@@ -1,0 +1,1360 @@
+openapi: 3.1.0
+info:
+  title: IT运维门户系统 API
+  description: |
+    IT运维门户系统的RESTful API文档，提供完整的运维管理功能接口。
+    
+    ## 认证方式
+    使用JWT Bearer Token进行认证，在请求头中添加：
+    ```
+    Authorization: Bearer <your-jwt-token>
+    ```
+    
+    ## 响应格式
+    所有接口统一返回格式：
+    ```json
+    {
+      "code": 200,
+      "message": "操作成功",
+      "data": {},
+      "timestamp": 1692000000000
+    }
+    ```
+  version: 4.5.0
+  contact:
+    name: API支持团队
+    email: api-support@ops-portal.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.ops-portal.com/api/v1
+    description: 生产环境
+  - url: https://test-api.ops-portal.com/api/v1
+    description: 测试环境
+  - url: http://localhost:8080/api/v1
+    description: 开发环境
+
+security:
+  - BearerAuth: []
+
+paths:
+  /auth/login:
+    post:
+      summary: 用户登录 (REQ-001, REQ-022)
+      description: 用户登录获取访问令牌
+      tags:
+        - 认证授权
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+                - tenantCode
+              properties:
+                username:
+                  type: string
+                  description: 用户名
+                  example: admin
+                password:
+                  type: string
+                  description: 密码
+                  example: password123
+                tenantCode:
+                  type: string
+                  description: 租户代码
+                  example: tenant001
+                loginType:
+                  type: string
+                  description: 登录类型
+                  enum: [PASSWORD, SMS, SSO]
+                  default: PASSWORD
+      responses:
+        '200':
+          description: 登录成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          token:
+                            type: string
+                            description: 访问令牌
+                            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                          refreshToken:
+                            type: string
+                            description: 刷新令牌
+                            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                          expiresIn:
+                            type: integer
+                            description: 令牌有效期（秒）
+                            example: 7200
+                          user:
+                            $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/refresh:
+    post:
+      summary: 刷新令牌 (REQ-001)
+      description: 使用刷新令牌获取新的访问令牌
+      tags:
+        - 认证授权
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+                  description: 刷新令牌
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      responses:
+        '200':
+          description: 令牌刷新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          token:
+                            type: string
+                            description: 新的访问令牌
+                          expiresIn:
+                            type: integer
+                            description: 令牌有效期（秒）
+
+  /auth/logout:
+    post:
+      summary: 用户登出 (REQ-001)
+      description: 用户登出，使令牌失效
+      tags:
+        - 认证授权
+      responses:
+        '200':
+          description: 登出成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /tickets:
+    get:
+      summary: 查询工单列表 (REQ-003)
+      description: 分页查询工单列表，支持多条件筛选
+      tags:
+        - 工单管理
+      parameters:
+        - name: page
+          in: query
+          description: 页码，从1开始
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: status
+          in: query
+          description: 工单状态
+          schema:
+            type: string
+            enum: [OPEN, IN_PROGRESS, RESOLVED, CLOSED, CANCELLED]
+        - name: priority
+          in: query
+          description: 优先级
+          schema:
+            type: string
+            enum: [LOW, MEDIUM, HIGH, URGENT]
+        - name: category
+          in: query
+          description: 工单分类
+          schema:
+            type: string
+            enum: [NETWORK, SERVER, DATABASE, APPLICATION, SECURITY, OTHER]
+        - name: assigneeId
+          in: query
+          description: 处理人ID
+          schema:
+            type: integer
+            format: int64
+        - name: customerId
+          in: query
+          description: 客户ID
+          schema:
+            type: integer
+            format: int64
+        - name: keyword
+          in: query
+          description: 关键词搜索
+          schema:
+            type: string
+        - name: startDate
+          in: query
+          description: 开始日期
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          description: 结束日期
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/PagedTickets'
+
+    post:
+      summary: 创建工单 (REQ-003)
+      description: 创建新的工单
+      tags:
+        - 工单管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - priority
+                - category
+              properties:
+                title:
+                  type: string
+                  description: 工单标题
+                  maxLength: 200
+                  example: 服务器无法访问
+                description:
+                  type: string
+                  description: 工单描述
+                  example: 服务器192.168.1.100无法ping通
+                priority:
+                  type: string
+                  description: 优先级
+                  enum: [LOW, MEDIUM, HIGH, URGENT]
+                  example: HIGH
+                category:
+                  type: string
+                  description: 工单分类
+                  enum: [NETWORK, SERVER, DATABASE, APPLICATION, SECURITY, OTHER]
+                  example: NETWORK
+                customerId:
+                  type: integer
+                  format: int64
+                  description: 客户ID
+                  example: 1001
+                attachments:
+                  type: array
+                  description: 附件列表
+                  items:
+                    type: string
+                  example: ["file1.jpg", "file2.pdf"]
+      responses:
+        '200':
+          description: 工单创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Ticket'
+
+  /tickets/{id}:
+    get:
+      summary: 获取工单详情 (REQ-003)
+      description: 获取指定工单的详细信息
+      tags:
+        - 工单管理
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 工单ID
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TicketDetail'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tickets/{id}/status:
+    put:
+      summary: 更新工单状态 (REQ-003)
+      description: 更新工单状态
+      tags:
+        - 工单管理
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 工单ID
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  description: 新状态
+                  enum: [OPEN, IN_PROGRESS, RESOLVED, CLOSED, CANCELLED]
+                  example: RESOLVED
+                comment:
+                  type: string
+                  description: 状态变更说明
+                  example: 问题已解决
+                resolution:
+                  type: string
+                  description: 解决方案
+                  example: 重启网络设备
+      responses:
+        '200':
+          description: 状态更新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            format: int64
+                          status:
+                            type: string
+                          updatedAt:
+                            type: string
+                            format: date-time
+
+  /dispatch/auto:
+    post:
+      summary: 智能派单 (REQ-004)
+      description: 基于AI算法自动派发工单
+      tags:
+        - 智能派单
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - ticketId
+              properties:
+                ticketId:
+                  type: integer
+                  format: int64
+                  description: 工单ID
+                  example: 12345
+                forceAssign:
+                  type: boolean
+                  description: 强制分配
+                  default: false
+      responses:
+        '200':
+          description: 派单成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/DispatchResult'
+
+  /dispatch/manual:
+    post:
+      summary: 手动派单 (REQ-004)
+      description: 手动指定工程师处理工单
+      tags:
+        - 智能派单
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - ticketId
+                - assigneeId
+              properties:
+                ticketId:
+                  type: integer
+                  format: int64
+                  description: 工单ID
+                  example: 12345
+                assigneeId:
+                  type: integer
+                  format: int64
+                  description: 指定工程师ID
+                  example: 2001
+                reason:
+                  type: string
+                  description: 派单原因
+                  example: 专业对口
+      responses:
+        '200':
+          description: 派单成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          ticketId:
+                            type: integer
+                            format: int64
+                          assigneeId:
+                            type: integer
+                            format: int64
+                          assigneeName:
+                            type: string
+                          assignedAt:
+                            type: string
+                            format: date-time
+
+  /dispatch/engineers/available:
+    get:
+      summary: 获取可用工程师 (REQ-004, REQ-006A)
+      description: 获取当前可用的工程师列表
+      tags:
+        - 智能派单
+      parameters:
+        - name: skillTags
+          in: query
+          description: 技能标签，逗号分隔
+          schema:
+            type: string
+            example: NETWORK,SERVER
+        - name: maxWorkload
+          in: query
+          description: 最大工作负载百分比
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 100
+            default: 80
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Engineer'
+
+  /knowledge/search:
+    get:
+      summary: 搜索知识 (REQ-005)
+      description: 全文搜索知识库内容
+      tags:
+        - 知识库
+      parameters:
+        - name: keyword
+          in: query
+          required: true
+          description: 搜索关键词
+          schema:
+            type: string
+            example: 网络故障
+        - name: category
+          in: query
+          description: 知识分类
+          schema:
+            type: string
+            enum: [NETWORK, SERVER, DATABASE, APPLICATION, SECURITY, OTHER]
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+      responses:
+        '200':
+          description: 搜索成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/PagedKnowledge'
+
+  /knowledge/{id}:
+    get:
+      summary: 获取知识详情 (REQ-005)
+      description: 获取知识文档详细内容
+      tags:
+        - 知识库
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 知识ID
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/KnowledgeDetail'
+
+  /knowledge/recommend:
+    get:
+      summary: 智能推荐知识 (REQ-005)
+      description: 基于工单内容推荐相关知识
+      tags:
+        - 知识库
+      parameters:
+        - name: ticketId
+          in: query
+          description: 工单ID
+          schema:
+            type: integer
+            format: int64
+        - name: content
+          in: query
+          description: 文本内容
+          schema:
+            type: string
+            example: 服务器无法访问
+        - name: limit
+          in: query
+          description: 推荐数量
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 5
+      responses:
+        '200':
+          description: 推荐成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/KnowledgeRecommendation'
+
+  /users:
+    get:
+      summary: 获取用户列表 (REQ-022)
+      description: 分页查询用户列表
+      tags:
+        - 用户管理
+      parameters:
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: keyword
+          in: query
+          description: 搜索关键词
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: 用户状态
+          schema:
+            type: string
+            enum: [ACTIVE, INACTIVE, LOCKED]
+        - name: roleId
+          in: query
+          description: 角色ID
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/PagedUsers'
+
+    post:
+      summary: 创建用户 (REQ-022)
+      description: 创建新用户
+      tags:
+        - 用户管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - realName
+                - password
+                - roleIds
+              properties:
+                username:
+                  type: string
+                  description: 用户名
+                  example: lisi
+                email:
+                  type: string
+                  format: email
+                  description: 邮箱
+                  example: lisi@example.com
+                realName:
+                  type: string
+                  description: 真实姓名
+                  example: 李四
+                phone:
+                  type: string
+                  description: 手机号
+                  example: "13900139000"
+                password:
+                  type: string
+                  description: 密码
+                  example: password123
+                roleIds:
+                  type: array
+                  description: 角色ID列表
+                  items:
+                    type: integer
+                    format: int64
+                  example: [2, 3]
+      responses:
+        '200':
+          description: 用户创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+
+  /files/upload:
+    post:
+      summary: 上传文件 (REQ-001)
+      description: 上传文件到服务器
+      tags:
+        - 文件管理
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: 上传的文件
+                category:
+                  type: string
+                  description: 文件分类
+                  enum: [TICKET_ATTACHMENT, KNOWLEDGE_ATTACHMENT, USER_AVATAR, OTHER]
+                  default: OTHER
+      responses:
+        '200':
+          description: 文件上传成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/FileInfo'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 响应码
+          example: 200
+        message:
+          type: string
+          description: 响应消息
+          example: 操作成功
+        timestamp:
+          type: integer
+          format: int64
+          description: 时间戳
+          example: 1692000000000
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 用户ID
+          example: 1
+        username:
+          type: string
+          description: 用户名
+          example: admin
+        email:
+          type: string
+          format: email
+          description: 邮箱
+          example: admin@example.com
+        realName:
+          type: string
+          description: 真实姓名
+          example: 管理员
+        phone:
+          type: string
+          description: 手机号
+          example: "13800138000"
+        status:
+          type: string
+          description: 用户状态
+          enum: [ACTIVE, INACTIVE, LOCKED]
+          example: ACTIVE
+        roles:
+          type: array
+          description: 用户角色
+          items:
+            $ref: '#/components/schemas/Role'
+        tenantId:
+          type: integer
+          format: int64
+          description: 租户ID
+          example: 1
+        lastLoginAt:
+          type: string
+          format: date-time
+          description: 最后登录时间
+        createdAt:
+          type: string
+          format: date-time
+          description: 创建时间
+
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 角色ID
+          example: 1
+        name:
+          type: string
+          description: 角色名称
+          example: 管理员
+        code:
+          type: string
+          description: 角色代码
+          example: ADMIN
+
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 工单ID
+          example: 12345
+        ticketNo:
+          type: string
+          description: 工单编号
+          example: TK202308130001
+        title:
+          type: string
+          description: 工单标题
+          example: 服务器无法访问
+        description:
+          type: string
+          description: 工单描述
+          example: 服务器192.168.1.100无法ping通
+        priority:
+          type: string
+          description: 优先级
+          enum: [LOW, MEDIUM, HIGH, URGENT]
+          example: HIGH
+        status:
+          type: string
+          description: 工单状态
+          enum: [OPEN, IN_PROGRESS, RESOLVED, CLOSED, CANCELLED]
+          example: OPEN
+        category:
+          type: string
+          description: 工单分类
+          enum: [NETWORK, SERVER, DATABASE, APPLICATION, SECURITY, OTHER]
+          example: NETWORK
+        creatorId:
+          type: integer
+          format: int64
+          description: 创建人ID
+          example: 1
+        creatorName:
+          type: string
+          description: 创建人姓名
+          example: 张三
+        assigneeId:
+          type: integer
+          format: int64
+          description: 处理人ID
+          example: 2001
+        assigneeName:
+          type: string
+          description: 处理人姓名
+          example: 李四
+        customerId:
+          type: integer
+          format: int64
+          description: 客户ID
+          example: 1001
+        customerName:
+          type: string
+          description: 客户名称
+          example: ABC公司
+        createdAt:
+          type: string
+          format: date-time
+          description: 创建时间
+        updatedAt:
+          type: string
+          format: date-time
+          description: 更新时间
+        slaDeadline:
+          type: string
+          format: date-time
+          description: SLA截止时间
+
+    TicketDetail:
+      allOf:
+        - $ref: '#/components/schemas/Ticket'
+        - type: object
+          properties:
+            creator:
+              $ref: '#/components/schemas/UserInfo'
+            assignee:
+              $ref: '#/components/schemas/UserInfo'
+            customer:
+              $ref: '#/components/schemas/CustomerInfo'
+            sla:
+              $ref: '#/components/schemas/SlaInfo'
+            attachments:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attachment'
+            logs:
+              type: array
+              items:
+                $ref: '#/components/schemas/TicketLog'
+
+    UserInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+
+    CustomerInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        contact:
+          type: string
+        phone:
+          type: string
+
+    SlaInfo:
+      type: object
+      properties:
+        responseTime:
+          type: integer
+          description: 响应时间（分钟）
+        resolveTime:
+          type: integer
+          description: 解决时间（分钟）
+        deadline:
+          type: string
+          format: date-time
+          description: 截止时间
+        remainingTime:
+          type: integer
+          description: 剩余时间（分钟）
+
+    Attachment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        url:
+          type: string
+        size:
+          type: integer
+          format: int64
+
+    TicketLog:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        action:
+          type: string
+        description:
+          type: string
+        operator:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    PagedTickets:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ticket'
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+        currentPage:
+          type: integer
+        pageSize:
+          type: integer
+
+    PagedUsers:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+        currentPage:
+          type: integer
+        pageSize:
+          type: integer
+
+    PagedKnowledge:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Knowledge'
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+        currentPage:
+          type: integer
+        pageSize:
+          type: integer
+
+    Knowledge:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        summary:
+          type: string
+        category:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        author:
+          type: string
+        viewCount:
+          type: integer
+        likeCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    KnowledgeDetail:
+      allOf:
+        - $ref: '#/components/schemas/Knowledge'
+        - type: object
+          properties:
+            content:
+              type: string
+              description: 知识内容（Markdown格式）
+            author:
+              $ref: '#/components/schemas/UserInfo'
+            status:
+              type: string
+              enum: [DRAFT, PUBLISHED, ARCHIVED]
+            attachments:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attachment'
+            relatedKnowledge:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                  title:
+                    type: string
+                  similarity:
+                    type: number
+                    format: float
+
+    KnowledgeRecommendation:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        summary:
+          type: string
+        relevance:
+          type: number
+          format: float
+          description: 相关度评分
+        reason:
+          type: string
+          description: 推荐原因
+
+    Engineer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        status:
+          type: string
+          enum: [ONLINE, OFFLINE, BUSY]
+        workload:
+          type: integer
+          description: 工作负载百分比
+        skillTags:
+          type: array
+          items:
+            type: string
+        currentTickets:
+          type: integer
+          description: 当前工单数
+        avgResponseTime:
+          type: integer
+          description: 平均响应时间（分钟）
+        satisfaction:
+          type: number
+          format: float
+          description: 满意度评分
+        location:
+          type: string
+          description: 所在地区
+
+    DispatchResult:
+      type: object
+      properties:
+        ticketId:
+          type: integer
+          format: int64
+        assigneeId:
+          type: integer
+          format: int64
+        assigneeName:
+          type: string
+        reason:
+          type: string
+          description: 派单原因
+        confidence:
+          type: number
+          format: float
+          description: 置信度
+        alternatives:
+          type: array
+          description: 备选方案
+          items:
+            type: object
+            properties:
+              engineerId:
+                type: integer
+                format: int64
+              engineerName:
+                type: string
+              score:
+                type: number
+                format: float
+              reason:
+                type: string
+        assignedAt:
+          type: string
+          format: date-time
+
+    FileInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        originalName:
+          type: string
+          description: 原始文件名
+        fileName:
+          type: string
+          description: 存储文件名
+        filePath:
+          type: string
+          description: 文件路径
+        fileSize:
+          type: integer
+          format: int64
+          description: 文件大小（字节）
+        mimeType:
+          type: string
+          description: MIME类型
+        uploadedAt:
+          type: string
+          format: date-time
+          description: 上传时间
+
+  responses:
+    BadRequest:
+      description: 请求参数错误
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ApiResponse'
+              - type: object
+                properties:
+                  code:
+                    example: 400
+                  message:
+                    example: 请求参数错误
+
+    Unauthorized:
+      description: 未授权
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ApiResponse'
+              - type: object
+                properties:
+                  code:
+                    example: 401
+                  message:
+                    example: 未授权，请先登录
+
+    Forbidden:
+      description: 权限不足
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ApiResponse'
+              - type: object
+                properties:
+                  code:
+                    example: 403
+                  message:
+                    example: 权限不足
+
+    NotFound:
+      description: 资源不存在
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ApiResponse'
+              - type: object
+                properties:
+                  code:
+                    example: 404
+                  message:
+                    example: 资源不存在
+
+    InternalServerError:
+      description: 服务器内部错误
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ApiResponse'
+              - type: object
+                properties:
+                  code:
+                    example: 500
+                  message:
+                    example: 服务器内部错误
+
+tags:
+  - name: 认证授权
+    description: 用户认证和授权相关接口
+  - name: 工单管理
+    description: 工单生命周期管理接口
+  - name: 智能派单
+    description: 智能派单和工程师管理接口
+  - name: 知识库
+    description: 知识库管理和搜索接口
+  - name: 用户管理
+    description: 用户和权限管理接口
+  - name: 文件管理
+    description: 文件上传和管理接口

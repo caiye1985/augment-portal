@@ -1,0 +1,12 @@
+stages:
+  - docs
+
+update_prd:
+  stage: docs
+  script:
+    - bash scripts/update_prd.sh
+  artifacts:
+    paths:
+      - docs/output/
+  only:
+    - main

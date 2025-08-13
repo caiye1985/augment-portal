@@ -1,0 +1,11 @@
+name: Update PRD Docs
+on:
+  push:
+    branches:
+      - main
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: bash scripts/update_prd.sh

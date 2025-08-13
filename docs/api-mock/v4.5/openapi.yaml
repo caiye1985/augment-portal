@@ -1,0 +1,753 @@
+openapi: "3.1.0"
+info:
+  title: "IT运维门户系统API"
+  version: "v1.0.0"
+  description: "IT运维门户系统v4.5的RESTful API接口文档，提供工单管理、工程师管理、客户管理等核心功能"
+  contact:
+    name: "技术支持"
+    email: "tech-support@ops-portal.com"
+  license:
+    name: "MIT"
+    url: "https://opensource.org/licenses/MIT"
+
+servers:
+  - url: "https://api.ops-portal.com/api/v1"
+    description: "生产环境"
+  - url: "https://test-api.ops-portal.com/api/v1"
+    description: "测试环境"
+  - url: "http://localhost:8080/api/v1"
+    description: "开发环境"
+
+security:
+  - BearerAuth: []
+  - TenantId: []
+
+tags:
+  - name: "认证管理"
+    description: "用户认证和授权相关接口"
+  - name: "工单管理"
+    description: "工单生命周期管理接口"
+  - name: "工程师管理"
+    description: "工程师信息和状态管理接口"
+  - name: "客户管理"
+    description: "客户信息管理接口"
+  - name: "知识库"
+    description: "知识库文档管理接口"
+  - name: "消息通知"
+    description: "消息和通知管理接口"
+  - name: "报表统计"
+    description: "数据统计和报表接口"
+  - name: "系统管理"
+    description: "系统配置和管理接口"
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - "认证管理"
+      summary: "用户登录"
+      description: "用户登录认证，支持用户名密码、短信验证码、企业SSO等方式"
+      operationId: "login"
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+            examples:
+              password_login:
+                summary: "密码登录"
+                value:
+                  username: "admin"
+                  password: "123456"
+                  tenantId: "12345678-1234-1234-1234-123456789012"
+                  loginType: "password"
+      responses:
+        "200":
+          description: "登录成功"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Result"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/LoginResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /auth/refresh:
+    post:
+      tags:
+        - "认证管理"
+      summary: "刷新令牌"
+      description: "使用refresh token刷新access token"
+      operationId: "refreshToken"
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+                  description: "刷新令牌"
+      responses:
+        "200":
+          description: "刷新成功"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Result"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/TokenInfo"
+
+  /auth/logout:
+    post:
+      tags:
+        - "认证管理"
+      summary: "用户登出"
+      description: "用户登出，清除服务器端会话"
+      operationId: "logout"
+      responses:
+        "200":
+          description: "登出成功"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Result"
+
+  /tickets:
+    get:
+      tags:
+        - "工单管理"
+      summary: "获取工单列表"
+      description: "分页查询工单列表，支持多条件筛选"
+      operationId: "getTickets"
+      parameters:
+        - name: page
+          in: query
+          description: "页码"
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: size
+          in: query
+          description: "每页大小"
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: status
+          in: query
+          description: "工单状态"
+          required: false
+          schema:
+            type: string
+            enum: ["pending", "assigned", "processing", "resolved", "closed", "cancelled"]
+        - name: priority
+          in: query
+          description: "优先级"
+          required: false
+          schema:
+            type: string
+            enum: ["low", "medium", "high", "urgent"]
+        - name: assigneeId
+          in: query
+          description: "处理人ID"
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: customerId
+          in: query
+          description: "客户ID"
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: keyword
+          in: query
+          description: "关键词搜索"
+          required: false
+          schema:
+            type: string
+            maxLength: 100
+      responses:
+        "200":
+          description: "查询成功"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Result"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/PageResult"
+
+    post:
+      tags:
+        - "工单管理"
+      summary: "创建工单"
+      description: "创建新的工单"
+      operationId: "createTicket"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTicketRequest"
+      responses:
+        "200":
+          description: "创建成功"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Result"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Ticket"
+
+  /tickets/{ticketId}:
+    get:
+      tags:
+        - "工单管理"
+      summary: "获取工单详情"
+      description: "根据工单ID获取工单详细信息"
+      operationId: "getTicketById"
+      parameters:
+        - name: ticketId
+          in: path
+          description: "工单ID"
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: "查询成功"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Result"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/TicketDetail"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags:
+        - "工单管理"
+      summary: "更新工单"
+      description: "更新工单信息"
+      operationId: "updateTicket"
+      parameters:
+        - name: ticketId
+          in: path
+          description: "工单ID"
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTicketRequest"
+      responses:
+        "200":
+          description: "更新成功"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Result"
+
+  /tickets/{ticketId}/assign:
+    post:
+      tags:
+        - "工单管理"
+      summary: "派发工单"
+      description: "将工单派发给指定工程师"
+      operationId: "assignTicket"
+      parameters:
+        - name: ticketId
+          in: path
+          description: "工单ID"
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - assigneeId
+              properties:
+                assigneeId:
+                  type: string
+                  format: uuid
+                  description: "处理人ID"
+                reason:
+                  type: string
+                  maxLength: 500
+                  description: "派发原因"
+      responses:
+        "200":
+          description: "派发成功"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Result"
+
+  /engineers:
+    get:
+      tags:
+        - "工程师管理"
+      summary: "获取工程师列表"
+      description: "分页查询工程师列表"
+      operationId: "getEngineers"
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: size
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: status
+          in: query
+          description: "在线状态"
+          schema:
+            type: string
+            enum: ["online", "offline", "busy"]
+      responses:
+        "200":
+          description: "查询成功"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Result"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/PageResult"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "JWT Bearer Token认证"
+    TenantId:
+      type: apiKey
+      in: header
+      name: Tenant-Id
+      description: "租户ID标识"
+
+  schemas:
+    Result:
+      type: object
+      required:
+        - code
+        - message
+        - timestamp
+      properties:
+        code:
+          type: integer
+          description: "响应状态码"
+          example: 200
+        message:
+          type: string
+          description: "响应消息"
+          example: "操作成功"
+        data:
+          type: object
+          description: "响应数据"
+        timestamp:
+          type: string
+          format: date-time
+          description: "响应时间戳"
+          example: "2025-08-12T10:30:00Z"
+
+    PageResult:
+      type: object
+      required:
+        - total
+        - page
+        - size
+        - pages
+        - records
+      properties:
+        total:
+          type: integer
+          description: "总记录数"
+          example: 100
+        page:
+          type: integer
+          description: "当前页码"
+          example: 1
+        size:
+          type: integer
+          description: "每页大小"
+          example: 20
+        pages:
+          type: integer
+          description: "总页数"
+          example: 5
+        records:
+          type: array
+          description: "数据记录"
+          items:
+            type: object
+
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+        - tenantId
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 50
+          description: "用户名"
+          example: "admin"
+        password:
+          type: string
+          minLength: 6
+          maxLength: 20
+          description: "密码"
+          example: "123456"
+        tenantId:
+          type: string
+          format: uuid
+          description: "租户ID"
+          example: "12345678-1234-1234-1234-123456789012"
+        loginType:
+          type: string
+          enum: ["password", "sms", "sso"]
+          default: "password"
+          description: "登录方式"
+        captcha:
+          type: string
+          pattern: "^[0-9]{4}$"
+          description: "验证码"
+
+    LoginResponse:
+      type: object
+      required:
+        - token
+        - refreshToken
+        - expiresIn
+        - userInfo
+      properties:
+        token:
+          type: string
+          description: "访问令牌"
+        refreshToken:
+          type: string
+          description: "刷新令牌"
+        expiresIn:
+          type: integer
+          description: "令牌过期时间(秒)"
+          example: 7200
+        userInfo:
+          $ref: "#/components/schemas/UserInfo"
+
+    TokenInfo:
+      type: object
+      required:
+        - token
+        - expiresIn
+      properties:
+        token:
+          type: string
+          description: "新的访问令牌"
+        expiresIn:
+          type: integer
+          description: "令牌过期时间(秒)"
+
+    UserInfo:
+      type: object
+      required:
+        - userId
+        - username
+        - realName
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: "用户ID"
+        username:
+          type: string
+          description: "用户名"
+        realName:
+          type: string
+          description: "真实姓名"
+        email:
+          type: string
+          format: email
+          description: "邮箱"
+        phone:
+          type: string
+          description: "手机号"
+        roles:
+          type: array
+          items:
+            type: string
+          description: "角色列表"
+
+    CreateTicketRequest:
+      type: object
+      required:
+        - title
+        - description
+        - priority
+        - customerId
+      properties:
+        title:
+          type: string
+          minLength: 5
+          maxLength: 100
+          description: "工单标题"
+        description:
+          type: string
+          minLength: 10
+          maxLength: 2000
+          description: "问题描述"
+        priority:
+          type: string
+          enum: ["low", "medium", "high", "urgent"]
+          description: "优先级"
+        customerId:
+          type: string
+          format: uuid
+          description: "客户ID"
+        categoryId:
+          type: string
+          format: uuid
+          description: "分类ID"
+        attachments:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+          description: "附件URL列表"
+
+    UpdateTicketRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 5
+          maxLength: 100
+        description:
+          type: string
+          minLength: 10
+          maxLength: 2000
+        priority:
+          type: string
+          enum: ["low", "medium", "high", "urgent"]
+
+    Ticket:
+      type: object
+      required:
+        - ticketId
+        - ticketNo
+        - title
+        - status
+        - priority
+        - customerId
+        - createdTime
+      properties:
+        ticketId:
+          type: string
+          format: uuid
+          description: "工单ID"
+        ticketNo:
+          type: string
+          description: "工单编号"
+        title:
+          type: string
+          description: "工单标题"
+        description:
+          type: string
+          description: "问题描述"
+        status:
+          type: string
+          enum: ["pending", "assigned", "processing", "resolved", "closed", "cancelled"]
+          description: "工单状态"
+        priority:
+          type: string
+          enum: ["low", "medium", "high", "urgent"]
+          description: "优先级"
+        customerId:
+          type: string
+          format: uuid
+          description: "客户ID"
+        customerName:
+          type: string
+          description: "客户名称"
+        assigneeId:
+          type: string
+          format: uuid
+          description: "处理人ID"
+        assigneeName:
+          type: string
+          description: "处理人姓名"
+        createdTime:
+          type: string
+          format: date-time
+          description: "创建时间"
+        updatedTime:
+          type: string
+          format: date-time
+          description: "更新时间"
+        slaDeadline:
+          type: string
+          format: date-time
+          description: "SLA截止时间"
+
+    TicketDetail:
+      allOf:
+        - $ref: "#/components/schemas/Ticket"
+        - type: object
+          properties:
+            attachments:
+              type: array
+              items:
+                type: string
+              description: "附件列表"
+            comments:
+              type: array
+              items:
+                $ref: "#/components/schemas/TicketComment"
+              description: "处理记录"
+
+    TicketComment:
+      type: object
+      required:
+        - commentId
+        - content
+        - authorId
+        - authorName
+        - createdTime
+      properties:
+        commentId:
+          type: string
+          format: uuid
+        content:
+          type: string
+        authorId:
+          type: string
+          format: uuid
+        authorName:
+          type: string
+        createdTime:
+          type: string
+          format: date-time
+
+  responses:
+    BadRequest:
+      description: "请求参数错误"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/Result"
+              - type: object
+                properties:
+                  code:
+                    example: 400
+                  message:
+                    example: "请求参数错误"
+
+    Unauthorized:
+      description: "未授权"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/Result"
+              - type: object
+                properties:
+                  code:
+                    example: 401
+                  message:
+                    example: "未授权访问"
+
+    Forbidden:
+      description: "禁止访问"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/Result"
+              - type: object
+                properties:
+                  code:
+                    example: 403
+                  message:
+                    example: "权限不足"
+
+    NotFound:
+      description: "资源不存在"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/Result"
+              - type: object
+                properties:
+                  code:
+                    example: 404
+                  message:
+                    example: "资源不存在"
+
+    InternalServerError:
+      description: "服务器内部错误"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/Result"
+              - type: object
+                properties:
+                  code:
+                    example: 500
+                  message:
+                    example: "服务器内部错误"

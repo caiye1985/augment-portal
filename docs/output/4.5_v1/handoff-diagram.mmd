@@ -1,0 +1,104 @@
+flowchart TD
+    %% 样式定义
+    style A fill:#dddddd,stroke:#555,stroke-width:1px,color:#000
+    style B fill:#4682B4,stroke:#333,stroke-width:1px,color:#fff
+    style C1 fill:#4682B4,stroke:#333,stroke-width:1px,color:#fff
+    style C2 fill:#32CD32,stroke:#333,stroke-width:1px,color:#fff
+    style C3 fill:#32CD32,stroke:#333,stroke-width:1px,color:#fff
+    style C4 fill:#f4a261,stroke:#333,stroke-width:1px,color:#fff
+    style C5 fill:#f4a261,stroke:#333,stroke-width:1px,color:#fff
+    style C6 fill:#f4a261,stroke:#333,stroke-width:1px,color:#fff
+    style D1 fill:#999999,stroke:#333,stroke-width:1px,color:#fff
+    style D2 fill:#999999,stroke:#333,stroke-width:1px,color:#fff
+    style D3 fill:#999999,stroke:#333,stroke-width:1px,color:#fff
+    style D4 fill:#999999,stroke:#333,stroke-width:1px,color:#fff
+    style E fill:#2E8B57,stroke:#333,stroke-width:1px,color:#fff
+    style F fill:#8B0000,stroke:#333,stroke-width:1px,color:#fff
+
+    %% 节点定义
+    A[原始 PRD 目录<br/>docs/prd/split/4.5<br/>📁 24个模块文件<br/>📊 完整需求规格]
+    
+    B[🤖 Augment Agent 运行<br/>一次性终极 Prompt<br/>🔄 自动化文档生成<br/>⚡ 智能需求解析]
+
+    C1[📘 backend-prd.md<br/>后端精简 PRD<br/>🔧 Java 17 + Spring Boot 3.2.11<br/>📦 24个模块后端需求]
+    
+    C2[🌐 frontend-prd.md<br/>Web 前端精简 PRD<br/>⚛️ Vue 3.4.15 + Element Plus<br/>🎨 完整界面设计需求]
+    
+    C3[📱 mobile-prd.md<br/>Flutter 移动端精简 PRD<br/>🦋 Flutter 3.13.0 + Material Design<br/>📲 跨平台移动应用需求]
+    
+    C4[📋 api-docs.md<br/>Markdown API 文档<br/>🔗 完整接口定义<br/>📝 请求响应示例]
+    
+    C5[📊 openapi.yaml<br/>OpenAPI 3.1 + Mock<br/>🛠️ Swagger 可导入<br/>🧪 Mock 数据完整]
+    
+    C6[📅 execution-plan.md<br/>执行计划<br/>⏱️ 3阶段开发路线图<br/>👥 资源配置方案]
+
+    D1[🔨 Augment<br/>生成后端代码<br/>☕ Java + Spring Boot<br/>🗄️ PostgreSQL + Redis]
+    
+    D2[💻 Cursor<br/>生成 Web 前端代码<br/>🎯 Vue 3 + TypeScript<br/>🎨 Element Plus UI]
+    
+    D3[📱 Cursor<br/>生成 Flutter 移动端代码<br/>🦋 Dart + Material Design<br/>📲 iOS + Android]
+    
+    D4[🧪 测试/管理团队<br/>使用 Mock API & 执行计划<br/>📊 接口测试验证<br/>📋 项目进度管理]
+
+    E[🔄 CI/CD<br/>集成测试<br/>🚀 自动化部署<br/>🔍 质量检查]
+    
+    F[🌟 正式上线<br/>后端 + Web + 移动端<br/>🎯 多租户 SaaS 平台<br/>📈 智能运维服务]
+
+    %% 连接关系
+    A --> B
+    
+    B --> C1
+    B --> C2
+    B --> C3
+    B --> C4
+    B --> C5
+    B --> C6
+
+    C1 --> D1
+    C5 --> D1
+
+    C2 --> D2
+    C5 --> D2
+
+    C3 --> D3
+    C5 --> D3
+
+    C4 --> D4
+    C5 --> D4
+    C6 --> D4
+
+    D1 --> E
+    D2 --> E
+    D3 --> E
+
+    E --> F
+
+    %% 子图分组
+    subgraph "📂 输入阶段"
+        A
+    end
+
+    subgraph "🤖 处理阶段"
+        B
+    end
+
+    subgraph "📄 文档输出阶段"
+        C1
+        C2
+        C3
+        C4
+        C5
+        C6
+    end
+
+    subgraph "👨‍💻 开发阶段"
+        D1
+        D2
+        D3
+        D4
+    end
+
+    subgraph "🚀 部署阶段"
+        E
+        F
+    end
