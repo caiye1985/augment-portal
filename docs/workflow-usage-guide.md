@@ -4,24 +4,54 @@
 
 本工作流解决了一次性处理所有PRD模块时生成文件丢失内容的问题，通过迭代式处理确保每次处理1-2个模块以提高生成精度。
 
-## 工作流程
+## 🆕 PRD文档改进工具（推荐）
 
-### 1. 初始化API文档结构
+**重大升级**：PRD文档改进工具已升级为"直接生成改进后PRD文档"模式，无需人工二次处理。
 
 ```bash
+# 生成所有PRD改进prompt（推荐）
+bash scripts/gen_prd_analysis.sh all
+
+# 分阶段生成PRD改进prompt
+bash scripts/gen_prd_analysis.sh generate P0
+
+# 查看当前进度
+bash scripts/gen_prd_analysis.sh progress
+```
+
+**输出结果**：
+- **PRD改进prompt**：`prompts/4.5/prd-analysis/prd-analysis-REQ-XXX.md`
+- **改进后PRD保存位置**：`docs/prd/split/4.5.1/modules/`
+- **版本自动升级**：4.5 → 4.5.1
+
+**工作流程**：
+```
+PRD 4.5 → AI直接改进 → 完整的PRD 4.5.1 → API设计
+```
+
+详细说明请参考：[PRD文档改进工作流程指南](prd-improvement-workflow.md)
+
+## 传统工作流程
+
+### 1. 初始化版本化目录结构
+
+```bash
+# 初始化版本化目录结构（自动检测PRD版本）
+bash scripts/version_utils.sh init
+
 # 生成三级分离的API文档架构（全局/业务域/模块）
 bash scripts/init_api_structure.sh
 ```
 
 **功能说明：**
-- 解析 `docs/prd/split/4.5/globals/06-api-domain-mapping.md` 中的业务域与模块映射关系
-- 生成全局入口文件：`docs/api/global-api-index.yaml`
-- 生成业务域聚合文件：`docs/api/domains/{domain}-domain.yaml`
-- 生成模块占位文件：`docs/api/modules/{MODULE_ID}-{MODULE_NAME}/openapi.yaml`
+- 自动检测当前PRD版本号（当前为4.5）
+- 创建版本化的目录结构
+- 解析版本化的业务域与模块映射关系
+- 生成版本化的API文档结构
 
 **输出结构：**
 ```
-docs/api/
+docs/api/4.5/                      # 版本化API目录
 ├── global-api-index.yaml          # 全局API入口
 ├── domains/                       # 业务域聚合文件
 │   ├── auth-domain.yaml
@@ -31,6 +61,19 @@ docs/api/
     ├── REQ-001-基础架构模块/
     ├── REQ-003-工单管理系统/
     └── ...
+
+prompts/4.5/                       # 版本化prompt目录
+├── api/                           # API prompt文件
+├── backend/                       # 后端prompt文件
+├── frontend/                      # 前端prompt文件
+└── mobile/                        # 移动端prompt文件
+
+docs/output/4.5/                   # 版本化输出目录
+├── api-docs/                      # API文档输出
+├── backend/                       # 后端代码输出
+├── frontend/                      # 前端代码输出
+├── mobile/                        # 移动端代码输出
+└── architecture/                  # 架构文档输出
 ```
 
 ### 2. 生成模块列表
@@ -54,26 +97,28 @@ bash scripts/gen_module_list.sh
 ### 3. 生成迭代式Prompt
 
 ```bash
-# 语法：bash scripts/gen_iter_prompt.sh <模式> <阶段> [批量数]
+# 语法：bash scripts/gen_iter_prompt.sh <模式> <阶段>
 
-# API文档生成（推荐批量数：1-2）
-bash scripts/gen_iter_prompt.sh api P0 2        # P0阶段，每次2个模块
-bash scripts/gen_iter_prompt.sh api P1 1        # P1阶段，每次1个模块
+# API文档生成（每个模块生成独立的prompt文件）
+bash scripts/gen_iter_prompt.sh api P0          # P0阶段所有模块
+bash scripts/gen_iter_prompt.sh api P1          # P1阶段所有模块
+bash scripts/gen_iter_prompt.sh api P2          # P2阶段所有模块
+bash scripts/gen_iter_prompt.sh api all         # 所有阶段模块
 
 # API初始化（一次性生成全局架构）
-bash scripts/gen_iter_prompt.sh api-init P0 1
+bash scripts/gen_iter_prompt.sh api-init P0
 
 # 后端代码生成
-bash scripts/gen_iter_prompt.sh backend P0 2
-bash scripts/gen_iter_prompt.sh backend-init P0 1
+bash scripts/gen_iter_prompt.sh backend P0
+bash scripts/gen_iter_prompt.sh backend-init P0
 
 # 前端代码生成
-bash scripts/gen_iter_prompt.sh frontend P0 2
-bash scripts/gen_iter_prompt.sh frontend-init P0 1
+bash scripts/gen_iter_prompt.sh frontend P0
+bash scripts/gen_iter_prompt.sh frontend-init P0
 
 # 移动端代码生成
-bash scripts/gen_iter_prompt.sh mobile P0 2
-bash scripts/gen_iter_prompt.sh mobile-init P0 1
+bash scripts/gen_iter_prompt.sh mobile P0
+bash scripts/gen_iter_prompt.sh mobile-init P0
 ```
 
 **支持的模式：**
@@ -102,36 +147,39 @@ bash scripts/gen_iter_prompt.sh mobile-init P0 1
 
 ### 1. 推荐的处理顺序
 
-1. **第一步：API架构初始化**
+1. **第一步：版本化结构初始化**
    ```bash
-   bash scripts/init_api_structure.sh
-   bash scripts/gen_iter_prompt.sh api-init P0 1
+   bash scripts/version_utils.sh init          # 初始化版本化目录
+   bash scripts/init_api_structure.sh          # 生成API结构
+   bash scripts/gen_iter_prompt.sh api-init P0 # 生成初始化prompt
    ```
 
-2. **第二步：分批处理API文档**
+2. **第二步：生成API文档prompt**
    ```bash
-   bash scripts/gen_iter_prompt.sh api P0 2  # 每次2个模块
-   bash scripts/gen_iter_prompt.sh api P1 2
-   bash scripts/gen_iter_prompt.sh api P2 2
+   bash scripts/gen_iter_prompt.sh api P0    # P0阶段所有模块
+   bash scripts/gen_iter_prompt.sh api P1    # P1阶段所有模块
+   bash scripts/gen_iter_prompt.sh api P2    # P2阶段所有模块
+   # 或者一次性生成所有阶段
+   bash scripts/gen_iter_prompt.sh api all
    ```
 
 3. **第三步：后端代码生成**
    ```bash
-   bash scripts/gen_iter_prompt.sh backend-init P0 1
-   bash scripts/gen_iter_prompt.sh backend P0 2
+   bash scripts/gen_iter_prompt.sh backend-init P0
+   bash scripts/gen_iter_prompt.sh backend P0
    ```
 
 4. **第四步：前端代码生成**
    ```bash
-   bash scripts/gen_iter_prompt.sh frontend-init P0 1
-   bash scripts/gen_iter_prompt.sh frontend P0 2
+   bash scripts/gen_iter_prompt.sh frontend-init P0
+   bash scripts/gen_iter_prompt.sh frontend P0
    ```
 
-### 2. 批量大小建议
+### 2. 生成策略建议
 
-- **API文档生成：** 1-2个模块/批次（内容复杂度高）
-- **代码生成：** 2-3个模块/批次（可并行处理）
-- **初始化模式：** 1个模块/批次（需要完整架构）
+- **API文档生成：** 每个模块生成独立的prompt文件，确保质量和可维护性
+- **阶段性处理：** 可按P0/P1/P2阶段分别处理，或使用 `all` 一次性处理所有阶段
+- **进度管理：** 支持中断和恢复，可随时继续未完成的阶段
 
 ### 3. 进度管理
 
@@ -140,7 +188,7 @@ bash scripts/gen_iter_prompt.sh mobile-init P0 1
 可以随时中断和恢复处理：
 ```bash
 # 继续上次未完成的处理
-bash scripts/gen_iter_prompt.sh api P0 2
+bash scripts/gen_iter_prompt.sh api P0
 ```
 
 ## 故障排除

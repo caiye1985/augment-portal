@@ -1,11 +1,27 @@
 #!/usr/bin/env bash
 set -e
 
-API_ROOT="docs/api"
+# 导入版本工具
+source "$(dirname "$0")/version_utils.sh"
+
+# 检测版本并设置路径
+VERSION=$(detect_prd_version)
+if [[ $? -ne 0 ]]; then
+    echo "[错误] 无法检测PRD版本号" >&2
+    exit 1
+fi
+
+echo "[i] 检测到PRD版本: $VERSION"
+
+# 设置版本化路径
+API_ROOT="docs/api/$VERSION"
 DOMAIN_DIR="$API_ROOT/domains"
 MODULE_DIR="$API_ROOT/modules"
 GLOBAL_INDEX="$API_ROOT/global-api-index.yaml"
-MAPPING_FILE="docs/prd/split/4.5/globals/06-api-domain-mapping.md"
+MAPPING_FILE="docs/prd/split/$VERSION/globals/06-api-domain-mapping.md"
+
+# 确保版本化目录存在
+create_versioned_directories "$VERSION"
 
 mkdir -p "$DOMAIN_DIR" "$MODULE_DIR"
 
@@ -149,3 +165,5 @@ EOF2
 done
 
 echo "[✔] 初始化完成：全局入口 + 域聚合 + 模块占位 已生成"
+echo "[i] 版本: $VERSION"
+echo "[i] API目录: $API_ROOT"

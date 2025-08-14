@@ -1,12 +1,22 @@
 #!/usr/bin/env bash
 # gen_module_list.sh
 # 自动生成模块编号列表文件，可按阶段生成多个列表
-# 基于 docs/prd/split/4.5/modules 目录扫描
+# 基于版本化的PRD模块目录扫描
 # 格式：<模块编号> <模块文档路径>
 
 set -e
 
-MODULES_DIR="docs/prd/split/4.5/modules"
+# 导入版本工具
+source "$(dirname "$0")/version_utils.sh"
+
+# 检测版本并设置路径
+VERSION=$(detect_prd_version)
+if [[ $? -ne 0 ]]; then
+    echo "[错误] 无法检测PRD版本号" >&2
+    exit 1
+fi
+
+MODULES_DIR="docs/prd/split/$VERSION/modules"
 OUTPUT_DIR="scripts"
 mkdir -p "$OUTPUT_DIR"
 
@@ -19,8 +29,12 @@ API_EXCLUDE_MODULES=(
 
 if [ ! -d "$MODULES_DIR" ]; then
     echo "[x] 模块目录不存在: $MODULES_DIR"
+    echo "[i] 当前版本: $VERSION"
     exit 1
 fi
+
+echo "[i] 使用PRD版本: $VERSION"
+echo "[i] 模块目录: $MODULES_DIR"
 
 # 定义各阶段模块编号（根据你的项目P0/P1/P2规划）
 # 注意：REQ-002, REQ-015, REQ-020 已从列表中移除，因为它们不需要独立的API

@@ -7,8 +7,8 @@
 1. **核心参考文档**：
    - 全局上下文：`docs/global-context.md`
    - Mock 数据规范：`docs/prd/split/4.5/globals/05-mock-data-guidelines.md`
-   - 当前模块 PRD：`docs/prd/split/4.5/modules/REQ-022.md`
-   - API 初始化合并文件：`（文件不存在，跳过引用）`
+   - 当前模块 PRD：`docs/prd/split/4.5/modules/REQ-012.md`
+   - API 初始化合并文件：`docs/api/global-api-index.yaml`
    - 技术栈规范：`docs/prd/split/4.5/appendix/03-technology-stack.md`
    - 业务流程文档：`docs/prd/split/4.5/globals/04-business-processes.md`
    - 术语表：`docs/prd/split/4.5/appendix/01-glossary-and-references.md`
@@ -52,10 +52,10 @@
    - 权限要求和安全级别
 
 #### Step 2：编写 OpenAPI 模块文件
-**路径**：`docs/api/modules/{MODULE_ID}.yaml`
+**路径**：`docs/api/modules/REQ-012-系统集成模块/openapi.yaml`
 
 必须包含：
-1. `info` 节点（title、version 与 `_global.yaml` 一致）。
+1. `info` 节点（title、version 与 `global-api-index.yaml` 一致）。
 2. `tags` 节点（模块标签及描述）。
 3. `paths`：  
    - 所有路径以业务域前缀开头（例如 `/api/v1/tickets/...`）  
@@ -63,7 +63,7 @@
    - operationId 命名规则：`<domain>_<action>`（小写_分隔，动词用英文现在时）。
 4. `components.schemas`：  
    - 仅定义**模块独有**的 schema
-   - 引用全局或域定义，使用 `$ref: '../_global.yaml#/components/schemas/...'` 或 `$ref: '../domains/{domain}.yaml#/components/schemas/...'`。
+   - 引用全局或域定义，使用 `$ref: '../global-api-index.yaml#/components/schemas/...'` 或 `$ref: '../domains/{domain}.yaml#/components/schemas/...'`。
 5. 响应：
    - **成功响应**（`200`）引用全局 `ApiResponse` 或 `PagedResponse`。
    - **错误响应**（`400` / `401` / `403` / `404` / `409` / `500`）必须引用全局标准错误响应模型。
@@ -72,7 +72,7 @@
 1. 所有 schema 字段必须严格匹配类型要求。
 2. 枚举完整列出所有值，每个值要有清晰意义描述。
 3. 所有字段包含符合 Mock 数据规范的 `example` 值。
-4. 所有时间字段统一 ISO8601 格式（例如 `2024-01-15T10:30:00Z`）。
+4. 所有时间字段统一 ISO8601 UTC 格式（例如 `2024-01-15T10:30:00Z`），便于数据库存储和国际化支持。前端可根据用户时区进行本地化显示。
 
 #### Step 4：校验与质量控制
 1. swagger-cli validate 必须通过。
@@ -91,11 +91,11 @@
 - `HEAD`：获取元信息（如需）
 
 ### 输出要求
-1. 输出完整的 `docs/api/modules/{MODULE_ID}.yaml` 文件内容。
+1. 输出完整的 `docs/api/modules/REQ-012-系统集成模块/openapi.yaml` 文件内容。
 2. 不包含全局/域级 schema 的重复定义。
 3. 所有示例数据必须符合 Mock 数据规范，贴合 IT运维业务语境。
 4. 文件可独立通过 swagger-cli validate。
 
 ### 验证命令
 ```bash
-swagger-cli validate docs/api/modules/{MODULE_ID}.yaml
+swagger-cli validate docs/api/modules/REQ-012-系统集成模块/openapi.yaml
