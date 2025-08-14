@@ -1,0 +1,7 @@
+openapi: 3.0.3
+info:
+  title: 资源权限管理模块 API
+  version: 1.0.0
+paths: {}
+components:
+  schemas: {}
