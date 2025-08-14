@@ -33,3 +33,111 @@ x-domains:
     $ref: './domains/client-domain.yaml'
   - name: data
     $ref: './domains/data-domain.yaml'
+
+components:
+  schemas:
+    # 通用响应Schema
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 响应状态码
+          example: 200
+        message:
+          type: string
+          description: 响应消息
+          example: "操作成功"
+        data:
+          type: object
+          description: 响应数据
+        timestamp:
+          type: string
+          format: date-time
+          description: 响应时间
+          example: "2024-08-14T15:30:00Z"
+
+    PagedResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                total:
+                  type: integer
+                  description: 总记录数
+                  example: 100
+                page:
+                  type: integer
+                  description: 当前页码
+                  example: 1
+                size:
+                  type: integer
+                  description: 每页大小
+                  example: 20
+                items:
+                  type: array
+                  description: 数据列表
+                  items:
+                    type: object
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 错误状态码
+          example: 400
+        message:
+          type: string
+          description: 错误消息
+          example: "请求参数错误"
+        error:
+          type: string
+          description: 错误详情
+          example: "用户名不能为空"
+        timestamp:
+          type: string
+          format: date-time
+          description: 错误时间
+          example: "2024-08-14T15:30:00Z"
+
+  responses:
+    BadRequest:
+      description: 请求参数错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: 未认证或认证失败
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: 权限不足
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: 资源不存在
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: 资源冲突
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: 服务器内部错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
