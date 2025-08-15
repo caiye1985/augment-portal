@@ -1,0 +1,37 @@
+openapi: 3.0.3
+info:
+  title: IT运维门户系统 API
+  version: 1.0.0
+  description: 全局 API 入口文档（聚合所有业务域）
+paths: {}
+x-domains:
+  - name: auth
+    $ref: './domains/auth-domain.yaml'
+  - name: ticket
+    $ref: './domains/ticket-domain.yaml'
+  - name: engineer
+    $ref: './domains/engineer-domain.yaml'
+  - name: knowledge
+    $ref: './domains/knowledge-domain.yaml'
+  - name: customer
+    $ref: './domains/customer-domain.yaml'
+  - name: notification
+    $ref: './domains/notification-domain.yaml'
+  - name: portal
+    $ref: './domains/portal-domain.yaml'
+  - name: integration
+    $ref: './domains/integration-domain.yaml'
+  - name: finance
+    $ref: './domains/finance-domain.yaml'
+  - name: system
+    $ref: './domains/system-domain.yaml'
+  - name: analytics
+    $ref: './domains/analytics-domain.yaml'
+  - name: workflow
+    $ref: './domains/workflow-domain.yaml'
+  - name: experience
+    $ref: './domains/experience-domain.yaml'
+  - name: client
+    $ref: './domains/client-domain.yaml'
+  - name: data
+    $ref: './domains/data-domain.yaml'

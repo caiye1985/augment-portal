@@ -1,0 +1,7 @@
+openapi: 3.0.3
+info:
+  title: Unotification 业务域 API 聚合
+  version: 1.0.0
+paths:
+  /通知与消息系统:
+    $ref: '../modules/REQ-011-通知与消息系统/openapi.yaml#/paths/~1通知与消息系统'

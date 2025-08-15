@@ -1,0 +1,11 @@
+openapi: 3.0.3
+info:
+  title: Ucustomer 业务域 API 聚合
+  version: 1.0.0
+paths:
+  /客户关系管理模块:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1客户关系管理模块'
+  /sla管理模块:
+    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1sla管理模块'
+  /甲方管理与报表系统:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1甲方管理与报表系统'

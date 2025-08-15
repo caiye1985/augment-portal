@@ -1,0 +1,7 @@
+openapi: 3.0.3
+info:
+  title: Uclient 业务域 API 聚合
+  version: 1.0.0
+paths:
+  /移动端应用模块:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1移动端应用模块'

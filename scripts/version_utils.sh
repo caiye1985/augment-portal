@@ -19,7 +19,7 @@ detect_prd_version() {
     # 查找最新版本号（按版本号排序）
     local latest_version
     latest_version=$(ls -d "$PRD_BASE_DIR"/*/ 2>/dev/null | \
-                    grep -oE '[0-9]+\.[0-9]+' | \
+                    grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?' | \
                     sort -V | \
                     tail -n1)
     

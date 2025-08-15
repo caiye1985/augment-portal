@@ -1,0 +1,7 @@
+openapi: 3.0.3
+info:
+  title: Uengineer 业务域 API 聚合
+  version: 1.0.0
+paths:
+  /工程师管理系统:
+    $ref: '../modules/REQ-006-工程师管理系统/openapi.yaml#/paths/~1工程师管理系统'

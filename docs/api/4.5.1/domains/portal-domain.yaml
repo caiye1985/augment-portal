@@ -1,0 +1,7 @@
+openapi: 3.0.3
+info:
+  title: Uportal 业务域 API 聚合
+  version: 1.0.0
+paths:
+  /工作台与仪表板:
+    $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1工作台与仪表板'

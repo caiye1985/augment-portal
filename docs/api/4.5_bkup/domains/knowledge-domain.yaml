@@ -1,0 +1,9 @@
+openapi: 3.0.3
+info:
+  title: Uknowledge 业务域 API 聚合
+  version: 1.0.0
+paths:
+  /知识库管理系统:
+    $ref: '../modules/REQ-005-知识库管理系统/openapi.yaml#/paths/~1知识库管理系统'
+  /客户自助服务模块:
+    $ref: '../modules/REQ-019-客户自助服务模块/openapi.yaml#/paths/~1客户自助服务模块'

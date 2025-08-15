@@ -29,9 +29,9 @@ echo "[i] 读取业务域与模块映射..."
 
 # 定义不需要生成API的模块列表
 API_EXCLUDE_MODULES=(
-    "REQ-020"  # 移动端应用模块 - 复用其他业务域API
-    "REQ-015"  # 用户体验增强系统 - 前端/交互优化
-    "REQ-002"  # 工作台与仪表板模块 - 数据聚合展示
+    # "REQ-020"  # 移动端应用模块 - 复用其他业务域API
+    # "REQ-015"  # 用户体验增强系统 - 前端/交互优化
+    # "REQ-002"  # 工作台与仪表板模块 - 数据聚合展示
 )
 
 domains=()
@@ -40,19 +40,38 @@ domain_modules_data=""
 last_domain=""
 
 # 从映射表解析数据
+in_main_table=false
 while IFS= read -r line; do
     # 跳过空行和markdown标题
     [[ -z "$line" ]] && continue
     [[ "$line" =~ ^#.*$ ]] && continue
     [[ "$line" =~ ^[[:space:]]*$ ]] && continue
 
-    # 只处理表格行（包含|符号）
-    if [[ "$line" =~ \| ]]; then
+    # 检测是否进入主映射表（业务域与模块对应关系表）
+    if [[ "$line" =~ 业务域.*Domain.*模块编号.*模块名称 ]]; then
+        in_main_table=true
+        continue
+    fi
+
+    # 检测是否离开主映射表（遇到其他表格或章节）
+    if [[ "$in_main_table" == "true" && "$line" =~ ^##[[:space:]] ]]; then
+        in_main_table=false
+        continue
+    fi
+
+    # 检测其他表格的开始（非主映射表）
+    if [[ "$line" =~ API路径.*功能描述 ]] || [[ "$line" =~ 目标域.*集成场景 ]]; then
+        in_main_table=false
+        continue
+    fi
+
+    # 只处理主映射表中的表格行
+    if [[ "$in_main_table" == "true" && "$line" =~ \| ]]; then
         # 分割表格列
         IFS='|' read -ra cols <<< "$line"
 
-        # 确保有足够的列
-        if [[ ${#cols[@]} -ge 4 ]]; then
+        # 确保有足够的列（至少5列：空|业务域|域描述|模块编号|模块名称|特殊说明|空）
+        if [[ ${#cols[@]} -ge 5 ]]; then
             # 去掉首尾空格
             domain=$(echo "${cols[1]}" | xargs 2>/dev/null || echo "")
             desc=$(echo "${cols[2]}" | xargs 2>/dev/null || echo "")
@@ -63,6 +82,11 @@ while IFS= read -r line; do
             [[ "$domain" =~ ^业务域 ]] && continue
             [[ "$domain" =~ ^-+$ ]] && continue
             [[ "$domain" == "" && "$mod_id" == "" ]] && continue
+
+            # 验证模块编号格式（必须是REQ-XXX格式）
+            if [[ -n "$mod_id" && ! "$mod_id" =~ ^REQ-[0-9]+ ]]; then
+                continue
+            fi
 
             # 如果域是空，则继承上一有效域
             if [[ -z "$domain" ]]; then
@@ -105,11 +129,20 @@ paths: {}
 x-domains:
 EOF
 
+# 清理文件名的函数
+clean_filename() {
+    local filename="$1"
+    # 移除危险字符，但保留中文字符
+    echo "$filename" | sed 's/[`'"'"'"]//g' | sed 's/[\/\\:*?"<>|]/_/g' | sed 's/__*/_/g' | sed 's/^_\|_$//g'
+}
+
 # 遍历每个域，生成域聚合文件和模块占位
 for domain in "${domains[@]}"; do
-    domain_file="$DOMAIN_DIR/${domain}-domain.yaml"
+    # 清理域名用于文件名
+    clean_domain=$(clean_filename "$domain")
+    domain_file="$DOMAIN_DIR/${clean_domain}-domain.yaml"
     echo "  - name: $domain" >> "$GLOBAL_INDEX"
-    echo "    \$ref: './domains/${domain}-domain.yaml'" >> "$GLOBAL_INDEX"
+    echo "    \$ref: './domains/${clean_domain}-domain.yaml'" >> "$GLOBAL_INDEX"
 
     echo "[i] 生成业务域文件: $domain_file"
     # 首字母大写（兼容性处理）
@@ -136,8 +169,12 @@ for domain in "${domains[@]}"; do
         [[ "$entry_domain" != "$domain" ]] && continue
         [[ -z "$mod_id" || -z "$mod_name" ]] && continue
 
+        # 清理模块名用于文件名
+        clean_mod_id=$(clean_filename "$mod_id")
+        clean_mod_name=$(clean_filename "$mod_name")
+
         # 创建模块目录和占位文件
-        mod_dir="$MODULE_DIR/${mod_id}-${mod_name}"
+        mod_dir="$MODULE_DIR/${clean_mod_id}-${clean_mod_name}"
         mkdir -p "$mod_dir"
         mod_file="$mod_dir/openapi.yaml"
         if [[ ! -f "$mod_file" ]]; then
@@ -159,7 +196,7 @@ EOF2
         path_key=$(echo "$path_key" | tr '[:upper:]' '[:lower:]')
         echo "  ${path_key}:" >> "$domain_file"
         mod_name_lower=$(echo "$mod_name" | tr '[:upper:]' '[:lower:]')
-        echo "    \$ref: '../modules/${mod_id}-${mod_name}/openapi.yaml#/paths/~1${mod_name_lower}'" >> "$domain_file"
+        echo "    \$ref: '../modules/${clean_mod_id}-${clean_mod_name}/openapi.yaml#/paths/~1${mod_name_lower}'" >> "$domain_file"
 
     done
 done

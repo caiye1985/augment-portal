@@ -1,0 +1,7 @@
+openapi: 3.0.3
+info:
+  title: Uexperience 业务域 API 聚合
+  version: 1.0.0
+paths:
+  /用户体验增强系统:
+    $ref: '../modules/REQ-015-用户体验增强系统/openapi.yaml#/paths/~1用户体验增强系统'
