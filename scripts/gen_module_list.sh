@@ -22,9 +22,9 @@ mkdir -p "$OUTPUT_DIR"
 
 # 定义不需要生成API的模块列表（与init_api_structure.sh保持一致）
 API_EXCLUDE_MODULES=(
-    "REQ-020"  # 移动端应用模块 - 复用其他业务域API
-    "REQ-015"  # 用户体验增强系统 - 前端/交互优化
-    "REQ-002"  # 工作台与仪表板模块 - 数据聚合展示
+    # "REQ-020"  # 移动端应用模块 - 复用其他业务域API
+    # "REQ-015"  # 用户体验增强系统 - 前端/交互优化
+    # "REQ-002"  # 工作台与仪表板模块 - 数据聚合展示
 )
 
 if [ ! -d "$MODULES_DIR" ]; then
