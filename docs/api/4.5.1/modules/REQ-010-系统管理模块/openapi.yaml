@@ -1,7 +1,1861 @@
 openapi: 3.0.3
 info:
-  title: 系统管理模块 API
+  title: IT运维门户系统 API
   version: 1.0.0
-paths: {}
+  description: REQ-010 系统管理模块 API 规范文档
+
+tags:
+  - name: system-user
+    description: 用户账户管理
+  - name: system-role
+    description: 角色权限管理
+  - name: system-permission
+    description: 权限管理
+  - name: system-department
+    description: 组织架构管理
+  - name: system-config
+    description: 系统运维配置
+  - name: system-audit
+    description: 操作审计日志
+  - name: system-security
+    description: 安全策略管理
+  - name: system-module
+    description: 模块启用控制
+  - name: system-announcement
+    description: 系统公告维护
+  - name: system-task
+    description: 任务调度管理
+  - name: system-tenant
+    description: 租户配置管理
+  - name: system-monitor
+    description: 系统监控管理
+  - name: system-data
+    description: 数据管理
+
+paths:
+  /api/v1/system/users:
+    get:
+      tags:
+        - system-user
+      summary: 查询用户列表
+      description: 支持多条件组合查询和分页显示
+      operationId: system_user_list
+      parameters:
+        - name: keyword
+          in: query
+          description: 关键词搜索（用户名、姓名、邮箱）
+          schema:
+            type: string
+            example: "张三"
+        - name: department_id
+          in: query
+          description: 部门ID
+          schema:
+            type: integer
+            example: 1001
+        - name: status
+          in: query
+          description: 用户状态
+          schema:
+            type: string
+            enum: ["active", "inactive", "locked", "deleted"]
+            example: "active"
+        - name: role_id
+          in: query
+          description: 角色ID
+          schema:
+            type: integer
+            example: 1
+        - name: created_start
+          in: query
+          description: 创建时间开始
+          schema:
+            type: string
+            format: date
+            example: "2025-01-01"
+        - name: created_end
+          in: query
+          description: 创建时间结束
+          schema:
+            type: string
+            format: date
+            example: "2025-12-31"
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页数量
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+        - name: sort
+          in: query
+          description: 排序字段
+          schema:
+            type: string
+            example: "created_at,desc"
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedResponse'
+              example:
+                code: 200
+                message: "查询成功"
+                data:
+                  total: 150
+                  page: 1
+                  size: 20
+                  pages: 8
+                  items:
+                    - user_id: 10001
+                      username: "zhangsan"
+                      real_name: "张三"
+                      email: "zhangsan@company.com"
+                      phone: "138****8000"
+                      department:
+                        department_id: 1001
+                        department_name: "技术部"
+                      roles:
+                        - role_id: 1
+                          role_name: "系统管理员"
+                          role_code: "system_admin"
+                      status: "active"
+                      last_login_time: "2025-08-14T09:15:00Z"
+                      created_at: "2024-01-15T10:30:00Z"
+                      updated_at: "2025-08-14T14:30:00Z"
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456789"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - system-user
+      summary: 创建用户账户
+      description: 创建新的用户账户，包含基本信息和角色分配
+      operationId: system_user_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+            example:
+              username: "zhangsan"
+              email: "zhangsan@company.com"
+              phone: "13800138000"
+              real_name: "张三"
+              department_id: 1001
+              role_ids: [1, 2]
+              status: "active"
+              password: "TempPass123!"
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "用户创建成功"
+                data:
+                  user_id: 10001
+                  username: "zhangsan"
+                  email: "zhangsan@company.com"
+                  status: "active"
+                  created_at: "2025-08-14T14:30:00Z"
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456789"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/system/users/{id}:
+    get:
+      tags:
+        - system-user
+      summary: 获取用户详情
+      description: 根据用户ID获取详细信息
+      operationId: system_user_detail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 用户ID
+          schema:
+            type: integer
+            example: 10001
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "查询成功"
+                data:
+                  user_id: 10001
+                  username: "zhangsan"
+                  email: "zhangsan@company.com"
+                  phone: "13800138000"
+                  real_name: "张三"
+                  avatar_url: "/avatars/zhangsan.jpg"
+                  department:
+                    department_id: 1001
+                    department_name: "技术部"
+                    department_path: "公司/技术部"
+                  roles:
+                    - role_id: 1
+                      role_name: "系统管理员"
+                      role_code: "system_admin"
+                      role_type: "system"
+                      assigned_at: "2024-01-15T10:30:00Z"
+                  status: "active"
+                  last_login_time: "2025-08-14T09:15:00Z"
+                  last_login_ip: "192.168.1.100"
+                  failed_login_count: 0
+                  created_by: 1
+                  created_at: "2024-01-15T10:30:00Z"
+                  updated_by: 1
+                  updated_at: "2025-08-14T14:30:00Z"
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456790"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      tags:
+        - system-user
+      summary: 更新用户信息
+      description: 更新用户基本信息
+      operationId: system_user_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 用户ID
+          schema:
+            type: integer
+            example: 10001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+            example:
+              email: "zhangsan.new@company.com"
+              phone: "13900139000"
+              real_name: "张三丰"
+              department_id: 1002
+              status: "active"
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "用户更新成功"
+                data:
+                  user_id: 10001
+                  updated_at: "2025-08-14T14:30:00Z"
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456791"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      tags:
+        - system-user
+      summary: 删除用户账户
+      description: 软删除用户账户（仅限管理员）
+      operationId: system_user_delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 用户ID
+          schema:
+            type: integer
+            example: 10001
+      responses:
+        '200':
+          description: 删除成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "用户删除成功"
+                data:
+                  user_id: 10001
+                  deleted_at: "2025-08-14T14:30:00Z"
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456792"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/system/users/{id}/roles:
+    put:
+      tags:
+        - system-user
+      summary: 分配用户角色
+      description: 为用户分配或更新角色
+      operationId: system_user_assign_roles
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 用户ID
+          schema:
+            type: integer
+            example: 10001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRoleAssignRequest'
+            example:
+              role_ids: [1, 2, 3]
+              reason: "业务需要，增加数据分析权限"
+      responses:
+        '200':
+          description: 角色分配成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "角色分配成功"
+                data:
+                  user_id: 10001
+                  assigned_roles: 3
+                  role_summary:
+                    - role_id: 1
+                      role_name: "系统管理员"
+                    - role_id: 2
+                      role_name: "业务管理员"
+                    - role_id: 3
+                      role_name: "数据分析师"
+                  assigned_at: "2025-08-14T14:30:00Z"
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456793"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/system/roles:
+    get:
+      tags:
+        - system-role
+      summary: 查询角色列表
+      description: 查询系统角色列表，支持分页和筛选
+      operationId: system_role_list
+      parameters:
+        - name: keyword
+          in: query
+          description: 关键词搜索（角色名称、角色编码）
+          schema:
+            type: string
+            example: "管理员"
+        - name: role_type
+          in: query
+          description: 角色类型
+          schema:
+            type: string
+            enum: ["system", "business", "custom"]
+            example: "system"
+        - name: status
+          in: query
+          description: 角色状态
+          schema:
+            type: string
+            enum: ["active", "inactive"]
+            example: "active"
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页数量
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedResponse'
+              example:
+                code: 200
+                message: "查询成功"
+                data:
+                  total: 25
+                  page: 1
+                  size: 20
+                  pages: 2
+                  items:
+                    - role_id: 1
+                      role_name: "系统管理员"
+                      role_code: "system_admin"
+                      role_type: "system"
+                      description: "系统最高权限管理员"
+                      status: "active"
+                      user_count: 5
+                      permission_count: 120
+                      sort_order: 1
+                      created_at: "2024-01-01T00:00:00Z"
+                      updated_at: "2025-08-14T14:30:00Z"
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456794"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - system-role
+      summary: 创建角色
+      description: 创建新的系统角色
+      operationId: system_role_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleCreateRequest'
+            example:
+              role_name: "业务管理员"
+              role_code: "business_admin"
+              description: "负责业务模块管理"
+              role_type: "business"
+              permission_ids: [1, 2, 3, 5, 8]
+              sort_order: 10
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "角色创建成功"
+                data:
+                  role_id: 1001
+                  role_name: "业务管理员"
+                  role_code: "business_admin"
+                  permission_count: 5
+                  created_at: "2025-08-14T14:30:00Z"
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456795"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/system/roles/{id}:
+    get:
+      tags:
+        - system-role
+      summary: 获取角色详情
+      description: 根据角色ID获取详细信息，包含权限列表
+      operationId: system_role_detail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 角色ID
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "查询成功"
+                data:
+                  role_id: 1
+                  role_name: "系统管理员"
+                  role_code: "system_admin"
+                  role_type: "system"
+                  description: "系统最高权限管理员"
+                  status: "active"
+                  sort_order: 1
+                  permissions:
+                    - permission_id: 1
+                      permission_name: "用户管理"
+                      permission_code: "user:manage"
+                      resource_type: "menu"
+                      action_type: "read"
+                      granted_at: "2024-01-01T00:00:00Z"
+                  user_count: 5
+                  created_by: 1
+                  created_at: "2024-01-01T00:00:00Z"
+                  updated_by: 1
+                  updated_at: "2025-08-14T14:30:00Z"
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456796"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      tags:
+        - system-role
+      summary: 更新角色信息
+      description: 更新角色基本信息
+      operationId: system_role_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 角色ID
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleUpdateRequest'
+            example:
+              role_name: "高级业务管理员"
+              description: "负责高级业务模块管理"
+              status: "active"
+              sort_order: 5
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "角色更新成功"
+                data:
+                  role_id: 1
+                  updated_at: "2025-08-14T14:30:00Z"
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456797"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/system/roles/{id}/permissions:
+    put:
+      tags:
+        - system-role
+      summary: 分配角色权限
+      description: 为角色分配或更新权限
+      operationId: system_role_assign_permissions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 角色ID
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RolePermissionAssignRequest'
+            example:
+              permission_ids: [1, 2, 3, 5, 8, 10]
+              reason: "业务需要，增加数据导出权限"
+      responses:
+        '200':
+          description: 权限分配成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "权限分配成功"
+                data:
+                  role_id: 1
+                  permission_count: 6
+                  updated_at: "2025-08-14T14:30:00Z"
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456798"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/system/permissions:
+    get:
+      tags:
+        - system-permission
+      summary: 查询权限列表
+      description: 查询系统权限列表，支持树形结构
+      operationId: system_permission_list
+      parameters:
+        - name: resource_type
+          in: query
+          description: 资源类型
+          schema:
+            type: string
+            enum: ["menu", "button", "api", "data"]
+            example: "menu"
+        - name: action_type
+          in: query
+          description: 操作类型
+          schema:
+            type: string
+            enum: ["create", "read", "update", "delete", "execute"]
+            example: "read"
+        - name: parent_id
+          in: query
+          description: 父权限ID
+          schema:
+            type: integer
+            example: 0
+        - name: status
+          in: query
+          description: 权限状态
+          schema:
+            type: string
+            enum: ["active", "inactive"]
+            example: "active"
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "查询成功"
+                data:
+                  permissions:
+                    - permission_id: 1
+                      parent_id: 0
+                      permission_name: "系统管理"
+                      permission_code: "system:manage"
+                      resource_type: "menu"
+                      action_type: "read"
+                      resource_path: "/system"
+                      description: "系统管理菜单"
+                      status: "active"
+                      sort_order: 1
+                      children:
+                        - permission_id: 2
+                          parent_id: 1
+                          permission_name: "用户管理"
+                          permission_code: "user:manage"
+                          resource_type: "menu"
+                          action_type: "read"
+                          resource_path: "/system/users"
+                          description: "用户管理菜单"
+                          status: "active"
+                          sort_order: 1
+                  total: 120
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456799"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/system/configs:
+    get:
+      tags:
+        - system-config
+      summary: 查询系统配置
+      description: 查询系统配置列表，支持按类型筛选
+      operationId: system_config_list
+      parameters:
+        - name: config_type
+          in: query
+          description: 配置类型
+          schema:
+            type: string
+            enum: ["security", "system", "business", "notification", "integration"]
+            example: "security"
+        - name: config_key
+          in: query
+          description: 配置键（支持模糊搜索）
+          schema:
+            type: string
+            example: "password"
+        - name: tenant_id
+          in: query
+          description: 租户ID（查询租户级配置）
+          schema:
+            type: integer
+            example: 1001
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "查询成功"
+                data:
+                  configs:
+                    - config_id: 1
+                      config_key: "password.min_length"
+                      config_value: "8"
+                      config_type: "security"
+                      description: "密码最小长度"
+                      is_encrypted: false
+                      tenant_id: null
+                      updated_by: 1
+                      updated_at: "2025-08-14T10:00:00Z"
+                      created_at: "2024-01-01T00:00:00Z"
+                  total: 45
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456800"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - system-config
+      summary: 创建系统配置
+      description: 创建新的系统配置项
+      operationId: system_config_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigCreateRequest'
+            example:
+              config_key: "session.timeout"
+              config_value: "7200"
+              config_type: "security"
+              description: "会话超时时间（秒）"
+              is_encrypted: false
+              tenant_id: null
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "配置创建成功"
+                data:
+                  config_id: 101
+                  config_key: "session.timeout"
+                  effect_time: "2025-08-14T14:30:00Z"
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456801"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/system/configs/{key}:
+    put:
+      tags:
+        - system-config
+      summary: 更新系统配置
+      description: 更新指定的系统配置项
+      operationId: system_config_update
+      parameters:
+        - name: key
+          in: path
+          required: true
+          description: 配置键
+          schema:
+            type: string
+            example: "password.min_length"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigUpdateRequest'
+            example:
+              config_value: "12"
+              description: "密码最小长度调整为12位"
+              reason: "安全策略升级"
+      responses:
+        '200':
+          description: 配置更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "配置更新成功"
+                data:
+                  config_key: "password.min_length"
+                  config_value: "12"
+                  effect_time: "2025-08-14T14:30:00Z"
+                  old_value: "8"
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456802"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/system/modules/{code}/toggle:
+    post:
+      tags:
+        - system-module
+      summary: 切换模块状态
+      description: 启用或禁用指定的业务模块
+      operationId: system_module_toggle
+      parameters:
+        - name: code
+          in: path
+          required: true
+          description: 模块编码
+          schema:
+            type: string
+            example: "ticket_management"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModuleToggleRequest'
+            example:
+              status: "enabled"
+              tenant_id: 1001
+              reason: "业务需要启用该模块"
+              effective_time: "2025-08-14T15:00:00Z"
+      responses:
+        '200':
+          description: 模块状态更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "模块状态更新成功"
+                data:
+                  module_code: "ticket_management"
+                  module_name: "工单管理系统"
+                  status: "enabled"
+                  tenant_id: 1001
+                  effect_time: "2025-08-14T15:00:00Z"
+                  affected_users: 150
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456803"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/system/audit/logs:
+    get:
+      tags:
+        - system-audit
+      summary: 查询操作审计日志
+      description: 查询系统操作审计日志，支持多条件筛选
+      operationId: system_audit_log_list
+      parameters:
+        - name: user_id
+          in: query
+          description: 操作用户ID
+          schema:
+            type: integer
+            example: 10001
+        - name: operation_type
+          in: query
+          description: 操作类型
+          schema:
+            type: string
+            enum: ["login", "logout", "create", "update", "delete", "config_change", "permission_change"]
+            example: "create"
+        - name: resource_type
+          in: query
+          description: 资源类型
+          schema:
+            type: string
+            enum: ["user", "role", "permission", "config", "module"]
+            example: "user"
+        - name: start_time
+          in: query
+          description: 开始时间
+          schema:
+            type: string
+            format: date-time
+            example: "2025-08-14T00:00:00Z"
+        - name: end_time
+          in: query
+          description: 结束时间
+          schema:
+            type: string
+            format: date-time
+            example: "2025-08-14T23:59:59Z"
+        - name: ip_address
+          in: query
+          description: 操作IP地址
+          schema:
+            type: string
+            example: "192.168.1.100"
+        - name: result
+          in: query
+          description: 操作结果
+          schema:
+            type: string
+            enum: ["success", "failed"]
+            example: "success"
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页数量
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedResponse'
+              example:
+                code: 200
+                message: "查询成功"
+                data:
+                  total: 1250
+                  page: 1
+                  size: 20
+                  pages: 63
+                  items:
+                    - log_id: 50001
+                      user_id: 10001
+                      username: "zhangsan"
+                      real_name: "张三"
+                      operation_type: "create"
+                      resource_type: "user"
+                      resource_id: "10002"
+                      resource_name: "lisi"
+                      operation_desc: "创建用户账户"
+                      ip_address: "192.168.1.100"
+                      user_agent: "Mozilla/5.0..."
+                      result: "success"
+                      error_message: null
+                      request_data: "{\"username\":\"lisi\"}"
+                      response_data: "{\"user_id\":10002}"
+                      operation_time: "2025-08-14T14:30:00Z"
+                      tenant_id: 1001
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456804"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/system/users/batch:
+    post:
+      tags:
+        - system-user
+      summary: 批量导入用户
+      description: 通过Excel/CSV文件批量导入用户数据
+      operationId: system_user_batch_import
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Excel或CSV文件
+                template_type:
+                  type: string
+                  enum: ["basic", "full"]
+                  default: "basic"
+                  description: 模板类型
+                validate_only:
+                  type: boolean
+                  default: false
+                  description: 仅验证不导入
+                default_password:
+                  type: string
+                  description: 默认密码
+                  example: "TempPass123!"
+      responses:
+        '200':
+          description: 导入成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "批量导入成功"
+                data:
+                  total_records: 100
+                  success_count: 95
+                  failed_count: 5
+                  import_id: "IMP-20250814-001"
+                  success_records:
+                    - index: 1
+                      user_id: 10001
+                      username: "zhangsan"
+                      status: "success"
+                  failed_records:
+                    - index: 10
+                      error_code: 40002
+                      error_message: "用户名已存在"
+                      data:
+                        username: "lisi"
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456805"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/system/users/export:
+    post:
+      tags:
+        - system-user
+      summary: 导出用户数据
+      description: 导出用户数据为Excel文件
+      operationId: system_user_export
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserExportRequest'
+            example:
+              format: "excel"
+              filters:
+                department_ids: [1001, 1002]
+                status: ["active", "inactive"]
+                role_ids: [1, 2]
+              fields:
+                - "username"
+                - "real_name"
+                - "email"
+                - "department_name"
+                - "roles"
+              include_sensitive: false
+      responses:
+        '200':
+          description: 导出成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "导出成功"
+                data:
+                  export_id: "EXP-20250814-001"
+                  file_url: "https://cdn.example.com/exports/users_20250814.xlsx"
+                  file_size: 1048576
+                  record_count: 150
+                  generated_at: "2025-08-14T14:30:00Z"
+                  expires_at: "2025-08-21T14:30:00Z"
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456806"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/system/analytics/summary:
+    get:
+      tags:
+        - system-data
+      summary: 系统数据统计概览
+      description: 获取系统管理数据的统计概览信息
+      operationId: system_analytics_summary
+      parameters:
+        - name: tenant_id
+          in: query
+          description: 租户ID
+          schema:
+            type: integer
+            example: 1001
+        - name: date_range
+          in: query
+          description: 统计时间范围
+          schema:
+            type: string
+            enum: ["7d", "30d", "90d", "1y"]
+            default: "30d"
+            example: "30d"
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 200
+                message: "查询成功"
+                data:
+                  user_statistics:
+                    total_users: 1500
+                    active_users: 1420
+                    inactive_users: 65
+                    locked_users: 15
+                    new_users_this_month: 45
+                  role_statistics:
+                    total_roles: 25
+                    system_roles: 5
+                    business_roles: 15
+                    custom_roles: 5
+                  permission_statistics:
+                    total_permissions: 120
+                    menu_permissions: 45
+                    api_permissions: 65
+                    data_permissions: 10
+                  operation_statistics:
+                    total_operations: 15000
+                    login_operations: 8500
+                    management_operations: 6500
+                    failed_operations: 150
+                  security_statistics:
+                    password_violations: 25
+                    login_failures: 120
+                    permission_violations: 5
+                    ip_restrictions: 10
+                timestamp: "2025-08-14T14:30:00Z"
+                request_id: "req_123456807"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
 components:
-  schemas: {}
+  schemas:
+    UserCreateRequest:
+      type: object
+      required:
+        - username
+        - email
+        - real_name
+        - department_id
+      properties:
+        username:
+          type: string
+          description: 用户名
+          maxLength: 50
+          pattern: '^[a-zA-Z0-9_]{3,50}$'
+          example: "zhangsan"
+        email:
+          type: string
+          format: email
+          description: 邮箱
+          maxLength: 100
+          example: "zhangsan@company.com"
+        phone:
+          type: string
+          description: 手机号
+          maxLength: 20
+          pattern: '^1[3-9]\d{9}$'
+          example: "13800138000"
+        real_name:
+          type: string
+          description: 真实姓名
+          maxLength: 50
+          example: "张三"
+        department_id:
+          type: integer
+          description: 部门ID
+          example: 1001
+        role_ids:
+          type: array
+          description: 角色ID列表
+          items:
+            type: integer
+          example: [1, 2]
+        status:
+          type: string
+          description: 用户状态
+          enum: ["active", "inactive"]
+          default: "active"
+          example: "active"
+        password:
+          type: string
+          description: 初始密码
+          minLength: 8
+          maxLength: 50
+          example: "TempPass123!"
+        avatar_url:
+          type: string
+          description: 头像URL
+          maxLength: 255
+          example: "/avatars/zhangsan.jpg"
+
+    UserUpdateRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: 邮箱
+          maxLength: 100
+          example: "zhangsan.new@company.com"
+        phone:
+          type: string
+          description: 手机号
+          maxLength: 20
+          pattern: '^1[3-9]\d{9}$'
+          example: "13900139000"
+        real_name:
+          type: string
+          description: 真实姓名
+          maxLength: 50
+          example: "张三丰"
+        department_id:
+          type: integer
+          description: 部门ID
+          example: 1002
+        status:
+          type: string
+          description: 用户状态
+          enum: ["active", "inactive", "locked"]
+          example: "active"
+        avatar_url:
+          type: string
+          description: 头像URL
+          maxLength: 255
+          example: "/avatars/zhangsan_new.jpg"
+
+    UserRoleAssignRequest:
+      type: object
+      required:
+        - role_ids
+      properties:
+        role_ids:
+          type: array
+          description: 角色ID列表
+          items:
+            type: integer
+          example: [1, 2, 3]
+        reason:
+          type: string
+          description: 分配原因
+          maxLength: 500
+          example: "业务需要，增加数据分析权限"
+
+    RoleCreateRequest:
+      type: object
+      required:
+        - role_name
+        - role_code
+        - role_type
+      properties:
+        role_name:
+          type: string
+          description: 角色名称
+          maxLength: 50
+          example: "业务管理员"
+        role_code:
+          type: string
+          description: 角色编码
+          maxLength: 50
+          pattern: '^[a-zA-Z0-9_]{3,50}$'
+          example: "business_admin"
+        description:
+          type: string
+          description: 角色描述
+          maxLength: 255
+          example: "负责业务模块管理"
+        role_type:
+          type: string
+          description: 角色类型
+          enum: ["system", "business", "custom"]
+          example: "business"
+        permission_ids:
+          type: array
+          description: 权限ID列表
+          items:
+            type: integer
+          example: [1, 2, 3, 5, 8]
+        sort_order:
+          type: integer
+          description: 排序序号
+          minimum: 0
+          default: 0
+          example: 10
+
+    RoleUpdateRequest:
+      type: object
+      properties:
+        role_name:
+          type: string
+          description: 角色名称
+          maxLength: 50
+          example: "高级业务管理员"
+        description:
+          type: string
+          description: 角色描述
+          maxLength: 255
+          example: "负责高级业务模块管理"
+        status:
+          type: string
+          description: 角色状态
+          enum: ["active", "inactive"]
+          example: "active"
+        sort_order:
+          type: integer
+          description: 排序序号
+          minimum: 0
+          example: 5
+
+    RolePermissionAssignRequest:
+      type: object
+      required:
+        - permission_ids
+      properties:
+        permission_ids:
+          type: array
+          description: 权限ID列表
+          items:
+            type: integer
+          example: [1, 2, 3, 5, 8, 10]
+        reason:
+          type: string
+          description: 分配原因
+          maxLength: 500
+          example: "业务需要，增加数据导出权限"
+
+    ConfigCreateRequest:
+      type: object
+      required:
+        - config_key
+        - config_value
+        - config_type
+      properties:
+        config_key:
+          type: string
+          description: 配置键
+          maxLength: 255
+          pattern: '^[a-zA-Z0-9._-]+$'
+          example: "session.timeout"
+        config_value:
+          type: string
+          description: 配置值
+          maxLength: 2000
+          example: "7200"
+        config_type:
+          type: string
+          description: 配置类型
+          enum: ["security", "system", "business", "notification", "integration"]
+          example: "security"
+        description:
+          type: string
+          description: 配置描述
+          maxLength: 500
+          example: "会话超时时间（秒）"
+        is_encrypted:
+          type: boolean
+          description: 是否加密存储
+          default: false
+          example: false
+        tenant_id:
+          type: integer
+          description: 租户ID（null表示全局配置）
+          nullable: true
+          example: null
+
+    ConfigUpdateRequest:
+      type: object
+      required:
+        - config_value
+      properties:
+        config_value:
+          type: string
+          description: 配置值
+          maxLength: 2000
+          example: "12"
+        description:
+          type: string
+          description: 配置描述
+          maxLength: 500
+          example: "密码最小长度调整为12位"
+        reason:
+          type: string
+          description: 修改原因
+          maxLength: 500
+          example: "安全策略升级"
+
+    ModuleToggleRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: 模块状态
+          enum: ["enabled", "disabled", "maintenance"]
+          example: "enabled"
+        tenant_id:
+          type: integer
+          description: 租户ID（null表示全局设置）
+          nullable: true
+          example: 1001
+        reason:
+          type: string
+          description: 操作原因
+          maxLength: 500
+          example: "业务需要启用该模块"
+        effective_time:
+          type: string
+          format: date-time
+          description: 生效时间（null表示立即生效）
+          nullable: true
+          example: "2025-08-14T15:00:00Z"
+
+    UserExportRequest:
+      type: object
+      required:
+        - format
+      properties:
+        format:
+          type: string
+          description: 导出格式
+          enum: ["excel", "csv"]
+          example: "excel"
+        filters:
+          type: object
+          description: 过滤条件
+          properties:
+            department_ids:
+              type: array
+              description: 部门ID列表
+              items:
+                type: integer
+              example: [1001, 1002]
+            status:
+              type: array
+              description: 用户状态列表
+              items:
+                type: string
+                enum: ["active", "inactive", "locked", "deleted"]
+              example: ["active", "inactive"]
+            role_ids:
+              type: array
+              description: 角色ID列表
+              items:
+                type: integer
+              example: [1, 2]
+            created_start:
+              type: string
+              format: date
+              description: 创建时间开始
+              example: "2025-01-01"
+            created_end:
+              type: string
+              format: date
+              description: 创建时间结束
+              example: "2025-12-31"
+        fields:
+          type: array
+          description: 导出字段列表
+          items:
+            type: string
+            enum: ["username", "real_name", "email", "phone", "department_name", "roles", "status", "last_login_time", "created_at"]
+          example: ["username", "real_name", "email", "department_name", "roles"]
+        include_sensitive:
+          type: boolean
+          description: 是否包含敏感信息
+          default: false
+          example: false
+
+    # 全局通用schemas
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 响应状态码
+          example: 200
+        message:
+          type: string
+          description: 响应消息
+          example: "操作成功"
+        data:
+          type: object
+          description: 响应数据
+        timestamp:
+          type: string
+          format: date-time
+          description: 响应时间戳
+          example: "2025-08-14T14:30:00Z"
+        request_id:
+          type: string
+          description: 请求ID
+          example: "req_123456789"
+
+    PagedResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 响应状态码
+          example: 200
+        message:
+          type: string
+          description: 响应消息
+          example: "查询成功"
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              description: 总记录数
+              example: 100
+            page:
+              type: integer
+              description: 当前页码
+              example: 1
+            size:
+              type: integer
+              description: 每页大小
+              example: 20
+            pages:
+              type: integer
+              description: 总页数
+              example: 5
+            items:
+              type: array
+              description: 数据列表
+              items:
+                type: object
+        timestamp:
+          type: string
+          format: date-time
+          description: 响应时间戳
+          example: "2025-08-14T14:30:00Z"
+        request_id:
+          type: string
+          description: 请求ID
+          example: "req_123456789"
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 错误状态码
+          example: 400
+        message:
+          type: string
+          description: 错误消息
+          example: "参数验证失败"
+        data:
+          type: object
+          nullable: true
+          description: 错误详情
+        error_details:
+          type: object
+          description: 详细错误信息
+          properties:
+            error_code:
+              type: string
+              description: 业务错误码
+              example: "USER_NOT_FOUND"
+            field:
+              type: string
+              description: 错误字段
+              example: "user_id"
+            value:
+              type: string
+              description: 错误值
+              example: "999999"
+            suggestion:
+              type: string
+              description: 修复建议
+              example: "请检查用户ID是否正确"
+        timestamp:
+          type: string
+          format: date-time
+          description: 响应时间戳
+          example: "2025-08-14T14:30:00Z"
+        request_id:
+          type: string
+          description: 请求ID
+          example: "req_123456789"
+
+  responses:
+    BadRequest:
+      description: 请求参数错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 400
+            message: "请求参数错误"
+            data: null
+            error_details:
+              error_code: "INVALID_PARAMETER"
+              field: "username"
+              value: ""
+              suggestion: "用户名不能为空"
+            timestamp: "2025-08-14T14:30:00Z"
+            request_id: "req_123456789"
+
+    Unauthorized:
+      description: 未授权访问
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 401
+            message: "未授权访问"
+            data: null
+            error_details:
+              error_code: "UNAUTHORIZED"
+              suggestion: "请先登录系统"
+            timestamp: "2025-08-14T14:30:00Z"
+            request_id: "req_123456789"
+
+    Forbidden:
+      description: 权限不足
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 403
+            message: "权限不足"
+            data: null
+            error_details:
+              error_code: "FORBIDDEN"
+              suggestion: "您没有执行此操作的权限"
+            timestamp: "2025-08-14T14:30:00Z"
+            request_id: "req_123456789"
+
+    NotFound:
+      description: 资源不存在
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 404
+            message: "资源不存在"
+            data: null
+            error_details:
+              error_code: "USER_NOT_FOUND"
+              field: "user_id"
+              value: "999999"
+              suggestion: "请检查用户ID是否正确"
+            timestamp: "2025-08-14T14:30:00Z"
+            request_id: "req_123456789"
+
+    Conflict:
+      description: 资源冲突
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 409
+            message: "资源冲突"
+            data: null
+            error_details:
+              error_code: "USERNAME_EXISTS"
+              field: "username"
+              value: "zhangsan"
+              suggestion: "用户名已存在，请使用其他用户名"
+            timestamp: "2025-08-14T14:30:00Z"
+            request_id: "req_123456789"
+
+    InternalServerError:
+      description: 服务器内部错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 500
+            message: "服务器内部错误"
+            data: null
+            error_details:
+              error_code: "INTERNAL_ERROR"
+              suggestion: "请稍后重试或联系系统管理员"
+            timestamp: "2025-08-14T14:30:00Z"
+            request_id: "req_123456789"

@@ -7,7 +7,7 @@
 1. **核心参考文档**：
    - 全局上下文：`docs/global-context.md`
    - Mock 数据规范：`docs/prd/split/4.5.1/globals/05-mock-data-guidelines.md`
-   - 当前模块 PRD：`docs/prd/split/4.5.1/modules/REQ-010.md`
+   - 当前模块 PRD：`docs/prd/split/4.5.1/modules/REQ-005.md`
    - API 初始化合并文件：`docs/api/4.5.1/global-api-index.yaml`
    - 技术栈规范：`docs/prd/split/4.5.1/appendix/03-technology-stack.md`
    - 业务流程文档：`docs/prd/split/4.5.1/globals/04-business-processes.md`
@@ -52,7 +52,7 @@
    - 权限要求和安全级别
 
 #### Step 2：编写 OpenAPI 模块文件
-**路径**：`docs/api/4.5.1/modules/REQ-010-系统管理模块/openapi.yaml`
+**路径**：`docs/api/4.5.1/modules/REQ-005-知识库管理系统/openapi.yaml`
 
 必须包含：
 1. `info` 节点（title、version 与 `global-api-index.yaml` 一致）。
@@ -91,11 +91,11 @@
 - `HEAD`：获取元信息（如需）
 
 ### 输出要求
-1. 输出完整的 `docs/api/4.5.1/modules/REQ-010-系统管理模块/openapi.yaml` 文件内容。
+1. 输出完整的 `docs/api/4.5.1/modules/REQ-005-知识库管理系统/openapi.yaml` 文件内容。
 2. 不包含全局/域级 schema 的重复定义。
 3. 所有示例数据必须符合 Mock 数据规范，贴合 IT运维业务语境。
 4. 文件可独立通过 swagger-cli validate。
 
 ### 验证命令
 ```bash
-swagger-cli validate docs/api/4.5.1/modules/REQ-010-系统管理模块/openapi.yaml
+swagger-cli validate docs/api/4.5.1/modules/REQ-005-知识库管理系统/openapi.yaml
