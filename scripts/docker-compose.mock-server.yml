@@ -1,0 +1,120 @@
+version: '3.8'
+
+services:
+  # 全局API Mock Server
+  mock-server-global:
+    build:
+      context: ..
+      dockerfile: scripts/Dockerfile.mock-server
+    container_name: ops-portal-mock-global
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - HOST=0.0.0.0
+    command: ["node", "start-mock-server.js", "--global", "--cors", "--dynamic", "--watch"]
+    volumes:
+      - ../docs/api/4.5.1:/app/api-docs:ro
+    restart: unless-stopped
+    networks:
+      - mock-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mock-global.rule=Host(`mock-global.localhost`)"
+      - "traefik.http.services.mock-global.loadbalancer.server.port=3000"
+
+  # 认证域Mock Server
+  mock-server-auth:
+    build:
+      context: ..
+      dockerfile: scripts/Dockerfile.mock-server
+    container_name: ops-portal-mock-auth
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - HOST=0.0.0.0
+    command: ["node", "start-mock-server.js", "--domain", "auth", "--cors", "--dynamic"]
+    volumes:
+      - ../docs/api/4.5.1:/app/api-docs:ro
+    restart: unless-stopped
+    networks:
+      - mock-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mock-auth.rule=Host(`mock-auth.localhost`)"
+      - "traefik.http.services.mock-auth.loadbalancer.server.port=3000"
+
+  # 工单域Mock Server
+  mock-server-ticket:
+    build:
+      context: ..
+      dockerfile: scripts/Dockerfile.mock-server
+    container_name: ops-portal-mock-ticket
+    ports:
+      - "3002:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - HOST=0.0.0.0
+    command: ["node", "start-mock-server.js", "--domain", "ticket", "--cors", "--dynamic"]
+    volumes:
+      - ../docs/api/4.5.1:/app/api-docs:ro
+    restart: unless-stopped
+    networks:
+      - mock-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mock-ticket.rule=Host(`mock-ticket.localhost`)"
+      - "traefik.http.services.mock-ticket.loadbalancer.server.port=3000"
+
+  # 客户关系管理模块Mock Server
+  mock-server-customer:
+    build:
+      context: ..
+      dockerfile: scripts/Dockerfile.mock-server
+    container_name: ops-portal-mock-customer
+    ports:
+      - "3003:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - HOST=0.0.0.0
+    command: ["node", "start-mock-server.js", "--module", "REQ-016-客户关系管理模块", "--cors", "--dynamic"]
+    volumes:
+      - ../docs/api/4.5.1:/app/api-docs:ro
+    restart: unless-stopped
+    networks:
+      - mock-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mock-customer.rule=Host(`mock-customer.localhost`)"
+      - "traefik.http.services.mock-customer.loadbalancer.server.port=3000"
+
+  # Nginx反向代理 (可选)
+  nginx-proxy:
+    image: nginx:alpine
+    container_name: ops-portal-mock-proxy
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.mock.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - mock-server-global
+      - mock-server-auth
+      - mock-server-ticket
+      - mock-server-customer
+    restart: unless-stopped
+    networks:
+      - mock-network
+
+networks:
+  mock-network:
+    driver: bridge
+    name: ops-portal-mock-network
+
+volumes:
+  api-docs:
+    driver: local

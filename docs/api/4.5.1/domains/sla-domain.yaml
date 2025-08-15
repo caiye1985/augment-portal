@@ -1,0 +1,56 @@
+openapi: 3.0.3
+info:
+  title: SLA业务域 API 聚合
+  version: 1.0.0
+  description: SLA相关的API聚合，包括SLA定义、监控、告警、违约处理、报告等功能
+
+paths:
+  # SLA定义管理API
+  /api/v1/sla/definitions:
+    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1api~1v1~1sla~1definitions'
+  /api/v1/sla/definitions/{id}:
+    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1api~1v1~1sla~1definitions~1{id}'
+  /api/v1/sla/definitions/batch:
+    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1api~1v1~1sla~1definitions~1batch'
+  /api/v1/sla/definitions/{id}/status:
+    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1api~1v1~1sla~1definitions~1{id}~1status'
+
+  # SLA监控管理API
+  /api/v1/sla/monitoring/status:
+    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1api~1v1~1sla~1monitoring~1status'
+  /api/v1/sla/monitoring/records:
+    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1api~1v1~1sla~1monitoring~1records'
+  /api/v1/sla/monitoring/recalculate:
+    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1api~1v1~1sla~1monitoring~1recalculate'
+
+  # SLA告警管理API
+  /api/v1/sla/alerts:
+    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1api~1v1~1sla~1alerts'
+  /api/v1/sla/alerts/{id}:
+    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1api~1v1~1sla~1alerts~1{id}'
+  /api/v1/sla/alerts/{id}/acknowledge:
+    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1api~1v1~1sla~1alerts~1{id}~1acknowledge'
+  /api/v1/sla/alerts/{id}/resolve:
+    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1api~1v1~1sla~1alerts~1{id}~1resolve'
+
+  # SLA违约管理API
+  /api/v1/sla/violations:
+    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1api~1v1~1sla~1violations'
+  /api/v1/sla/violations/{id}:
+    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1api~1v1~1sla~1violations~1{id}'
+
+  # SLA报告管理API
+  /api/v1/sla/reports/generate:
+    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1api~1v1~1sla~1reports~1generate'
+  /api/v1/sla/reports:
+    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1api~1v1~1sla~1reports'
+
+components:
+  schemas:
+    # 引用全局通用组件
+    ApiResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+    PagedResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/PagedResponse'
+    ErrorResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'

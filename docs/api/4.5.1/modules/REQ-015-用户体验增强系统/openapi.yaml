@@ -2,6 +2,221 @@ openapi: 3.0.3
 info:
   title: 用户体验增强系统 API
   version: 1.0.0
-paths: {}
+  description: REQ-015 用户体验增强系统 API 规范
+
+tags:
+  - name: ux-enhancement
+    description: 用户体验增强
+
+paths:
+  /api/v1/ux/personalization:
+    get:
+      tags:
+        - ux-enhancement
+      summary: 获取个性化设置
+      description: 获取用户个性化配置
+      operationId: ux_get_personalization
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/PersonalizationSettings'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    put:
+      tags:
+        - ux-enhancement
+      summary: 更新个性化设置
+      description: 更新用户个性化配置
+      operationId: ux_update_personalization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalizationUpdateRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/PersonalizationSettings'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ux/accessibility:
+    get:
+      tags:
+        - ux-enhancement
+      summary: 获取无障碍设置
+      description: 获取用户无障碍配置
+      operationId: ux_get_accessibility
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AccessibilitySettings'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
 components:
-  schemas: {}
+  schemas:
+    PersonalizationSettings:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          description: 用户ID
+          example: 1001
+        theme:
+          type: string
+          description: 主题设置
+          enum: [light, dark, auto]
+          example: "light"
+        language:
+          type: string
+          description: 语言设置
+          example: "zh-CN"
+        dashboard_layout:
+          type: object
+          description: 仪表板布局
+          properties:
+            widgets:
+              type: array
+              description: 组件列表
+              items:
+                type: object
+                properties:
+                  widget_id:
+                    type: string
+                    description: 组件ID
+                    example: "ticket-summary"
+                  position:
+                    type: object
+                    description: 位置信息
+                    properties:
+                      x:
+                        type: integer
+                        example: 0
+                      y:
+                        type: integer
+                        example: 0
+                      width:
+                        type: integer
+                        example: 6
+                      height:
+                        type: integer
+                        example: 4
+        notification_preferences:
+          type: object
+          description: 通知偏好
+          properties:
+            email_enabled:
+              type: boolean
+              description: 邮件通知
+              example: true
+            sms_enabled:
+              type: boolean
+              description: 短信通知
+              example: false
+            push_enabled:
+              type: boolean
+              description: 推送通知
+              example: true
+            frequency:
+              type: string
+              description: 通知频率
+              enum: [immediate, hourly, daily]
+              example: "immediate"
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+          example: "2024-08-15T10:30:00Z"
+
+    PersonalizationUpdateRequest:
+      type: object
+      properties:
+        theme:
+          type: string
+          description: 主题设置
+          enum: [light, dark, auto]
+          example: "dark"
+        language:
+          type: string
+          description: 语言设置
+          example: "en-US"
+        dashboard_layout:
+          type: object
+          description: 仪表板布局
+          additionalProperties: true
+        notification_preferences:
+          type: object
+          description: 通知偏好
+          additionalProperties: true
+
+    AccessibilitySettings:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          description: 用户ID
+          example: 1001
+        high_contrast:
+          type: boolean
+          description: 高对比度模式
+          example: false
+        large_text:
+          type: boolean
+          description: 大字体模式
+          example: false
+        screen_reader:
+          type: boolean
+          description: 屏幕阅读器支持
+          example: false
+        keyboard_navigation:
+          type: boolean
+          description: 键盘导航
+          example: true
+        reduced_motion:
+          type: boolean
+          description: 减少动画
+          example: false
+        focus_indicators:
+          type: boolean
+          description: 焦点指示器
+          example: true
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+          example: "2024-08-15T10:30:00Z"

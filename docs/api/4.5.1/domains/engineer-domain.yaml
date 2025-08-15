@@ -3,5 +3,9 @@ info:
   title: Uengineer 业务域 API 聚合
   version: 1.0.0
 paths:
-  /工程师管理系统:
-    $ref: '../modules/REQ-006-工程师管理系统/openapi.yaml#/paths/~1工程师管理系统'
+  /api/v1/engineers:
+    $ref: '../modules/REQ-006-工程师管理系统/openapi.yaml#/paths/~1api~1v1~1engineers'
+  /api/v1/engineers/{id}:
+    $ref: '../modules/REQ-006-工程师管理系统/openapi.yaml#/paths/~1api~1v1~1engineers~1{id}'
+  /api/v1/engineers/{id}/skills:
+    $ref: '../modules/REQ-006-工程师管理系统/openapi.yaml#/paths/~1api~1v1~1engineers~1{id}~1skills'

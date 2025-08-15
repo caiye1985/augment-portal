@@ -1,7 +1,30 @@
 openapi: 3.0.3
 info:
-  title: Udata 业务域 API 聚合
+  title: 数据业务域 API 聚合
   version: 1.0.0
+  description: 数据相关的API聚合，包括数据分析与商业智能等功能
+
 paths:
-  /数据分析与商业智能模块:
-    $ref: '../modules/REQ-023-数据分析与商业智能模块/openapi.yaml#/paths/~1数据分析与商业智能模块'
+  # 数据分析与商业智能模块暂未实现，添加占位符路径
+  /api/v1/data/placeholder:
+    get:
+      summary: 数据分析占位符接口
+      description: 数据分析模块占位符接口，待实现
+      operationId: data_placeholder
+      responses:
+        '200':
+          description: 占位符响应
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+components:
+  schemas:
+    # 引用全局通用组件
+    ApiResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+    PagedResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/PagedResponse'
+    ErrorResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'

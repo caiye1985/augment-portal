@@ -1,7 +1,70 @@
 openapi: 3.0.3
 info:
-  title: Ufinance 业务域 API 聚合
+  title: 财务业务域 API 聚合
   version: 1.0.0
+  description: 财务相关的API聚合，包括账单管理、支付处理、合同展期、财务分析等功能
+
 paths:
-  /财务管理模块:
-    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1财务管理模块'
+  # 账单管理API
+  /api/v1/finance/invoices/generate:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1invoices~1generate'
+  /api/v1/finance/invoices:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1invoices'
+  /api/v1/finance/invoices/{id}:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1invoices~1{id}'
+  /api/v1/finance/invoices/batch:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1invoices~1batch'
+  /api/v1/finance/invoices/export:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1invoices~1export'
+
+  # 支付管理API
+  /api/v1/finance/payments/process:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1payments~1process'
+  /api/v1/finance/payments:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1payments'
+  /api/v1/finance/payments/{id}:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1payments~1{id}'
+  /api/v1/finance/payments/notify:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1payments~1notify'
+  /api/v1/finance/payments/reconcile:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1payments~1reconcile'
+
+  # 合同展期管理API
+  /api/v1/finance/contracts/{id}/extensions:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1contracts~1{id}~1extensions'
+  /api/v1/finance/extensions:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1extensions'
+  /api/v1/finance/extensions/{id}:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1extensions~1{id}'
+  /api/v1/finance/extensions/{id}/approve:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1extensions~1{id}~1approve'
+  /api/v1/finance/extensions/{id}/reject:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1extensions~1{id}~1reject'
+
+  # 财务报表分析API
+  /api/v1/finance/reports/revenue-analysis:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1reports~1revenue-analysis'
+  /api/v1/finance/reports/cash-flow:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1reports~1cash-flow'
+  /api/v1/finance/reports/customer-analysis:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1reports~1customer-analysis'
+
+  # 风险管理API
+  /api/v1/finance/risk/assessment:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1risk~1assessment'
+
+  # 配置管理API
+  /api/v1/finance/config/billing-rules:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1config~1billing-rules'
+  /api/v1/finance/config/tax-rates:
+    $ref: '../modules/REQ-018-财务管理模块/openapi.yaml#/paths/~1api~1v1~1finance~1config~1tax-rates'
+
+components:
+  schemas:
+    # 引用全局通用组件
+    ApiResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+    PagedResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/PagedResponse'
+    ErrorResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'

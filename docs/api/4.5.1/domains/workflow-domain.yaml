@@ -1,7 +1,30 @@
 openapi: 3.0.3
 info:
-  title: Uworkflow 业务域 API 聚合
+  title: 工作流业务域 API 聚合
   version: 1.0.0
+  description: 工作流相关的API聚合，包括工作流引擎等功能
+
 paths:
-  /工作流引擎系统:
-    $ref: '../modules/REQ-014-工作流引擎系统/openapi.yaml#/paths/~1工作流引擎系统'
+  # 工作流引擎系统模块暂未实现，添加占位符路径
+  /api/v1/workflow/placeholder:
+    get:
+      summary: 工作流占位符接口
+      description: 工作流模块占位符接口，待实现
+      operationId: workflow_placeholder
+      responses:
+        '200':
+          description: 占位符响应
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+components:
+  schemas:
+    # 引用全局通用组件
+    ApiResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+    PagedResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/PagedResponse'
+    ErrorResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'

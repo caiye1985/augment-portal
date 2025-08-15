@@ -59,25 +59,25 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
                         $ref: '#/components/schemas/SendNotificationResponse'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '429':
           description: 请求频率超限
           content:
             application/json:
               schema:
-                $ref: '../../../global-api-index.yaml#/components/schemas/ErrorResponse'
+                $ref: '../../global-api-index.yaml#/components/schemas/ErrorResponse'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
   /api/v1/notifications/batch-send:
     post:

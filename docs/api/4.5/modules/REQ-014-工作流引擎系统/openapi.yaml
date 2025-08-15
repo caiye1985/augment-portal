@@ -1,7 +1,0 @@
-openapi: 3.0.3
-info:
-  title: 工作流引擎系统 API
-  version: 1.0.0
-paths: {}
-components:
-  schemas: {}

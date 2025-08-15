@@ -2,6 +2,178 @@ openapi: 3.0.3
 info:
   title: 运维管理 API
   version: 1.0.0
-paths: {}
+  description: REQ-009 运维管理 API 规范
+
+tags:
+  - name: operations
+    description: 运维管理
+
+paths:
+  /api/v1/operations/health:
+    get:
+      tags:
+        - operations
+      summary: 系统健康检查
+      description: 检查系统各组件健康状态
+      operationId: operations_health_check
+      responses:
+        '200':
+          description: 健康检查成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/HealthStatus'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/operations/metrics:
+    get:
+      tags:
+        - operations
+      summary: 获取系统指标
+      description: 获取系统性能指标数据
+      operationId: operations_get_metrics
+      parameters:
+        - name: start_time
+          in: query
+          description: 开始时间
+          schema:
+            type: string
+            format: date-time
+            example: "2024-08-15T00:00:00Z"
+        - name: end_time
+          in: query
+          description: 结束时间
+          schema:
+            type: string
+            format: date-time
+            example: "2024-08-15T23:59:59Z"
+        - name: metric_type
+          in: query
+          description: 指标类型
+          schema:
+            type: string
+            enum: [cpu, memory, disk, network]
+            example: "cpu"
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SystemMetrics'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
 components:
-  schemas: {}
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        overall_status:
+          type: string
+          description: 整体状态
+          enum: [healthy, degraded, unhealthy]
+          example: "healthy"
+        components:
+          type: array
+          description: 组件状态列表
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: 组件名称
+                example: "database"
+              status:
+                type: string
+                description: 组件状态
+                enum: [healthy, degraded, unhealthy]
+                example: "healthy"
+              response_time:
+                type: number
+                description: 响应时间（毫秒）
+                example: 15.5
+              last_check:
+                type: string
+                format: date-time
+                description: 最后检查时间
+                example: "2024-08-15T10:30:00Z"
+        timestamp:
+          type: string
+          format: date-time
+          description: 检查时间
+          example: "2024-08-15T10:30:00Z"
+
+    SystemMetrics:
+      type: object
+      properties:
+        metric_type:
+          type: string
+          description: 指标类型
+          example: "cpu"
+        time_range:
+          type: object
+          description: 时间范围
+          properties:
+            start_time:
+              type: string
+              format: date-time
+              description: 开始时间
+              example: "2024-08-15T00:00:00Z"
+            end_time:
+              type: string
+              format: date-time
+              description: 结束时间
+              example: "2024-08-15T23:59:59Z"
+        data_points:
+          type: array
+          description: 数据点列表
+          items:
+            type: object
+            properties:
+              timestamp:
+                type: string
+                format: date-time
+                description: 时间戳
+                example: "2024-08-15T10:30:00Z"
+              value:
+                type: number
+                description: 指标值
+                example: 65.5
+              unit:
+                type: string
+                description: 单位
+                example: "percent"
+        summary:
+          type: object
+          description: 汇总信息
+          properties:
+            average:
+              type: number
+              description: 平均值
+              example: 60.2
+            maximum:
+              type: number
+              description: 最大值
+              example: 85.7
+            minimum:
+              type: number
+              description: 最小值
+              example: 45.3

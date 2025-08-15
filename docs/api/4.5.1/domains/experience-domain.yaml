@@ -3,5 +3,7 @@ info:
   title: Uexperience 业务域 API 聚合
   version: 1.0.0
 paths:
-  /用户体验增强系统:
-    $ref: '../modules/REQ-015-用户体验增强系统/openapi.yaml#/paths/~1用户体验增强系统'
+  /api/v1/ux/personalization:
+    $ref: '../modules/REQ-015-用户体验增强系统/openapi.yaml#/paths/~1api~1v1~1ux~1personalization'
+  /api/v1/ux/accessibility:
+    $ref: '../modules/REQ-015-用户体验增强系统/openapi.yaml#/paths/~1api~1v1~1ux~1accessibility'

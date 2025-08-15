@@ -3,5 +3,7 @@ info:
   title: Uintegration 业务域 API 聚合
   version: 1.0.0
 paths:
-  /系统集成模块:
-    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1系统集成模块'
+  /api/v1/integrations/configs:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1configs'
+  /api/v1/integrations/configs/{id}:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1configs~1{id}'

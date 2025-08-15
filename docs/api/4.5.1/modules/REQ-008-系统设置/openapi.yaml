@@ -2,6 +2,2434 @@ openapi: 3.0.3
 info:
   title: 系统设置 API
   version: 1.0.0
-paths: {}
+  description: REQ-008 系统设置 API 规范，提供统一的配置管理服务，支持多租户配置隔离、功能开关控制、灰度发布策略等功能
+
+tags:
+  - name: system-config
+    description: 系统配置管理
+  - name: config-templates
+    description: 配置模板管理
+  - name: feature-flags
+    description: 功能开关管理
+  - name: gray-release
+    description: 灰度发布管理
+  - name: config-logs
+    description: 配置变更日志
+  - name: config-operations
+    description: 配置操作（批量、导入导出等）
+
+paths:
+  # 系统配置管理
+  /api/v1/system-config:
+    get:
+      tags:
+        - system-config
+      summary: 获取系统配置列表
+      description: 分页查询系统配置，支持按租户、范围、类型等条件筛选
+      operationId: system_config_list
+      parameters:
+        - name: tenantId
+          in: query
+          description: 租户ID（可选，为空时查询全局配置）
+          required: false
+          schema:
+            type: integer
+            example: 1001
+        - name: scope
+          in: query
+          description: 配置范围
+          required: false
+          schema:
+            type: string
+            enum: [GLOBAL, MODULE, FEATURE]
+            example: "GLOBAL"
+        - name: configType
+          in: query
+          description: 配置类型
+          required: false
+          schema:
+            type: string
+            enum: [STRING, NUMBER, BOOLEAN, JSON, XML]
+            example: "STRING"
+        - name: keyword
+          in: query
+          description: 关键词搜索（配置键名或描述）
+          required: false
+          schema:
+            type: string
+            example: "session"
+        - name: isActive
+          in: query
+          description: 是否激活
+          required: false
+          schema:
+            type: boolean
+            example: true
+        - name: page
+          in: query
+          description: 页码
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+        - name: sort
+          in: query
+          description: 排序字段
+          required: false
+          schema:
+            type: string
+            enum: [config_key, created_at, updated_at, effective_time]
+            default: "created_at"
+            example: "created_at"
+        - name: order
+          in: query
+          description: 排序方向
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: "desc"
+            example: "desc"
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/SystemConfigInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - system-config
+      summary: 创建系统配置
+      description: 创建新的系统配置项
+      operationId: system_config_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SystemConfigCreateRequest'
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SystemConfigInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/system-config/{configKey}:
+    get:
+      tags:
+        - system-config
+      summary: 获取系统配置详情
+      description: 根据配置键名获取配置详情
+      operationId: system_config_get
+      parameters:
+        - name: configKey
+          in: path
+          description: 配置键名
+          required: true
+          schema:
+            type: string
+            example: "session.timeout"
+        - name: tenantId
+          in: query
+          description: 租户ID（可选）
+          required: false
+          schema:
+            type: integer
+            example: 1001
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SystemConfigDetail'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    put:
+      tags:
+        - system-config
+      summary: 更新系统配置
+      description: 更新指定的系统配置项
+      operationId: system_config_update
+      parameters:
+        - name: configKey
+          in: path
+          description: 配置键名
+          required: true
+          schema:
+            type: string
+            example: "session.timeout"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SystemConfigUpdateRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SystemConfigInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    delete:
+      tags:
+        - system-config
+      summary: 删除系统配置
+      description: 删除指定的系统配置项（软删除）
+      operationId: system_config_delete
+      parameters:
+        - name: configKey
+          in: path
+          description: 配置键名
+          required: true
+          schema:
+            type: string
+            example: "session.timeout"
+        - name: tenantId
+          in: query
+          description: 租户ID（可选）
+          required: false
+          schema:
+            type: integer
+            example: 1001
+      responses:
+        '200':
+          description: 删除成功
+          content:
+            application/json:
+              schema:
+                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 配置批量操作
+  /api/v1/system-config/batch:
+    post:
+      tags:
+        - config-operations
+      summary: 批量操作配置
+      description: 批量创建、更新或删除配置项
+      operationId: system_config_batch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchConfigRequest'
+      responses:
+        '200':
+          description: 批量操作成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/BatchConfigResult'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 配置导入导出
+  /api/v1/system-config/export:
+    get:
+      tags:
+        - config-operations
+      summary: 导出配置
+      description: 导出系统配置为指定格式文件
+      operationId: system_config_export
+      parameters:
+        - name: format
+          in: query
+          description: 导出格式
+          required: false
+          schema:
+            type: string
+            enum: [excel, json, yaml]
+            default: "excel"
+            example: "excel"
+        - name: tenantId
+          in: query
+          description: 租户ID（可选）
+          required: false
+          schema:
+            type: integer
+            example: 1001
+        - name: scope
+          in: query
+          description: 配置范围
+          required: false
+          schema:
+            type: string
+            enum: [GLOBAL, MODULE, FEATURE]
+            example: "GLOBAL"
+      responses:
+        '200':
+          description: 导出成功
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                type: object
+            application/x-yaml:
+              schema:
+                type: string
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/system-config/import:
+    post:
+      tags:
+        - config-operations
+      summary: 导入配置
+      description: 从文件导入系统配置
+      operationId: system_config_import
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: 配置文件
+                templateId:
+                  type: integer
+                  description: 配置模板ID（可选）
+                  example: 123
+                overwriteExisting:
+                  type: boolean
+                  description: 是否覆盖已存在的配置
+                  default: false
+                  example: true
+                dryRun:
+                  type: boolean
+                  description: 是否仅验证不实际导入
+                  default: false
+                  example: false
+              required:
+                - file
+      responses:
+        '200':
+          description: 导入成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ConfigImportResult'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 功能开关管理
+  /api/v1/feature-flags:
+    get:
+      tags:
+        - feature-flags
+      summary: 获取功能开关列表
+      description: 分页查询功能开关，支持按环境、状态等条件筛选
+      operationId: feature_flag_list
+      parameters:
+        - name: environment
+          in: query
+          description: 环境
+          required: false
+          schema:
+            type: string
+            enum: [DEV, TEST, PROD]
+            example: "PROD"
+        - name: enabled
+          in: query
+          description: 启用状态
+          required: false
+          schema:
+            type: boolean
+            example: true
+        - name: flagType
+          in: query
+          description: 开关类型
+          required: false
+          schema:
+            type: string
+            enum: [BOOLEAN, PERCENTAGE, TARGETING]
+            example: "BOOLEAN"
+        - name: keyword
+          in: query
+          description: 关键词搜索
+          required: false
+          schema:
+            type: string
+            example: "new_feature"
+        - name: page
+          in: query
+          description: 页码
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/FeatureFlagInfo'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - feature-flags
+      summary: 创建功能开关
+      description: 创建新的功能开关
+      operationId: feature_flag_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureFlagCreateRequest'
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/FeatureFlagInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/feature-flags/{flagKey}:
+    get:
+      tags:
+        - feature-flags
+      summary: 获取功能开关详情
+      description: 根据开关键名获取功能开关详情
+      operationId: feature_flag_get
+      parameters:
+        - name: flagKey
+          in: path
+          description: 功能开关键名
+          required: true
+          schema:
+            type: string
+            example: "new_feature_v2"
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/FeatureFlagDetail'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    put:
+      tags:
+        - feature-flags
+      summary: 更新功能开关
+      description: 更新指定的功能开关配置
+      operationId: feature_flag_update
+      parameters:
+        - name: flagKey
+          in: path
+          description: 功能开关键名
+          required: true
+          schema:
+            type: string
+            example: "new_feature_v2"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureFlagUpdateRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/FeatureFlagInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    delete:
+      tags:
+        - feature-flags
+      summary: 删除功能开关
+      description: 删除指定的功能开关
+      operationId: feature_flag_delete
+      parameters:
+        - name: flagKey
+          in: path
+          description: 功能开关键名
+          required: true
+          schema:
+            type: string
+            example: "new_feature_v2"
+      responses:
+        '200':
+          description: 删除成功
+          content:
+            application/json:
+              schema:
+                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/feature-flags/{flagKey}/toggle:
+    post:
+      tags:
+        - feature-flags
+      summary: 切换功能开关状态
+      description: 快速切换功能开关的启用/禁用状态
+      operationId: feature_flag_toggle
+      parameters:
+        - name: flagKey
+          in: path
+          description: 功能开关键名
+          required: true
+          schema:
+            type: string
+            example: "new_feature_v2"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+                  description: 是否启用
+                  example: true
+                reason:
+                  type: string
+                  description: 切换原因
+                  example: "紧急修复生产问题"
+              required:
+                - enabled
+      responses:
+        '200':
+          description: 切换成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/FeatureFlagInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 灰度发布管理
+  /api/v1/gray-release:
+    get:
+      tags:
+        - gray-release
+      summary: 获取灰度发布列表
+      description: 分页查询灰度发布策略
+      operationId: gray_release_list
+      parameters:
+        - name: status
+          in: query
+          description: 发布状态
+          required: false
+          schema:
+            type: string
+            enum: [DRAFT, ACTIVE, PAUSED, COMPLETED, CANCELLED]
+            example: "ACTIVE"
+        - name: featureKey
+          in: query
+          description: 功能键名
+          required: false
+          schema:
+            type: string
+            example: "new_feature_v2"
+        - name: page
+          in: query
+          description: 页码
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/GrayReleaseInfo'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - gray-release
+      summary: 创建灰度发布
+      description: 创建新的灰度发布策略
+      operationId: gray_release_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrayReleaseCreateRequest'
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/GrayReleaseInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/gray-release/{releaseId}:
+    get:
+      tags:
+        - gray-release
+      summary: 获取灰度发布详情
+      description: 根据发布ID获取灰度发布详情
+      operationId: gray_release_get
+      parameters:
+        - name: releaseId
+          in: path
+          description: 灰度发布ID
+          required: true
+          schema:
+            type: integer
+            example: 3001
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/GrayReleaseDetail'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    put:
+      tags:
+        - gray-release
+      summary: 更新灰度发布
+      description: 更新灰度发布策略配置
+      operationId: gray_release_update
+      parameters:
+        - name: releaseId
+          in: path
+          description: 灰度发布ID
+          required: true
+          schema:
+            type: integer
+            example: 3001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrayReleaseUpdateRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/GrayReleaseInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/gray-release/{releaseId}/start:
+    post:
+      tags:
+        - gray-release
+      summary: 启动灰度发布
+      description: 启动指定的灰度发布策略
+      operationId: gray_release_start
+      parameters:
+        - name: releaseId
+          in: path
+          description: 灰度发布ID
+          required: true
+          schema:
+            type: integer
+            example: 3001
+      responses:
+        '200':
+          description: 启动成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/GrayReleaseInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/gray-release/{releaseId}/pause:
+    post:
+      tags:
+        - gray-release
+      summary: 暂停灰度发布
+      description: 暂停正在进行的灰度发布
+      operationId: gray_release_pause
+      parameters:
+        - name: releaseId
+          in: path
+          description: 灰度发布ID
+          required: true
+          schema:
+            type: integer
+            example: 3001
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  description: 暂停原因
+                  example: "发现异常指标，暂停发布"
+      responses:
+        '200':
+          description: 暂停成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/GrayReleaseInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/gray-release/{releaseId}/rollback:
+    post:
+      tags:
+        - gray-release
+      summary: 回滚灰度发布
+      description: 回滚灰度发布到之前状态
+      operationId: gray_release_rollback
+      parameters:
+        - name: releaseId
+          in: path
+          description: 灰度发布ID
+          required: true
+          schema:
+            type: integer
+            example: 3001
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  description: 回滚原因
+                  example: "发现严重问题，立即回滚"
+      responses:
+        '200':
+          description: 回滚成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/GrayReleaseInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 配置变更日志
+  /api/v1/config-change-logs:
+    get:
+      tags:
+        - config-logs
+      summary: 获取配置变更日志
+      description: 分页查询配置变更审计日志
+      operationId: config_change_log_list
+      parameters:
+        - name: configKey
+          in: query
+          description: 配置键名
+          required: false
+          schema:
+            type: string
+            example: "session.timeout"
+        - name: operationType
+          in: query
+          description: 操作类型
+          required: false
+          schema:
+            type: string
+            enum: [CREATE, UPDATE, DELETE, ROLLBACK]
+            example: "UPDATE"
+        - name: operatorId
+          in: query
+          description: 操作人ID
+          required: false
+          schema:
+            type: integer
+            example: 1001
+        - name: startTime
+          in: query
+          description: 开始时间
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: "2024-08-01T00:00:00Z"
+        - name: endTime
+          in: query
+          description: 结束时间
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: "2024-08-31T23:59:59Z"
+        - name: page
+          in: query
+          description: 页码
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/ConfigChangeLogInfo'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 配置版本管理
+  /api/v1/system-config/{configKey}/versions:
+    get:
+      tags:
+        - config-operations
+      summary: 获取配置版本历史
+      description: 获取指定配置的版本历史记录
+      operationId: system_config_versions
+      parameters:
+        - name: configKey
+          in: path
+          description: 配置键名
+          required: true
+          schema:
+            type: string
+            example: "session.timeout"
+        - name: tenantId
+          in: query
+          description: 租户ID（可选）
+          required: false
+          schema:
+            type: integer
+            example: 1001
+        - name: page
+          in: query
+          description: 页码
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/ConfigVersionInfo'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/system-config/{configKey}/rollback:
+    post:
+      tags:
+        - config-operations
+      summary: 回滚配置到指定版本
+      description: 将配置回滚到历史版本
+      operationId: system_config_rollback
+      parameters:
+        - name: configKey
+          in: path
+          description: 配置键名
+          required: true
+          schema:
+            type: string
+            example: "session.timeout"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - target_version
+              properties:
+                target_version:
+                  type: integer
+                  description: 目标版本号
+                  example: 3
+                tenant_id:
+                  type: integer
+                  nullable: true
+                  description: 租户ID（可选）
+                  example: 1001
+                rollback_reason:
+                  type: string
+                  nullable: true
+                  description: 回滚原因
+                  example: "配置错误，回滚到稳定版本"
+      responses:
+        '200':
+          description: 回滚成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SystemConfigInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 配置验证
+  /api/v1/system-config/{configKey}/validate:
+    post:
+      tags:
+        - config-operations
+      summary: 验证配置值
+      description: 验证配置值是否符合格式和业务规则
+      operationId: system_config_validate
+      parameters:
+        - name: configKey
+          in: path
+          description: 配置键名
+          required: true
+          schema:
+            type: string
+            example: "session.timeout"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - config_value
+              properties:
+                config_value:
+                  type: string
+                  description: 待验证的配置值
+                  example: "3600"
+                config_type:
+                  type: string
+                  enum: [STRING, NUMBER, BOOLEAN, JSON, XML]
+                  description: 配置类型
+                  example: "NUMBER"
+                tenant_id:
+                  type: integer
+                  nullable: true
+                  description: 租户ID（可选）
+                  example: 1001
+      responses:
+        '200':
+          description: 验证成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          is_valid:
+                            type: boolean
+                            description: 是否有效
+                            example: true
+                          validation_errors:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                field:
+                                  type: string
+                                  example: "config_value"
+                                error_code:
+                                  type: string
+                                  example: "OUT_OF_RANGE"
+                                error_message:
+                                  type: string
+                                  example: "配置值超出允许范围"
+                            description: 验证错误列表
+                          suggestions:
+                            type: array
+                            items:
+                              type: string
+                            description: 修复建议
+                            example: ["配置值应在300-86400之间"]
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 兼容性保留的旧接口
+  /api/v1/settings:
+    get:
+      tags:
+        - system-config
+      summary: 获取系统设置（兼容性接口）
+      description: 获取系统配置参数（向后兼容）
+      operationId: settings_get
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SystemSettings'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    put:
+      tags:
+        - system-config
+      summary: 更新系统设置（兼容性接口）
+      description: 更新系统配置参数（向后兼容）
+      operationId: settings_update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SystemSettingsUpdateRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SystemSettings'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
 components:
-  schemas: {}
+  schemas:
+    # 系统配置相关schemas
+    SystemConfigInfo:
+      type: object
+      description: 系统配置基本信息
+      properties:
+        config_id:
+          type: integer
+          description: 配置ID
+          example: 12345
+        tenant_id:
+          type: integer
+          nullable: true
+          description: 租户ID（NULL为全局配置）
+          example: 1001
+        config_key:
+          type: string
+          description: 配置键名
+          example: "session.timeout"
+        config_value:
+          type: string
+          description: 配置值
+          example: "3600"
+        config_type:
+          type: string
+          enum: [STRING, NUMBER, BOOLEAN, JSON, XML]
+          description: 配置类型
+          example: "NUMBER"
+        scope:
+          type: string
+          enum: [GLOBAL, MODULE, FEATURE]
+          description: 配置范围
+          example: "GLOBAL"
+        effective_mode:
+          type: string
+          enum: [IMMEDIATE, SCHEDULED, MANUAL]
+          description: 生效模式
+          example: "IMMEDIATE"
+        version:
+          type: integer
+          description: 配置版本号
+          example: 1
+        is_encrypted:
+          type: boolean
+          description: 是否加密存储
+          example: false
+        effective_time:
+          type: string
+          format: date-time
+          nullable: true
+          description: 生效时间
+          example: "2024-08-15T10:30:00Z"
+        expire_time:
+          type: string
+          format: date-time
+          nullable: true
+          description: 过期时间
+          example: null
+        description:
+          type: string
+          nullable: true
+          description: 配置描述
+          example: "会话超时时间（秒）"
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: 配置标签
+          example: ["security", "session"]
+        is_active:
+          type: boolean
+          description: 是否激活
+          example: true
+        created_by:
+          type: integer
+          description: 创建人ID
+          example: 1001
+        updated_by:
+          type: integer
+          description: 更新人ID
+          example: 1001
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2024-08-01T09:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+          example: "2024-08-15T10:30:00Z"
+
+    SystemConfigDetail:
+      allOf:
+        - $ref: '#/components/schemas/SystemConfigInfo'
+        - type: object
+          properties:
+            template_id:
+              type: integer
+              nullable: true
+              description: 配置模板ID
+              example: 123
+            validation_rule:
+              type: object
+              nullable: true
+              description: 验证规则
+              example:
+                type: "range"
+                min: 300
+                max: 86400
+            change_history:
+              type: array
+              items:
+                $ref: '#/components/schemas/ConfigChangeLogInfo'
+              description: 变更历史（最近10条）
+
+    SystemConfigCreateRequest:
+      type: object
+      required:
+        - config_key
+        - config_value
+        - config_type
+      properties:
+        tenant_id:
+          type: integer
+          nullable: true
+          description: 租户ID（可选，为空时创建全局配置）
+          example: 1001
+        config_key:
+          type: string
+          description: 配置键名
+          example: "session.timeout"
+        config_value:
+          type: string
+          description: 配置值
+          example: "3600"
+        config_type:
+          type: string
+          enum: [STRING, NUMBER, BOOLEAN, JSON, XML]
+          description: 配置类型
+          example: "NUMBER"
+        scope:
+          type: string
+          enum: [GLOBAL, MODULE, FEATURE]
+          description: 配置范围
+          default: "GLOBAL"
+          example: "GLOBAL"
+        effective_mode:
+          type: string
+          enum: [IMMEDIATE, SCHEDULED, MANUAL]
+          description: 生效模式
+          default: "IMMEDIATE"
+          example: "IMMEDIATE"
+        effective_time:
+          type: string
+          format: date-time
+          nullable: true
+          description: 生效时间（仅在SCHEDULED模式下有效）
+          example: "2024-08-15T10:30:00Z"
+        expire_time:
+          type: string
+          format: date-time
+          nullable: true
+          description: 过期时间
+          example: null
+        template_id:
+          type: integer
+          nullable: true
+          description: 配置模板ID
+          example: 123
+        validation_rule:
+          type: object
+          nullable: true
+          description: 验证规则
+          example:
+            type: "range"
+            min: 300
+            max: 86400
+        description:
+          type: string
+          nullable: true
+          description: 配置描述
+          example: "会话超时时间（秒）"
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: 配置标签
+          example: ["security", "session"]
+
+    SystemConfigUpdateRequest:
+      type: object
+      properties:
+        config_value:
+          type: string
+          description: 配置值
+          example: "7200"
+        effective_mode:
+          type: string
+          enum: [IMMEDIATE, SCHEDULED, MANUAL]
+          description: 生效模式
+          example: "SCHEDULED"
+        effective_time:
+          type: string
+          format: date-time
+          nullable: true
+          description: 生效时间
+          example: "2024-08-15T00:00:00Z"
+        expire_time:
+          type: string
+          format: date-time
+          nullable: true
+          description: 过期时间
+          example: null
+        validation_rule:
+          type: object
+          nullable: true
+          description: 验证规则
+          example:
+            type: "range"
+            min: 300
+            max: 86400
+        description:
+          type: string
+          nullable: true
+          description: 配置描述
+          example: "会话超时时间（秒）"
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: 配置标签
+          example: ["security", "session"]
+        change_reason:
+          type: string
+          nullable: true
+          description: 变更原因
+          example: "延长会话时间以提升用户体验"
+
+    # 批量操作相关schemas
+    BatchConfigRequest:
+      type: object
+      required:
+        - operation
+        - configs
+      properties:
+        operation:
+          type: string
+          enum: [CREATE, UPDATE, DELETE]
+          description: 批量操作类型
+          example: "UPDATE"
+        configs:
+          type: array
+          items:
+            type: object
+            properties:
+              config_key:
+                type: string
+                description: 配置键名
+                example: "session.timeout"
+              config_value:
+                type: string
+                description: 配置值
+                example: "3600"
+              config_type:
+                type: string
+                enum: [STRING, NUMBER, BOOLEAN, JSON, XML]
+                description: 配置类型
+                example: "NUMBER"
+              scope:
+                type: string
+                enum: [GLOBAL, MODULE, FEATURE]
+                description: 配置范围
+                example: "GLOBAL"
+              tenant_id:
+                type: integer
+                nullable: true
+                description: 租户ID
+                example: 1001
+            required:
+              - config_key
+          description: 配置项列表
+        effective_mode:
+          type: string
+          enum: [IMMEDIATE, SCHEDULED, MANUAL]
+          description: 生效模式
+          default: "IMMEDIATE"
+          example: "IMMEDIATE"
+        effective_time:
+          type: string
+          format: date-time
+          nullable: true
+          description: 生效时间
+          example: "2024-08-15T10:30:00Z"
+        change_reason:
+          type: string
+          nullable: true
+          description: 变更原因
+          example: "批量安全配置更新"
+
+    BatchConfigResult:
+      type: object
+      properties:
+        total_count:
+          type: integer
+          description: 总数量
+          example: 10
+        success_count:
+          type: integer
+          description: 成功数量
+          example: 8
+        failed_count:
+          type: integer
+          description: 失败数量
+          example: 2
+        success_items:
+          type: array
+          items:
+            type: object
+            properties:
+              config_key:
+                type: string
+                example: "session.timeout"
+              status:
+                type: string
+                example: "SUCCESS"
+          description: 成功项列表
+        failed_items:
+          type: array
+          items:
+            type: object
+            properties:
+              config_key:
+                type: string
+                example: "invalid.config"
+              error_code:
+                type: string
+                example: "VALIDATION_FAILED"
+              error_message:
+                type: string
+                example: "配置值格式不正确"
+          description: 失败项列表
+
+    ConfigImportResult:
+      type: object
+      properties:
+        total_count:
+          type: integer
+          description: 导入总数量
+          example: 50
+        success_count:
+          type: integer
+          description: 成功数量
+          example: 45
+        failed_count:
+          type: integer
+          description: 失败数量
+          example: 5
+        skipped_count:
+          type: integer
+          description: 跳过数量
+          example: 0
+        validation_errors:
+          type: array
+          items:
+            type: object
+            properties:
+              row_number:
+                type: integer
+                example: 3
+              config_key:
+                type: string
+                example: "invalid.config"
+              error_message:
+                type: string
+                example: "配置键名格式不正确"
+          description: 验证错误列表
+        import_summary:
+          type: object
+          properties:
+            file_name:
+              type: string
+              example: "system_config_20240815.xlsx"
+            import_time:
+              type: string
+              format: date-time
+              example: "2024-08-15T10:30:00Z"
+            operator_id:
+              type: integer
+              example: 1001
+          description: 导入摘要信息
+
+    # 功能开关相关schemas
+    FeatureFlagInfo:
+      type: object
+      description: 功能开关基本信息
+      properties:
+        flag_id:
+          type: integer
+          description: 开关ID
+          example: 2001
+        flag_key:
+          type: string
+          description: 开关键名
+          example: "new_feature_v2"
+        flag_name:
+          type: string
+          description: 开关名称
+          example: "新功能V2版本"
+        description:
+          type: string
+          nullable: true
+          description: 开关描述
+          example: "新版本功能的灰度发布开关"
+        is_enabled:
+          type: boolean
+          description: 是否启用
+          example: true
+        flag_type:
+          type: string
+          enum: [BOOLEAN, PERCENTAGE, TARGETING]
+          description: 开关类型
+          example: "BOOLEAN"
+        target_rules:
+          type: object
+          nullable: true
+          description: 目标规则配置
+          example:
+            tenants: ["tenant1", "tenant2"]
+            users: ["user1", "user2"]
+            percentage: 50
+        default_value:
+          type: string
+          nullable: true
+          description: 默认值
+          example: "false"
+        environment:
+          type: string
+          enum: [DEV, TEST, PROD]
+          description: 环境
+          example: "PROD"
+        owner_id:
+          type: integer
+          nullable: true
+          description: 负责人ID
+          example: 1001
+        created_by:
+          type: integer
+          description: 创建人ID
+          example: 1001
+        updated_by:
+          type: integer
+          description: 更新人ID
+          example: 1001
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2024-08-01T09:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+          example: "2024-08-15T10:30:00Z"
+
+    FeatureFlagDetail:
+      allOf:
+        - $ref: '#/components/schemas/FeatureFlagInfo'
+        - type: object
+          properties:
+            usage_statistics:
+              type: object
+              description: 使用统计
+              properties:
+                total_requests:
+                  type: integer
+                  example: 10000
+                enabled_requests:
+                  type: integer
+                  example: 5000
+                enabled_percentage:
+                  type: number
+                  format: float
+                  example: 50.0
+                last_accessed:
+                  type: string
+                  format: date-time
+                  example: "2024-08-15T10:30:00Z"
+            change_history:
+              type: array
+              items:
+                $ref: '#/components/schemas/ConfigChangeLogInfo'
+              description: 变更历史（最近10条）
+
+    FeatureFlagCreateRequest:
+      type: object
+      required:
+        - flag_key
+        - flag_name
+        - flag_type
+      properties:
+        flag_key:
+          type: string
+          description: 开关键名
+          example: "new_feature_v2"
+        flag_name:
+          type: string
+          description: 开关名称
+          example: "新功能V2版本"
+        description:
+          type: string
+          nullable: true
+          description: 开关描述
+          example: "新版本功能的灰度发布开关"
+        flag_type:
+          type: string
+          enum: [BOOLEAN, PERCENTAGE, TARGETING]
+          description: 开关类型
+          example: "BOOLEAN"
+        target_rules:
+          type: object
+          nullable: true
+          description: 目标规则配置
+          example:
+            tenants: ["tenant1", "tenant2"]
+            users: ["user1", "user2"]
+            percentage: 50
+        default_value:
+          type: string
+          nullable: true
+          description: 默认值
+          example: "false"
+        environment:
+          type: string
+          enum: [DEV, TEST, PROD]
+          description: 环境
+          default: "PROD"
+          example: "PROD"
+        owner_id:
+          type: integer
+          nullable: true
+          description: 负责人ID
+          example: 1001
+
+    FeatureFlagUpdateRequest:
+      type: object
+      properties:
+        flag_name:
+          type: string
+          description: 开关名称
+          example: "新功能V2版本"
+        description:
+          type: string
+          nullable: true
+          description: 开关描述
+          example: "新版本功能的灰度发布开关"
+        is_enabled:
+          type: boolean
+          description: 是否启用
+          example: true
+        target_rules:
+          type: object
+          nullable: true
+          description: 目标规则配置
+          example:
+            tenants: ["tenant1", "tenant2"]
+            users: ["user1", "user2"]
+            percentage: 50
+        default_value:
+          type: string
+          nullable: true
+          description: 默认值
+          example: "false"
+        owner_id:
+          type: integer
+          nullable: true
+          description: 负责人ID
+          example: 1001
+
+    # 灰度发布相关schemas
+    GrayReleaseInfo:
+      type: object
+      description: 灰度发布基本信息
+      properties:
+        release_id:
+          type: integer
+          description: 发布ID
+          example: 3001
+        release_name:
+          type: string
+          description: 发布名称
+          example: "新功能灰度发布"
+        feature_key:
+          type: string
+          description: 功能键名
+          example: "new_feature_v2"
+        strategy_type:
+          type: string
+          enum: [PERCENTAGE, USER_LIST, TENANT_LIST]
+          description: 策略类型
+          example: "PERCENTAGE"
+        strategy_config:
+          type: object
+          description: 策略配置
+          example:
+            target_percentage: 10
+            increment_step: 5
+            increment_interval: 3600
+        status:
+          type: string
+          enum: [DRAFT, ACTIVE, PAUSED, COMPLETED, CANCELLED]
+          description: 状态
+          example: "ACTIVE"
+        target_percentage:
+          type: number
+          format: float
+          nullable: true
+          description: 目标百分比
+          example: 10.0
+        current_percentage:
+          type: number
+          format: float
+          description: 当前百分比
+          example: 5.0
+        start_time:
+          type: string
+          format: date-time
+          nullable: true
+          description: 开始时间
+          example: "2024-08-15T10:00:00Z"
+        end_time:
+          type: string
+          format: date-time
+          nullable: true
+          description: 结束时间
+          example: null
+        auto_rollback:
+          type: boolean
+          description: 自动回滚
+          example: true
+        created_by:
+          type: integer
+          description: 创建人ID
+          example: 1001
+        updated_by:
+          type: integer
+          description: 更新人ID
+          example: 1001
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2024-08-15T09:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+          example: "2024-08-15T10:30:00Z"
+
+    GrayReleaseDetail:
+      allOf:
+        - $ref: '#/components/schemas/GrayReleaseInfo'
+        - type: object
+          properties:
+            rollback_condition:
+              type: object
+              nullable: true
+              description: 回滚条件
+              example:
+                error_rate: 0.05
+                response_time: 5000
+            metrics_config:
+              type: object
+              nullable: true
+              description: 监控指标配置
+              example:
+                monitor_interval: 300
+                alert_threshold: 0.1
+            execution_log:
+              type: array
+              items:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2024-08-15T10:30:00Z"
+                  action:
+                    type: string
+                    example: "PERCENTAGE_INCREASED"
+                  details:
+                    type: string
+                    example: "百分比从5%增加到10%"
+              description: 执行日志
+
+    GrayReleaseCreateRequest:
+      type: object
+      required:
+        - release_name
+        - feature_key
+        - strategy_type
+        - strategy_config
+      properties:
+        release_name:
+          type: string
+          description: 发布名称
+          example: "新功能灰度发布"
+        feature_key:
+          type: string
+          description: 功能键名
+          example: "new_feature_v2"
+        strategy_type:
+          type: string
+          enum: [PERCENTAGE, USER_LIST, TENANT_LIST]
+          description: 策略类型
+          example: "PERCENTAGE"
+        strategy_config:
+          type: object
+          description: 策略配置
+          example:
+            target_percentage: 10
+            increment_step: 5
+            increment_interval: 3600
+        auto_rollback:
+          type: boolean
+          description: 自动回滚
+          default: false
+          example: true
+        rollback_condition:
+          type: object
+          nullable: true
+          description: 回滚条件
+          example:
+            error_rate: 0.05
+            response_time: 5000
+        metrics_config:
+          type: object
+          nullable: true
+          description: 监控指标配置
+          example:
+            monitor_interval: 300
+            alert_threshold: 0.1
+
+    GrayReleaseUpdateRequest:
+      type: object
+      properties:
+        release_name:
+          type: string
+          description: 发布名称
+          example: "新功能灰度发布"
+        strategy_config:
+          type: object
+          description: 策略配置
+          example:
+            target_percentage: 20
+            increment_step: 10
+        auto_rollback:
+          type: boolean
+          description: 自动回滚
+          example: true
+        rollback_condition:
+          type: object
+          nullable: true
+          description: 回滚条件
+          example:
+            error_rate: 0.05
+            response_time: 5000
+
+    # 配置变更日志相关schemas
+    ConfigChangeLogInfo:
+      type: object
+      description: 配置变更日志信息
+      properties:
+        log_id:
+          type: integer
+          description: 日志ID
+          example: 10001
+        config_id:
+          type: integer
+          description: 配置ID
+          example: 12345
+        tenant_id:
+          type: integer
+          nullable: true
+          description: 租户ID
+          example: 1001
+        config_key:
+          type: string
+          description: 配置键名
+          example: "session.timeout"
+        old_value:
+          type: string
+          nullable: true
+          description: 变更前值
+          example: "3600"
+        new_value:
+          type: string
+          description: 变更后值
+          example: "7200"
+        operation_type:
+          type: string
+          enum: [CREATE, UPDATE, DELETE, ROLLBACK]
+          description: 操作类型
+          example: "UPDATE"
+        change_reason:
+          type: string
+          nullable: true
+          description: 变更原因
+          example: "延长会话时间以提升用户体验"
+        approval_status:
+          type: string
+          enum: [PENDING, APPROVED, REJECTED]
+          nullable: true
+          description: 审批状态
+          example: "APPROVED"
+        approver_id:
+          type: integer
+          nullable: true
+          description: 审批人ID
+          example: 2001
+        operator_id:
+          type: integer
+          description: 操作人ID
+          example: 1001
+        operator_name:
+          type: string
+          description: 操作人姓名
+          example: "张三"
+        operation_time:
+          type: string
+          format: date-time
+          description: 操作时间
+          example: "2024-08-15T10:30:00Z"
+        ip_address:
+          type: string
+          nullable: true
+          description: 操作IP地址
+          example: "192.168.1.100"
+        user_agent:
+          type: string
+          nullable: true
+          description: 用户代理信息
+          example: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        session_id:
+          type: string
+          nullable: true
+          description: 会话ID
+          example: "sess_abc123def456"
+        request_id:
+          type: string
+          nullable: true
+          description: 请求ID
+          example: "req_789xyz012"
+
+    ConfigVersionInfo:
+      type: object
+      description: 配置版本信息
+      properties:
+        version:
+          type: integer
+          description: 版本号
+          example: 3
+        config_value:
+          type: string
+          description: 配置值
+          example: "3600"
+        change_reason:
+          type: string
+          nullable: true
+          description: 变更原因
+          example: "调整会话超时时间"
+        operator_id:
+          type: integer
+          description: 操作人ID
+          example: 1001
+        operator_name:
+          type: string
+          description: 操作人姓名
+          example: "张三"
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2024-08-15T10:30:00Z"
+        is_current:
+          type: boolean
+          description: 是否为当前版本
+          example: true
+
+    # 兼容性保留的旧schemas（向后兼容）
+    SystemSettings:
+      type: object
+      description: 系统设置（向后兼容）
+      properties:
+        tenant_id:
+          type: integer
+          description: 租户ID
+          example: 1001
+        system_name:
+          type: string
+          description: 系统名称
+          example: "IT运维门户系统"
+        system_logo:
+          type: string
+          description: 系统Logo URL
+          example: "https://cdn.example.com/logo.png"
+        timezone:
+          type: string
+          description: 系统时区
+          example: "Asia/Shanghai"
+        language:
+          type: string
+          description: 系统语言
+          example: "zh-CN"
+        date_format:
+          type: string
+          description: 日期格式
+          example: "YYYY-MM-DD"
+        time_format:
+          type: string
+          description: 时间格式
+          example: "HH:mm:ss"
+        session_timeout:
+          type: integer
+          description: 会话超时时间（分钟）
+          example: 30
+        max_login_attempts:
+          type: integer
+          description: 最大登录尝试次数
+          example: 5
+        password_policy:
+          type: object
+          description: 密码策略
+          properties:
+            min_length:
+              type: integer
+              description: 最小长度
+              example: 8
+            require_uppercase:
+              type: boolean
+              description: 需要大写字母
+              example: true
+            require_lowercase:
+              type: boolean
+              description: 需要小写字母
+              example: true
+            require_numbers:
+              type: boolean
+              description: 需要数字
+              example: true
+            require_special_chars:
+              type: boolean
+              description: 需要特殊字符
+              example: true
+        email_settings:
+          type: object
+          description: 邮件设置
+          properties:
+            smtp_host:
+              type: string
+              description: SMTP服务器
+              example: "smtp.example.com"
+            smtp_port:
+              type: integer
+              description: SMTP端口
+              example: 587
+            smtp_username:
+              type: string
+              description: SMTP用户名
+              example: "noreply@example.com"
+            smtp_password:
+              type: string
+              description: SMTP密码
+              example: "********"
+            from_email:
+              type: string
+              description: 发件人邮箱
+              example: "noreply@example.com"
+            from_name:
+              type: string
+              description: 发件人名称
+              example: "IT运维门户系统"
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+          example: "2024-08-15T10:30:00Z"
+        updated_by:
+          type: integer
+          description: 更新人ID
+          example: 1001
+
+    SystemSettingsUpdateRequest:
+      type: object
+      description: 系统设置更新请求（向后兼容）
+      properties:
+        system_name:
+          type: string
+          description: 系统名称
+          example: "IT运维门户系统"
+        system_logo:
+          type: string
+          description: 系统Logo URL
+          example: "https://cdn.example.com/logo.png"
+        timezone:
+          type: string
+          description: 系统时区
+          example: "Asia/Shanghai"
+        language:
+          type: string
+          description: 系统语言
+          example: "zh-CN"
+        date_format:
+          type: string
+          description: 日期格式
+          example: "YYYY-MM-DD"
+        time_format:
+          type: string
+          description: 时间格式
+          example: "HH:mm:ss"
+        session_timeout:
+          type: integer
+          description: 会话超时时间（分钟）
+          example: 30
+        max_login_attempts:
+          type: integer
+          description: 最大登录尝试次数
+          example: 5
+        password_policy:
+          type: object
+          description: 密码策略
+          additionalProperties: true
+        email_settings:
+          type: object
+          description: 邮件设置
+          additionalProperties: true

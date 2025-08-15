@@ -1,0 +1,48 @@
+{
+  "name": "ops-portal-mock-server",
+  "version": "1.0.0",
+  "description": "IT运维门户系统 Mock Server 工具集",
+  "main": "start-mock-server.js",
+  "scripts": {
+    "start": "node start-mock-server.js",
+    "start:global": "node start-mock-server.js --global",
+    "start:watch": "node start-mock-server.js --watch --dynamic",
+    "start:auth": "node start-mock-server.js --domain auth",
+    "start:ticket": "node start-mock-server.js --domain ticket",
+    "start:customer": "node start-mock-server.js --module REQ-016-客户关系管理模块",
+    "install-prism": "npm install -g @stoplight/prism-cli",
+    "validate": "node -e \"require('./start-mock-server.js').validateApiFile('../docs/api/4.5.1/global-api-index.yaml')\"",
+    "list": "node start-mock-server.js --list",
+    "help": "node start-mock-server.js --help"
+  },
+  "bin": {
+    "ops-mock": "./start-mock-server.js"
+  },
+  "keywords": [
+    "mock-server",
+    "openapi",
+    "prism",
+    "api",
+    "ops-portal"
+  ],
+  "author": "IT运维门户系统开发团队",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@stoplight/prism-cli": "^5.8.0"
+  },
+  "optionalDependencies": {
+    "@stoplight/prism-cli": "^5.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-org/ops-portal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/ops-portal/issues"
+  },
+  "homepage": "https://github.com/your-org/ops-portal#readme"
+}

@@ -73,7 +73,7 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
                   - type: object
                     properties:
                       data:

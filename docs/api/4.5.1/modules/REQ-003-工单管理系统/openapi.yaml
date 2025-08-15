@@ -37,19 +37,19 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
                         $ref: '#/components/schemas/TicketCreateResponse'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
     get:
       tags:
@@ -151,7 +151,7 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
                   - type: object
                     properties:
                       data:
@@ -162,13 +162,13 @@ paths:
                             items:
                               $ref: '#/components/schemas/TicketListItem'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
   /api/v1/tickets/{id}:
     get:
@@ -192,21 +192,21 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
                         $ref: '#/components/schemas/TicketDetail'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '404':
-          $ref: '../../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
     put:
       tags:
@@ -235,23 +235,23 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
                         $ref: '#/components/schemas/TicketDetail'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '404':
-          $ref: '../../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
         '409':
-          $ref: '../../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
     delete:
       tags:
@@ -273,17 +273,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '404':
-          $ref: '../../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
   /api/v1/tickets/{id}/status:
     put:
@@ -313,23 +313,23 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
                         $ref: '#/components/schemas/TicketStatusUpdateResponse'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '404':
-          $ref: '../../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
         '409':
-          $ref: '../../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
   /api/v1/tickets/{id}/assign:
     post:
@@ -359,21 +359,21 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
                         $ref: '#/components/schemas/TicketAssignResponse'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '404':
-          $ref: '../../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
   /api/v1/tickets/{id}/accept:
     post:
@@ -403,21 +403,21 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
                         $ref: '#/components/schemas/TicketAcceptResponse'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '404':
-          $ref: '../../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
   /api/v1/tickets/{id}/escalate:
     post:
@@ -447,21 +447,21 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
                         $ref: '#/components/schemas/TicketEscalateResponse'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '404':
-          $ref: '../../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
   /api/v1/tickets/{id}/resolve:
     post:
@@ -491,21 +491,21 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
                         $ref: '#/components/schemas/TicketResolveResponse'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '404':
-          $ref: '../../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
   /api/v1/tickets/batch:
     post:
@@ -527,19 +527,19 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
                         $ref: '#/components/schemas/TicketBatchCreateResponse'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
     put:
       tags:
@@ -560,19 +560,19 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
                         $ref: '#/components/schemas/TicketBatchUpdateResponse'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
   /api/v1/tickets/batch/assign:
     post:
@@ -594,19 +594,19 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
                         $ref: '#/components/schemas/TicketBatchAssignResponse'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
   /api/v1/tickets/batch/close:
     post:
@@ -628,19 +628,19 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
                         $ref: '#/components/schemas/TicketBatchCloseResponse'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
   /api/v1/tickets/search:
     get:
@@ -695,7 +695,7 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
                   - type: object
                     properties:
                       data:
@@ -706,13 +706,13 @@ paths:
                             items:
                               $ref: '#/components/schemas/TicketSearchResult'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
   /api/v1/tickets/statistics:
     get:
@@ -759,19 +759,19 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
                         $ref: '#/components/schemas/TicketStatistics'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
   /api/v1/tickets/export:
     get:
@@ -812,13 +812,13 @@ paths:
                 type: string
                 format: binary
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
   /api/v1/tickets/dashboard:
     get:
@@ -834,17 +834,17 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
                         $ref: '#/components/schemas/TicketDashboard'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
   /api/v1/tickets/{id}/attachments:
     post:
@@ -883,21 +883,21 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
                         $ref: '#/components/schemas/TicketAttachment'
         '400':
-          $ref: '../../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '404':
-          $ref: '../../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
     get:
       tags:
@@ -920,7 +920,7 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
                   - type: object
                     properties:
                       data:
@@ -928,13 +928,13 @@ paths:
                         items:
                           $ref: '#/components/schemas/TicketAttachment'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '404':
-          $ref: '../../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
   /api/v1/tickets/{ticket_id}/attachments/{attachment_id}:
     delete:
@@ -964,15 +964,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '../../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
         '401':
-          $ref: '../../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
         '403':
-          $ref: '../../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '404':
-          $ref: '../../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
         '500':
-          $ref: '../../../global-api-index.yaml#/components/responses/InternalServerError'
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
 components:
   schemas:

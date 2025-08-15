@@ -2,6 +2,1947 @@ openapi: 3.0.3
 info:
   title: SLA管理模块 API
   version: 1.0.0
-paths: {}
+  description: REQ-017 SLA管理模块 API 规范，提供SLA定义、监控、告警、违约处理等功能
+
+tags:
+  - name: SLA定义管理
+    description: SLA定义的创建、查询、更新、删除等操作
+  - name: SLA监控管理
+    description: SLA监控状态查询、计算任务管理等操作
+  - name: SLA告警管理
+    description: SLA告警查询、确认、解决等操作
+  - name: SLA违约管理
+    description: SLA违约记录查询、处理、分析等操作
+  - name: SLA报告管理
+    description: SLA报告生成、查询、下载等操作
+  - name: SLA升级规则管理
+    description: SLA升级规则的配置和管理
+
+paths:
+  /api/v1/sla/definitions:
+    post:
+      tags:
+        - SLA定义管理
+      summary: 创建SLA定义
+      description: 创建新的SLA定义，支持多种指标类型和复杂计算规则
+      operationId: sla_definition_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlaDefinitionCreateRequest'
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SlaDefinitionInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    get:
+      tags:
+        - SLA定义管理
+      summary: 获取SLA定义列表
+      description: 分页查询SLA定义列表，支持多种筛选条件
+      operationId: sla_definition_list
+      parameters:
+        - name: customer_id
+          in: query
+          description: 客户ID
+          schema:
+            type: integer
+            example: 12345
+        - name: status
+          in: query
+          description: SLA状态
+          schema:
+            type: string
+            enum: [active, inactive, draft, expired]
+            example: "active"
+        - name: metric_type
+          in: query
+          description: 指标类型
+          schema:
+            type: string
+            enum: [response_time, resolution_time, availability, satisfaction, first_call_resolution]
+            example: "response_time"
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+        - name: sort
+          in: query
+          description: 排序字段
+          schema:
+            type: string
+            default: "created_at,desc"
+            example: "created_at,desc"
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/SlaDefinitionInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/sla/definitions/{id}:
+    get:
+      tags:
+        - SLA定义管理
+      summary: 获取SLA定义详情
+      description: 根据ID获取SLA定义的详细信息
+      operationId: sla_definition_get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: SLA定义ID
+          schema:
+            type: integer
+            example: 67890
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SlaDefinitionDetailInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    put:
+      tags:
+        - SLA定义管理
+      summary: 更新SLA定义
+      description: 更新指定的SLA定义信息
+      operationId: sla_definition_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: SLA定义ID
+          schema:
+            type: integer
+            example: 67890
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlaDefinitionUpdateRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SlaDefinitionInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    delete:
+      tags:
+        - SLA定义管理
+      summary: 删除SLA定义
+      description: 删除指定的SLA定义（软删除）
+      operationId: sla_definition_delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: SLA定义ID
+          schema:
+            type: integer
+            example: 67890
+      responses:
+        '200':
+          description: 删除成功
+          content:
+            application/json:
+              schema:
+                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/sla/definitions/batch:
+    post:
+      tags:
+        - SLA定义管理
+      summary: 批量创建SLA定义
+      description: 批量创建多个SLA定义
+      operationId: sla_definition_batch_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                definitions:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/SlaDefinitionCreateRequest'
+                  example:
+                    - sla_name: "工单响应时间SLA"
+                      sla_code: "TICKET_RESPONSE_TIME"
+                      customer_id: 12345
+                      metric_type: "response_time"
+                      target_value: 30.0
+                    - sla_name: "工单解决时间SLA"
+                      sla_code: "TICKET_RESOLUTION_TIME"
+                      customer_id: 12345
+                      metric_type: "resolution_time"
+                      target_value: 240.0
+      responses:
+        '200':
+          description: 批量创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          success_count:
+                            type: integer
+                            description: 成功创建数量
+                            example: 2
+                          failed_count:
+                            type: integer
+                            description: 失败数量
+                            example: 0
+                          results:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/SlaDefinitionInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/sla/definitions/{id}/status:
+    patch:
+      tags:
+        - SLA定义管理
+      summary: 更新SLA状态
+      description: 更新指定SLA定义的状态
+      operationId: sla_definition_status_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: SLA定义ID
+          schema:
+            type: integer
+            example: 67890
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [active, inactive, draft, expired]
+                  description: 新状态
+                  example: "active"
+                reason:
+                  type: string
+                  description: 状态变更原因
+                  example: "SLA配置完成，正式启用"
+              required:
+                - status
+      responses:
+        '200':
+          description: 状态更新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SlaDefinitionInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/sla/monitoring/status:
+    get:
+      tags:
+        - SLA监控管理
+      summary: 获取SLA监控状态
+      description: 获取指定SLA的实时监控状态和趋势数据
+      operationId: sla_monitoring_status_get
+      parameters:
+        - name: sla_id
+          in: query
+          required: true
+          description: SLA定义ID
+          schema:
+            type: integer
+            example: 67890
+        - name: period
+          in: query
+          description: 监控周期
+          schema:
+            type: string
+            example: "2025-08"
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SlaMonitoringStatus'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/sla/monitoring/records:
+    get:
+      tags:
+        - SLA监控管理
+      summary: 获取SLA监控记录列表
+      description: 分页查询SLA监控记录
+      operationId: sla_monitoring_records_list
+      parameters:
+        - name: sla_id
+          in: query
+          description: SLA定义ID
+          schema:
+            type: integer
+            example: 67890
+        - name: period_type
+          in: query
+          description: 周期类型
+          schema:
+            type: string
+            enum: [daily, weekly, monthly, quarterly]
+            example: "monthly"
+        - name: status
+          in: query
+          description: 监控状态
+          schema:
+            type: string
+            enum: [achieved, warning, violated, calculating, data_insufficient]
+            example: "achieved"
+        - name: start_date
+          in: query
+          description: 开始日期
+          schema:
+            type: string
+            format: date
+            example: "2025-08-01"
+        - name: end_date
+          in: query
+          description: 结束日期
+          schema:
+            type: string
+            format: date
+            example: "2025-08-31"
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/SlaMonitoringRecord'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/sla/monitoring/recalculate:
+    post:
+      tags:
+        - SLA监控管理
+      summary: 触发SLA重新计算
+      description: 手动触发指定SLA的重新计算
+      operationId: sla_monitoring_recalculate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sla_id:
+                  type: integer
+                  description: SLA定义ID
+                  example: 67890
+                period_start:
+                  type: string
+                  format: date
+                  description: 重算开始日期
+                  example: "2025-08-01"
+                period_end:
+                  type: string
+                  format: date
+                  description: 重算结束日期
+                  example: "2025-08-15"
+                reason:
+                  type: string
+                  description: 重算原因
+                  example: "数据修正后重新计算"
+              required:
+                - sla_id
+                - period_start
+                - period_end
+      responses:
+        '200':
+          description: 重算任务创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          task_id:
+                            type: integer
+                            description: 计算任务ID
+                            example: 12345
+                          estimated_duration:
+                            type: integer
+                            description: 预估耗时（秒）
+                            example: 300
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/sla/alerts:
+    get:
+      tags:
+        - SLA告警管理
+      summary: 获取SLA告警列表
+      description: 分页查询SLA告警记录
+      operationId: sla_alerts_list
+      parameters:
+        - name: sla_id
+          in: query
+          description: SLA定义ID
+          schema:
+            type: integer
+            example: 67890
+        - name: alert_level
+          in: query
+          description: 告警级别
+          schema:
+            type: string
+            enum: [info, warning, error, critical]
+            example: "critical"
+        - name: alert_type
+          in: query
+          description: 告警类型
+          schema:
+            type: string
+            enum: [warning, critical, violation, recovery, threshold]
+            example: "violation"
+        - name: status
+          in: query
+          description: 告警状态
+          schema:
+            type: string
+            enum: [active, acknowledged, resolved, closed, suppressed]
+            example: "active"
+        - name: start_time
+          in: query
+          description: 开始时间
+          schema:
+            type: string
+            format: date-time
+            example: "2025-08-01T00:00:00Z"
+        - name: end_time
+          in: query
+          description: 结束时间
+          schema:
+            type: string
+            format: date-time
+            example: "2025-08-31T23:59:59Z"
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/SlaAlertInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/sla/alerts/{id}:
+    get:
+      tags:
+        - SLA告警管理
+      summary: 获取SLA告警详情
+      description: 根据ID获取SLA告警的详细信息
+      operationId: sla_alert_get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 告警ID
+          schema:
+            type: integer
+            example: 12345
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SlaAlertDetailInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/sla/alerts/{id}/acknowledge:
+    patch:
+      tags:
+        - SLA告警管理
+      summary: 确认SLA告警
+      description: 确认指定的SLA告警
+      operationId: sla_alert_acknowledge
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 告警ID
+          schema:
+            type: integer
+            example: 12345
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlaAlertAcknowledgeRequest'
+      responses:
+        '200':
+          description: 确认成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SlaAlertInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/sla/alerts/{id}/resolve:
+    patch:
+      tags:
+        - SLA告警管理
+      summary: 解决SLA告警
+      description: 解决指定的SLA告警
+      operationId: sla_alert_resolve
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 告警ID
+          schema:
+            type: integer
+            example: 12345
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlaAlertResolveRequest'
+      responses:
+        '200':
+          description: 解决成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SlaAlertInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/sla/violations:
+    get:
+      tags:
+        - SLA违约管理
+      summary: 获取SLA违约记录列表
+      description: 分页查询SLA违约记录
+      operationId: sla_violations_list
+      parameters:
+        - name: sla_id
+          in: query
+          description: SLA定义ID
+          schema:
+            type: integer
+            example: 67890
+        - name: severity_level
+          in: query
+          description: 严重程度
+          schema:
+            type: string
+            enum: [low, medium, high, critical]
+            example: "high"
+        - name: violation_type
+          in: query
+          description: 违约类型
+          schema:
+            type: string
+            enum: [threshold, availability, response_time, resolution_time, quality]
+            example: "response_time"
+        - name: status
+          in: query
+          description: 违约状态
+          schema:
+            type: string
+            enum: [open, investigating, resolved, closed, cancelled]
+            example: "open"
+        - name: start_time
+          in: query
+          description: 开始时间
+          schema:
+            type: string
+            format: date-time
+            example: "2025-08-01T00:00:00Z"
+        - name: end_time
+          in: query
+          description: 结束时间
+          schema:
+            type: string
+            format: date-time
+            example: "2025-08-31T23:59:59Z"
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/SlaViolationRecord'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/sla/violations/{id}:
+    get:
+      tags:
+        - SLA违约管理
+      summary: 获取SLA违约记录详情
+      description: 根据ID获取SLA违约记录的详细信息
+      operationId: sla_violation_get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 违约记录ID
+          schema:
+            type: integer
+            example: 12345
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SlaViolationDetailRecord'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/sla/reports/generate:
+    post:
+      tags:
+        - SLA报告管理
+      summary: 生成SLA报告
+      description: 根据指定条件生成SLA报告
+      operationId: sla_report_generate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlaReportGenerateRequest'
+      responses:
+        '200':
+          description: 报告生成任务创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          report_id:
+                            type: string
+                            description: 报告ID
+                            example: "RPT-20250815-0001"
+                          estimated_duration:
+                            type: integer
+                            description: 预估生成时间（秒）
+                            example: 30
+                          status:
+                            type: string
+                            description: 报告状态
+                            example: "generating"
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/sla/reports:
+    get:
+      tags:
+        - SLA报告管理
+      summary: 获取SLA报告列表
+      description: 分页查询SLA报告列表
+      operationId: sla_reports_list
+      parameters:
+        - name: customer_id
+          in: query
+          description: 客户ID
+          schema:
+            type: integer
+            example: 12345
+        - name: report_type
+          in: query
+          description: 报告类型
+          schema:
+            type: string
+            enum: [daily, weekly, monthly, quarterly, yearly, custom]
+            example: "monthly"
+        - name: status
+          in: query
+          description: 报告状态
+          schema:
+            type: string
+            enum: [generating, completed, failed, cancelled]
+            example: "completed"
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/SlaReportInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
 components:
-  schemas: {}
+  schemas:
+    SlaDefinitionInfo:
+      type: object
+      description: SLA定义基本信息
+      properties:
+        sla_id:
+          type: integer
+          description: SLA定义ID
+          example: 67890
+        sla_name:
+          type: string
+          description: SLA名称
+          example: "工单响应时间SLA"
+        sla_code:
+          type: string
+          description: SLA编码
+          example: "TICKET_RESPONSE_TIME"
+        customer_id:
+          type: integer
+          description: 客户ID
+          example: 12345
+        customer_name:
+          type: string
+          description: 客户名称
+          example: "ABC科技有限公司"
+        service_type:
+          type: string
+          description: 服务类型
+          example: "工单处理"
+        metric_type:
+          type: string
+          enum: [response_time, resolution_time, availability, satisfaction, first_call_resolution]
+          description: 指标类型
+          example: "response_time"
+        target_value:
+          type: number
+          format: decimal
+          description: 目标值
+          example: 30.0
+        warning_threshold:
+          type: number
+          format: decimal
+          description: 预警阈值
+          example: 25.0
+        critical_threshold:
+          type: number
+          format: decimal
+          description: 严重告警阈值
+          example: 35.0
+        unit:
+          type: string
+          enum: [minutes, hours, percentage, score]
+          description: 单位
+          example: "minutes"
+        calculation_period:
+          type: string
+          enum: [daily, weekly, monthly, quarterly, yearly]
+          description: 计算周期
+          example: "monthly"
+        status:
+          type: string
+          enum: [active, inactive, draft, expired]
+          description: 状态
+          example: "active"
+        effective_date:
+          type: string
+          format: date
+          description: 生效日期
+          example: "2025-09-01"
+        expiry_date:
+          type: string
+          format: date
+          description: 失效日期
+          example: "2026-08-31"
+        version:
+          type: string
+          description: 版本号
+          example: "1.0"
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2025-08-15T14:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+          example: "2025-08-15T14:30:00Z"
+
+    SlaDefinitionDetailInfo:
+      allOf:
+        - $ref: '#/components/schemas/SlaDefinitionInfo'
+        - type: object
+          properties:
+            calculation_formula:
+              type: string
+              description: 计算公式
+              example: "AVG(response_time_minutes) WHERE priority IN (1,2)"
+            business_hours_only:
+              type: boolean
+              description: 是否仅工作时间
+              example: true
+            business_hours_config:
+              type: object
+              description: 工作时间配置
+              properties:
+                timezone:
+                  type: string
+                  example: "Asia/Shanghai"
+                work_days:
+                  type: array
+                  items:
+                    type: integer
+                  example: [1, 2, 3, 4, 5]
+                work_hours:
+                  type: object
+                  properties:
+                    start:
+                      type: string
+                      example: "09:00"
+                    end:
+                      type: string
+                      example: "18:00"
+                holidays:
+                  type: array
+                  items:
+                    type: string
+                    format: date
+                  example: ["2025-01-01", "2025-02-10"]
+            priority_filter:
+              type: string
+              description: 优先级过滤条件
+              example: "1,2"
+            category_filter:
+              type: string
+              description: 分类过滤条件
+              example: "硬件故障,软件故障"
+            exclude_conditions:
+              type: object
+              description: 排除条件配置
+              properties:
+                exclude_maintenance:
+                  type: boolean
+                  example: true
+                exclude_customer_delay:
+                  type: boolean
+                  example: true
+            weight:
+              type: number
+              format: decimal
+              description: 权重
+              example: 1.0
+            penalty_rules:
+              type: object
+              description: 违约扣费/赔偿规则
+              properties:
+                violation_penalty:
+                  type: object
+                  properties:
+                    percentage:
+                      type: number
+                      example: 5.0
+                    max_amount:
+                      type: number
+                      example: 10000.00
+                    calculation_base:
+                      type: string
+                      example: "monthly_fee"
+                compensation_rules:
+                  type: object
+                  properties:
+                    minor_violation:
+                      type: number
+                      example: 1000.00
+                    major_violation:
+                      type: number
+                      example: 5000.00
+
+    SlaDefinitionCreateRequest:
+      type: object
+      description: 创建SLA定义请求
+      required:
+        - sla_name
+        - sla_code
+        - metric_type
+        - target_value
+        - unit
+        - calculation_period
+      properties:
+        sla_name:
+          type: string
+          description: SLA名称
+          example: "工单响应时间SLA"
+        sla_code:
+          type: string
+          description: SLA编码
+          example: "TICKET_RESPONSE_TIME"
+        customer_id:
+          type: integer
+          description: 客户ID
+          example: 12345
+        service_type:
+          type: string
+          description: 服务类型
+          example: "工单处理"
+        metric_type:
+          type: string
+          enum: [response_time, resolution_time, availability, satisfaction, first_call_resolution]
+          description: 指标类型
+          example: "response_time"
+        target_value:
+          type: number
+          format: decimal
+          description: 目标值
+          example: 30.0
+        warning_threshold:
+          type: number
+          format: decimal
+          description: 预警阈值
+          example: 25.0
+        critical_threshold:
+          type: number
+          format: decimal
+          description: 严重告警阈值
+          example: 35.0
+        unit:
+          type: string
+          enum: [minutes, hours, percentage, score]
+          description: 单位
+          example: "minutes"
+        calculation_period:
+          type: string
+          enum: [daily, weekly, monthly, quarterly, yearly]
+          description: 计算周期
+          example: "monthly"
+        calculation_formula:
+          type: string
+          description: 计算公式
+          example: "AVG(response_time_minutes) WHERE priority IN (1,2)"
+        business_hours_only:
+          type: boolean
+          description: 是否仅工作时间
+          example: true
+        business_hours_config:
+          type: object
+          description: 工作时间配置
+        priority_filter:
+          type: string
+          description: 优先级过滤条件
+          example: "1,2"
+        category_filter:
+          type: string
+          description: 分类过滤条件
+          example: "硬件故障,软件故障"
+        exclude_conditions:
+          type: object
+          description: 排除条件配置
+        weight:
+          type: number
+          format: decimal
+          description: 权重
+          example: 1.0
+        penalty_rules:
+          type: object
+          description: 违约扣费/赔偿规则
+        effective_date:
+          type: string
+          format: date
+          description: 生效日期
+          example: "2025-09-01"
+        expiry_date:
+          type: string
+          format: date
+          description: 失效日期
+          example: "2026-08-31"
+
+    SlaDefinitionUpdateRequest:
+      type: object
+      description: 更新SLA定义请求
+      properties:
+        sla_name:
+          type: string
+          description: SLA名称
+          example: "工单响应时间SLA"
+        target_value:
+          type: number
+          format: decimal
+          description: 目标值
+          example: 25.0
+        warning_threshold:
+          type: number
+          format: decimal
+          description: 预警阈值
+          example: 20.0
+        critical_threshold:
+          type: number
+          format: decimal
+          description: 严重告警阈值
+          example: 30.0
+        calculation_formula:
+          type: string
+          description: 计算公式
+          example: "AVG(response_time_minutes) WHERE priority IN (1,2)"
+        business_hours_config:
+          type: object
+          description: 工作时间配置
+        priority_filter:
+          type: string
+          description: 优先级过滤条件
+          example: "1,2"
+        category_filter:
+          type: string
+          description: 分类过滤条件
+          example: "硬件故障,软件故障"
+        exclude_conditions:
+          type: object
+          description: 排除条件配置
+        weight:
+          type: number
+          format: decimal
+          description: 权重
+          example: 1.0
+        penalty_rules:
+          type: object
+          description: 违约扣费/赔偿规则
+        expiry_date:
+          type: string
+          format: date
+          description: 失效日期
+          example: "2026-08-31"
+        version:
+          type: string
+          description: 版本号
+          example: "1.1"
+        change_reason:
+          type: string
+          description: 变更原因
+          example: "客户要求提升服务水平"
+
+    SlaMonitoringStatus:
+      type: object
+      description: SLA监控状态
+      properties:
+        sla_id:
+          type: integer
+          description: SLA定义ID
+          example: 67890
+        sla_name:
+          type: string
+          description: SLA名称
+          example: "工单响应时间SLA"
+        monitoring_period:
+          type: string
+          description: 监控周期
+          example: "2025-08"
+        current_status:
+          type: object
+          description: 当前状态
+          properties:
+            status:
+              type: string
+              enum: [achieved, warning, violated, calculating, data_insufficient]
+              example: "achieved"
+            actual_value:
+              type: number
+              format: decimal
+              example: 28.5
+            target_value:
+              type: number
+              format: decimal
+              example: 30.0
+            achievement_rate:
+              type: number
+              format: decimal
+              example: 105.3
+            trend_indicator:
+              type: string
+              enum: [improving, stable, declining]
+              example: "improving"
+            days_remaining:
+              type: integer
+              example: 15
+        period_summary:
+          type: object
+          description: 周期汇总
+          properties:
+            total_incidents:
+              type: integer
+              example: 156
+            achieved_incidents:
+              type: integer
+              example: 152
+            violated_incidents:
+              type: integer
+              example: 4
+            sample_count:
+              type: integer
+              example: 156
+            quality_score:
+              type: number
+              format: decimal
+              example: 98.5
+        trend_data:
+          type: array
+          description: 趋势数据
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                format: date
+                example: "2025-08-01"
+              value:
+                type: number
+                format: decimal
+                example: 32.1
+              status:
+                type: string
+                example: "warning"
+        risk_assessment:
+          type: object
+          description: 风险评估
+          properties:
+            risk_level:
+              type: string
+              enum: [low, medium, high, critical]
+              example: "low"
+            risk_factors:
+              type: array
+              items:
+                type: string
+              example: []
+            predicted_end_value:
+              type: number
+              format: decimal
+              example: 28.2
+            confidence:
+              type: number
+              format: decimal
+              example: 0.85
+
+    SlaMonitoringRecord:
+      type: object
+      description: SLA监控记录
+      properties:
+        record_id:
+          type: integer
+          description: 记录ID
+          example: 12345
+        sla_id:
+          type: integer
+          description: SLA定义ID
+          example: 67890
+        sla_name:
+          type: string
+          description: SLA名称
+          example: "工单响应时间SLA"
+        monitoring_period:
+          type: string
+          format: date
+          description: 监控周期
+          example: "2025-08-01"
+        period_type:
+          type: string
+          enum: [daily, weekly, monthly, quarterly]
+          description: 周期类型
+          example: "monthly"
+        actual_value:
+          type: number
+          format: decimal
+          description: 实际值
+          example: 28.5
+        target_value:
+          type: number
+          format: decimal
+          description: 目标值
+          example: 30.0
+        achievement_rate:
+          type: number
+          format: decimal
+          description: 达成率（百分比）
+          example: 105.3
+        status:
+          type: string
+          enum: [achieved, warning, violated, calculating, data_insufficient]
+          description: 状态
+          example: "achieved"
+        sample_count:
+          type: integer
+          description: 样本数量
+          example: 156
+        total_incidents:
+          type: integer
+          description: 总事件数
+          example: 156
+        violation_count:
+          type: integer
+          description: 违约次数
+          example: 4
+        excluded_count:
+          type: integer
+          description: 排除事件数
+          example: 2
+        quality_score:
+          type: number
+          format: decimal
+          description: 数据质量评分（0-100）
+          example: 98.5
+        trend_indicator:
+          type: string
+          enum: [improving, stable, declining]
+          description: 趋势指标
+          example: "improving"
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2025-08-15T14:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+          example: "2025-08-15T14:30:00Z"
+
+    SlaAlertInfo:
+      type: object
+      description: SLA告警信息
+      properties:
+        alert_id:
+          type: integer
+          description: 告警ID
+          example: 12345
+        sla_id:
+          type: integer
+          description: SLA定义ID
+          example: 67890
+        sla_name:
+          type: string
+          description: SLA名称
+          example: "工单响应时间SLA"
+        alert_type:
+          type: string
+          enum: [warning, critical, violation, recovery, threshold]
+          description: 告警类型
+          example: "violation"
+        alert_level:
+          type: string
+          enum: [info, warning, error, critical]
+          description: 告警级别
+          example: "critical"
+        alert_title:
+          type: string
+          description: 告警标题
+          example: "SLA违约告警"
+        alert_message:
+          type: string
+          description: 告警消息
+          example: "工单响应时间SLA违约，当前值35.2分钟，超出目标值30分钟"
+        current_value:
+          type: number
+          format: decimal
+          description: 当前值
+          example: 35.2
+        threshold_value:
+          type: number
+          format: decimal
+          description: 阈值
+          example: 30.0
+        escalation_level:
+          type: integer
+          description: 升级级别
+          example: 2
+        status:
+          type: string
+          enum: [active, acknowledged, resolved, closed, suppressed]
+          description: 状态
+          example: "active"
+        notification_sent:
+          type: boolean
+          description: 是否已发送通知
+          example: true
+        acknowledged_by:
+          type: integer
+          description: 确认人ID
+          example: 456
+        acknowledged_at:
+          type: string
+          format: date-time
+          description: 确认时间
+          example: "2025-08-15T15:00:00Z"
+        resolved_by:
+          type: integer
+          description: 解决人ID
+          example: 456
+        resolved_at:
+          type: string
+          format: date-time
+          description: 解决时间
+          example: "2025-08-15T16:00:00Z"
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2025-08-15T14:30:00Z"
+
+    SlaAlertDetailInfo:
+      allOf:
+        - $ref: '#/components/schemas/SlaAlertInfo'
+        - type: object
+          properties:
+            trend_data:
+              type: object
+              description: 趋势数据
+              properties:
+                last_24h:
+                  type: array
+                  items:
+                    type: number
+                  example: [32.1, 33.5, 35.2]
+                trend:
+                  type: string
+                  example: "increasing"
+            notification_channels:
+              type: array
+              description: 通知渠道列表
+              items:
+                type: string
+              example: ["email", "sms", "dingtalk"]
+            escalation_rule_id:
+              type: integer
+              description: 升级规则ID
+              example: 789
+            resolution_notes:
+              type: string
+              description: 解决备注
+              example: "已优化工单分配策略，响应时间恢复正常"
+
+    SlaAlertAcknowledgeRequest:
+      type: object
+      description: 告警确认请求
+      required:
+        - acknowledgment_notes
+      properties:
+        acknowledgment_notes:
+          type: string
+          description: 确认备注
+          example: "已确认告警，正在处理相关问题"
+        estimated_resolution_time:
+          type: string
+          format: date-time
+          description: 预估解决时间
+          example: "2025-08-15T16:00:00Z"
+
+    SlaAlertResolveRequest:
+      type: object
+      description: 告警解决请求
+      required:
+        - resolution_notes
+      properties:
+        resolution_notes:
+          type: string
+          description: 解决备注
+          example: "已优化工单分配策略，响应时间恢复正常"
+        resolution_actions:
+          type: array
+          description: 解决措施
+          items:
+            type: string
+          example: ["调整工程师排班", "优化工单分配算法", "增加监控频率"]
+
+    SlaViolationRecord:
+      type: object
+      description: SLA违约记录
+      properties:
+        violation_id:
+          type: integer
+          description: 违约记录ID
+          example: 12345
+        sla_id:
+          type: integer
+          description: SLA定义ID
+          example: 67890
+        sla_name:
+          type: string
+          description: SLA名称
+          example: "工单响应时间SLA"
+        violation_type:
+          type: string
+          enum: [threshold, availability, response_time, resolution_time, quality]
+          description: 违约类型
+          example: "response_time"
+        severity_level:
+          type: string
+          enum: [low, medium, high, critical]
+          description: 严重程度
+          example: "high"
+        violation_start_time:
+          type: string
+          format: date-time
+          description: 违约开始时间
+          example: "2025-08-15T14:30:00Z"
+        violation_end_time:
+          type: string
+          format: date-time
+          description: 违约结束时间
+          example: "2025-08-15T16:30:00Z"
+        duration_minutes:
+          type: integer
+          description: 违约持续时间（分钟）
+          example: 120
+        actual_value:
+          type: number
+          format: decimal
+          description: 实际值
+          example: 35.2
+        threshold_value:
+          type: number
+          format: decimal
+          description: 阈值
+          example: 30.0
+        deviation_percentage:
+          type: number
+          format: decimal
+          description: 偏差百分比
+          example: 17.3
+        business_impact:
+          type: string
+          description: 业务影响描述
+          example: "客户业务中断"
+        financial_impact:
+          type: number
+          format: decimal
+          description: 财务影响金额
+          example: 5000.00
+        penalty_amount:
+          type: number
+          format: decimal
+          description: 违约金额
+          example: 2500.00
+        compensation_amount:
+          type: number
+          format: decimal
+          description: 赔偿金额
+          example: 1000.00
+        status:
+          type: string
+          enum: [open, investigating, resolved, closed, cancelled]
+          description: 状态
+          example: "open"
+        assigned_to:
+          type: integer
+          description: 负责人ID
+          example: 456
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2025-08-15T14:30:00Z"
+
+    SlaViolationDetailRecord:
+      allOf:
+        - $ref: '#/components/schemas/SlaViolationRecord'
+        - type: object
+          properties:
+            affected_incidents:
+              type: array
+              description: 受影响的事件列表
+              items:
+                type: object
+                properties:
+                  incident_id:
+                    type: string
+                    example: "INC-20250815-0001"
+                  incident_type:
+                    type: string
+                    example: "工单处理"
+                  impact_level:
+                    type: string
+                    example: "high"
+            root_cause_analysis:
+              type: string
+              description: 根因分析
+              example: "工程师资源不足，导致响应时间延长"
+            resolution_actions:
+              type: array
+              description: 解决措施
+              items:
+                type: object
+                properties:
+                  action:
+                    type: string
+                    example: "增加工程师排班"
+                  responsible:
+                    type: string
+                    example: "运维经理"
+                  deadline:
+                    type: string
+                    format: date-time
+                    example: "2025-08-20T18:00:00Z"
+                  status:
+                    type: string
+                    example: "in_progress"
+            prevention_measures:
+              type: array
+              description: 预防措施
+              items:
+                type: string
+              example: ["优化工单分配算法", "增加监控频率", "建立预警机制"]
+
+    SlaReportGenerateRequest:
+      type: object
+      description: SLA报告生成请求
+      required:
+        - report_type
+        - period
+      properties:
+        report_type:
+          type: string
+          enum: [daily, weekly, monthly, quarterly, yearly, custom]
+          description: 报告类型
+          example: "monthly"
+        period:
+          type: string
+          description: 报告周期
+          example: "2025-08"
+        customer_id:
+          type: integer
+          description: 客户ID
+          example: 12345
+        sla_ids:
+          type: array
+          description: SLA ID列表
+          items:
+            type: integer
+          example: [67890, 67891, 67892]
+        include_sections:
+          type: array
+          description: 包含的报告章节
+          items:
+            type: string
+          example: ["executive_summary", "detailed_metrics", "trend_analysis", "violation_analysis", "improvement_recommendations"]
+        format:
+          type: string
+          enum: [pdf, excel, html]
+          description: 报告格式
+          example: "pdf"
+        language:
+          type: string
+          enum: [zh-CN, en-US]
+          description: 报告语言
+          example: "zh-CN"
+        delivery_method:
+          type: string
+          enum: [download, email, api]
+          description: 交付方式
+          example: "email"
+        recipients:
+          type: array
+          description: 收件人列表
+          items:
+            type: string
+          example: ["customer@example.com", "manager@company.com"]
+
+    SlaReportInfo:
+      type: object
+      description: SLA报告信息
+      properties:
+        report_id:
+          type: string
+          description: 报告ID
+          example: "RPT-20250815-0001"
+        report_name:
+          type: string
+          description: 报告名称
+          example: "ABC科技有限公司2025年8月SLA月度报告"
+        report_type:
+          type: string
+          enum: [daily, weekly, monthly, quarterly, yearly, custom]
+          description: 报告类型
+          example: "monthly"
+        customer_id:
+          type: integer
+          description: 客户ID
+          example: 12345
+        customer_name:
+          type: string
+          description: 客户名称
+          example: "ABC科技有限公司"
+        period:
+          type: string
+          description: 报告周期
+          example: "2025-08"
+        format:
+          type: string
+          enum: [pdf, excel, html]
+          description: 报告格式
+          example: "pdf"
+        status:
+          type: string
+          enum: [generating, completed, failed, cancelled]
+          description: 报告状态
+          example: "completed"
+        file_size:
+          type: integer
+          description: 文件大小（字节）
+          example: 2048576
+        download_url:
+          type: string
+          description: 下载链接
+          example: "https://cdn.example.com/reports/RPT-20250815-0001.pdf"
+        generated_at:
+          type: string
+          format: date-time
+          description: 生成时间
+          example: "2025-08-15T15:30:00Z"
+        expires_at:
+          type: string
+          format: date-time
+          description: 过期时间
+          example: "2025-09-15T15:30:00Z"

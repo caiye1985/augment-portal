@@ -3,38 +3,137 @@ info:
   title: IT运维门户系统 API
   version: 1.0.0
   description: 全局 API 入口文档（聚合所有业务域）
-paths: {}
-x-domains:
-  - name: auth
-    $ref: './domains/auth-domain.yaml'
-  - name: ticket
-    $ref: './domains/ticket-domain.yaml'
-  - name: engineer
-    $ref: './domains/engineer-domain.yaml'
-  - name: knowledge
-    $ref: './domains/knowledge-domain.yaml'
-  - name: customer
-    $ref: './domains/customer-domain.yaml'
-  - name: notification
-    $ref: './domains/notification-domain.yaml'
-  - name: portal
-    $ref: './domains/portal-domain.yaml'
-  - name: integration
-    $ref: './domains/integration-domain.yaml'
-  - name: finance
-    $ref: './domains/finance-domain.yaml'
-  - name: system
-    $ref: './domains/system-domain.yaml'
-  - name: analytics
-    $ref: './domains/analytics-domain.yaml'
-  - name: workflow
-    $ref: './domains/workflow-domain.yaml'
-  - name: experience
-    $ref: './domains/experience-domain.yaml'
-  - name: client
-    $ref: './domains/client-domain.yaml'
-  - name: data
-    $ref: './domains/data-domain.yaml'
+
+paths:
+  # 认证业务域 API
+  /api/v1/auth/login:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1auth~1login'
+  /api/v1/auth/logout:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1auth~1logout'
+  /api/v1/auth/refresh:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1auth~1refresh'
+  /api/v1/users:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1users'
+  /api/v1/users/{id}:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1users~1{id}'
+  /api/v1/roles:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1roles'
+  /api/v1/permissions:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1permissions'
+
+  # 工单业务域 API
+  /api/v1/tickets:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets'
+  /api/v1/tickets/{id}:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1{id}'
+  /api/v1/tickets/{id}/status:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1{id}~1status'
+  /api/v1/tickets/{id}/assign:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1{id}~1assign'
+
+  # 客户业务域 API
+  /api/v1/customers:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers'
+  /api/v1/customers/{id}:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}'
+  /api/v1/customers/search:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1search'
+  /api/v1/customers/batch:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1batch'
+  /api/v1/customers/export:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1export'
+  /api/v1/customers/{id}/contacts:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1contacts'
+  /api/v1/customers/{id}/health-score:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1health-score'
+  /api/v1/customers/{id}/contracts:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1contracts'
+  /api/v1/contracts/{id}:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1contracts~1{id}'
+  /api/v1/customers/{id}/analysis/value:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1analysis~1value'
+  /api/v1/customers/{id}/tags:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1tags'
+  /api/v1/customers/{id}/communications:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1communications'
+  /api/v1/customers/{id}/service-records:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1service-records'
+
+  # SLA业务域 API
+  /api/v1/sla/definitions:
+    $ref: './domains/sla-domain.yaml#/paths/~1api~1v1~1sla~1definitions'
+  /api/v1/sla/definitions/{id}:
+    $ref: './domains/sla-domain.yaml#/paths/~1api~1v1~1sla~1definitions~1{id}'
+  /api/v1/sla/definitions/batch:
+    $ref: './domains/sla-domain.yaml#/paths/~1api~1v1~1sla~1definitions~1batch'
+  /api/v1/sla/definitions/{id}/status:
+    $ref: './domains/sla-domain.yaml#/paths/~1api~1v1~1sla~1definitions~1{id}~1status'
+  /api/v1/sla/monitoring/status:
+    $ref: './domains/sla-domain.yaml#/paths/~1api~1v1~1sla~1monitoring~1status'
+  /api/v1/sla/monitoring/records:
+    $ref: './domains/sla-domain.yaml#/paths/~1api~1v1~1sla~1monitoring~1records'
+  /api/v1/sla/monitoring/recalculate:
+    $ref: './domains/sla-domain.yaml#/paths/~1api~1v1~1sla~1monitoring~1recalculate'
+  /api/v1/sla/alerts:
+    $ref: './domains/sla-domain.yaml#/paths/~1api~1v1~1sla~1alerts'
+  /api/v1/sla/alerts/{id}:
+    $ref: './domains/sla-domain.yaml#/paths/~1api~1v1~1sla~1alerts~1{id}'
+  /api/v1/sla/alerts/{id}/acknowledge:
+    $ref: './domains/sla-domain.yaml#/paths/~1api~1v1~1sla~1alerts~1{id}~1acknowledge'
+  /api/v1/sla/alerts/{id}/resolve:
+    $ref: './domains/sla-domain.yaml#/paths/~1api~1v1~1sla~1alerts~1{id}~1resolve'
+  /api/v1/sla/violations:
+    $ref: './domains/sla-domain.yaml#/paths/~1api~1v1~1sla~1violations'
+  /api/v1/sla/violations/{id}:
+    $ref: './domains/sla-domain.yaml#/paths/~1api~1v1~1sla~1violations~1{id}'
+  /api/v1/sla/reports/generate:
+    $ref: './domains/sla-domain.yaml#/paths/~1api~1v1~1sla~1reports~1generate'
+  /api/v1/sla/reports:
+    $ref: './domains/sla-domain.yaml#/paths/~1api~1v1~1sla~1reports'
+
+  # 财务业务域 API
+  /api/v1/finance/invoices/generate:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1invoices~1generate'
+  /api/v1/finance/invoices:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1invoices'
+  /api/v1/finance/invoices/{id}:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1invoices~1{id}'
+  /api/v1/finance/invoices/batch:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1invoices~1batch'
+  /api/v1/finance/invoices/export:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1invoices~1export'
+  /api/v1/finance/payments/process:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1payments~1process'
+  /api/v1/finance/payments:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1payments'
+  /api/v1/finance/payments/{id}:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1payments~1{id}'
+  /api/v1/finance/payments/notify:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1payments~1notify'
+  /api/v1/finance/payments/reconcile:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1payments~1reconcile'
+  /api/v1/finance/contracts/{id}/extensions:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1contracts~1{id}~1extensions'
+  /api/v1/finance/extensions:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1extensions'
+  /api/v1/finance/extensions/{id}:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1extensions~1{id}'
+  /api/v1/finance/extensions/{id}/approve:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1extensions~1{id}~1approve'
+  /api/v1/finance/extensions/{id}/reject:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1extensions~1{id}~1reject'
+  /api/v1/finance/reports/revenue-analysis:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1reports~1revenue-analysis'
+  /api/v1/finance/reports/cash-flow:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1reports~1cash-flow'
+  /api/v1/finance/reports/customer-analysis:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1reports~1customer-analysis'
+  /api/v1/finance/risk/assessment:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1risk~1assessment'
+  /api/v1/finance/config/billing-rules:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1config~1billing-rules'
+  /api/v1/finance/config/tax-rates:
+    $ref: './domains/finance-domain.yaml#/paths/~1api~1v1~1finance~1config~1tax-rates'
 
 components:
   schemas:
@@ -139,6 +238,12 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
     InternalServerError:
       description: 服务器内部错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    UnprocessableEntity:
+      description: 请求格式正确但语义错误
       content:
         application/json:
           schema:

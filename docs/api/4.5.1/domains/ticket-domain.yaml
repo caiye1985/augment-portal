@@ -1,9 +1,32 @@
 openapi: 3.0.3
 info:
-  title: Uticket 业务域 API 聚合
+  title: 工单业务域 API 聚合
   version: 1.0.0
+  description: 工单相关的API聚合，包括工单管理、智能派单等功能
+
 paths:
-  /工单管理系统:
-    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1工单管理系统'
-  /智能派单系统:
-    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1智能派单系统'
+  # 工单管理系统 - 工单CRUD API
+  /api/v1/tickets:
+    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets'
+  /api/v1/tickets/{id}:
+    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1{id}'
+  /api/v1/tickets/{id}/status:
+    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1{id}~1status'
+  /api/v1/tickets/{id}/assign:
+    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1{id}~1assign'
+  /api/v1/tickets/{id}/accept:
+    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1{id}~1accept'
+  /api/v1/tickets/{id}/resolve:
+    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1{id}~1resolve'
+  /api/v1/tickets/{id}/attachments:
+    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1{id}~1attachments'
+
+components:
+  # 引用全局通用组件
+  schemas:
+    ApiResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+    PagedResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/PagedResponse'
+    ErrorResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'

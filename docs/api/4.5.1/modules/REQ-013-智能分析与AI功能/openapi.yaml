@@ -2,6 +2,224 @@ openapi: 3.0.3
 info:
   title: 智能分析与AI功能 API
   version: 1.0.0
-paths: {}
+  description: REQ-013 智能分析与AI功能 API 规范
+
+tags:
+  - name: ai-analysis
+    description: AI智能分析
+
+paths:
+  /api/v1/ai/analysis/predict:
+    post:
+      tags:
+        - ai-analysis
+      summary: AI预测分析
+      description: 使用AI模型进行预测分析
+      operationId: ai_predict
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PredictionRequest'
+      responses:
+        '200':
+          description: 预测成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/PredictionResult'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ai/analysis/insights:
+    get:
+      tags:
+        - ai-analysis
+      summary: 获取AI洞察
+      description: 获取AI分析洞察结果
+      operationId: ai_get_insights
+      parameters:
+        - name: category
+          in: query
+          description: 分析类别
+          schema:
+            type: string
+            enum: [performance, security, cost, trend]
+            example: "performance"
+        - name: time_range
+          in: query
+          description: 时间范围（天）
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 365
+            default: 30
+            example: 30
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AIInsights'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
 components:
-  schemas: {}
+  schemas:
+    PredictionRequest:
+      type: object
+      required:
+        - model_type
+        - input_data
+      properties:
+        model_type:
+          type: string
+          description: 模型类型
+          enum: [workload_prediction, failure_prediction, resource_optimization]
+          example: "workload_prediction"
+        input_data:
+          type: object
+          description: 输入数据
+          additionalProperties: true
+          example:
+            historical_data: [100, 120, 95, 110, 130]
+            time_period: "daily"
+            forecast_days: 7
+        parameters:
+          type: object
+          description: 模型参数
+          additionalProperties: true
+
+    PredictionResult:
+      type: object
+      properties:
+        model_type:
+          type: string
+          description: 模型类型
+          example: "workload_prediction"
+        predictions:
+          type: array
+          description: 预测结果
+          items:
+            type: object
+            properties:
+              timestamp:
+                type: string
+                format: date-time
+                description: 预测时间点
+                example: "2024-08-16T10:30:00Z"
+              predicted_value:
+                type: number
+                description: 预测值
+                example: 125.5
+              confidence:
+                type: number
+                description: 置信度
+                example: 0.85
+        accuracy_metrics:
+          type: object
+          description: 准确性指标
+          properties:
+            mae:
+              type: number
+              description: 平均绝对误差
+              example: 5.2
+            rmse:
+              type: number
+              description: 均方根误差
+              example: 7.8
+            r_squared:
+              type: number
+              description: 决定系数
+              example: 0.92
+        generated_at:
+          type: string
+          format: date-time
+          description: 生成时间
+          example: "2024-08-15T10:30:00Z"
+
+    AIInsights:
+      type: object
+      properties:
+        category:
+          type: string
+          description: 分析类别
+          example: "performance"
+        insights:
+          type: array
+          description: 洞察列表
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+                description: 洞察标题
+                example: "CPU使用率异常增长"
+              description:
+                type: string
+                description: 洞察描述
+                example: "过去7天CPU使用率平均增长15%，建议检查资源配置"
+              severity:
+                type: string
+                description: 严重程度
+                enum: [low, medium, high, critical]
+                example: "medium"
+              confidence:
+                type: number
+                description: 置信度
+                example: 0.78
+              recommendations:
+                type: array
+                description: 建议措施
+                items:
+                  type: string
+                example: ["增加CPU资源", "优化应用程序", "检查后台进程"]
+              impact:
+                type: string
+                description: 影响评估
+                example: "可能导致系统响应变慢"
+        summary:
+          type: object
+          description: 汇总信息
+          properties:
+            total_insights:
+              type: integer
+              description: 洞察总数
+              example: 5
+            critical_count:
+              type: integer
+              description: 严重问题数
+              example: 1
+            high_count:
+              type: integer
+              description: 高优先级问题数
+              example: 2
+        generated_at:
+          type: string
+          format: date-time
+          description: 生成时间
+          example: "2024-08-15T10:30:00Z"

@@ -1,11 +1,76 @@
 openapi: 3.0.3
 info:
-  title: Usystem 业务域 API 聚合
+  title: 系统业务域 API 聚合
   version: 1.0.0
+  description: 系统相关的API聚合，包括系统设置、系统管理、运维管理等功能
+
 paths:
-  /系统管理模块:
-    $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1系统管理模块'
-  /系统设置:
-    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1系统设置'
-  /运维管理:
-    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1运维管理'
+  # 系统管理模块 API
+  /api/v1/system/users:
+    $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1users'
+  /api/v1/system/roles:
+    $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1roles'
+  /api/v1/system/permissions:
+    $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1permissions'
+
+  # 系统设置模块 API - 系统配置管理
+  /api/v1/system-config:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1system-config'
+  /api/v1/system-config/{configKey}:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1system-config~1{configKey}'
+  /api/v1/system-config/batch:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1system-config~1batch'
+  /api/v1/system-config/export:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1system-config~1export'
+  /api/v1/system-config/import:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1system-config~1import'
+  /api/v1/system-config/{configKey}/versions:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1system-config~1{configKey}~1versions'
+  /api/v1/system-config/{configKey}/rollback:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1system-config~1{configKey}~1rollback'
+  /api/v1/system-config/{configKey}/validate:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1system-config~1{configKey}~1validate'
+
+  # 系统设置模块 API - 功能开关管理
+  /api/v1/feature-flags:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1feature-flags'
+  /api/v1/feature-flags/{flagKey}:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1feature-flags~1{flagKey}'
+  /api/v1/feature-flags/{flagKey}/toggle:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1feature-flags~1{flagKey}~1toggle'
+
+  # 系统设置模块 API - 灰度发布管理
+  /api/v1/gray-release:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1gray-release'
+  /api/v1/gray-release/{releaseId}:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1gray-release~1{releaseId}'
+  /api/v1/gray-release/{releaseId}/start:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1gray-release~1{releaseId}~1start'
+  /api/v1/gray-release/{releaseId}/pause:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1gray-release~1{releaseId}~1pause'
+  /api/v1/gray-release/{releaseId}/rollback:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1gray-release~1{releaseId}~1rollback'
+
+  # 系统设置模块 API - 配置变更日志
+  /api/v1/config-change-logs:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1config-change-logs'
+
+  # 系统设置模块 API - 兼容性接口
+  /api/v1/settings:
+    $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1settings'
+
+  # 运维管理模块 API
+  /api/v1/operations/health:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1operations~1health'
+  /api/v1/operations/metrics:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1operations~1metrics'
+
+components:
+  # 引用全局通用组件
+  schemas:
+    ApiResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+    PagedResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/PagedResponse'
+    ErrorResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'

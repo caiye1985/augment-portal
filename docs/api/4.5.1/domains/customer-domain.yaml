@@ -1,11 +1,82 @@
 openapi: 3.0.3
 info:
-  title: Ucustomer 业务域 API 聚合
+  title: 客户业务域 API 聚合
   version: 1.0.0
+  description: 客户相关的API聚合，包括客户关系管理、SLA管理、甲方管理等功能
+
 paths:
-  /客户关系管理模块:
-    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1客户关系管理模块'
-  /sla管理模块:
-    $ref: '../modules/REQ-017-SLA管理模块/openapi.yaml#/paths/~1sla管理模块'
-  /甲方管理与报表系统:
-    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1甲方管理与报表系统'
+  # 客户关系管理模块 - 客户档案API
+  /api/v1/customers:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers'
+  /api/v1/customers/{id}:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}'
+  /api/v1/customers/search:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1search'
+  /api/v1/customers/batch:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1batch'
+  /api/v1/customers/export:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1export'
+  /api/v1/customers/success-tasks:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1success-tasks'
+
+  # 客户联系人管理API
+  /api/v1/customers/{id}/contacts:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}~1contacts'
+  /api/v1/customers/{id}/contacts/{contactId}:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}~1contacts~1{contactId}'
+  /api/v1/customers/{id}/contacts/{contactId}/primary:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}~1contacts~1{contactId}~1primary'
+
+  # 客户健康度管理API
+  /api/v1/customers/{id}/health-score:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}~1health-score'
+  /api/v1/customers/{id}/health-score/calculate:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}~1health-score~1calculate'
+  /api/v1/customers/{id}/health-score/trend:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}~1health-score~1trend'
+
+  # 客户成功任务管理API
+  /api/v1/customers/{id}/success-tasks:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}~1success-tasks'
+
+  # 客户合同管理API
+  /api/v1/customers/{id}/contracts:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}~1contracts'
+  /api/v1/contracts/{id}:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1contracts~1{id}'
+  /api/v1/contracts/{id}/renew:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1contracts~1{id}~1renew'
+  /api/v1/contracts/expiring:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1contracts~1expiring'
+
+  # 客户分析API
+  /api/v1/customers/{id}/analysis/value:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}~1analysis~1value'
+  /api/v1/customers/{id}/analysis/behavior:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}~1analysis~1behavior'
+
+  # 客户标签管理API
+  /api/v1/customers/{id}/tags:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}~1tags'
+  /api/v1/customers/{id}/tags/{tagId}:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}~1tags~1{tagId}'
+
+  # 客户沟通记录管理API
+  /api/v1/customers/{id}/communications:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}~1communications'
+
+  # 客户服务记录管理API
+  /api/v1/customers/{id}/service-records:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}~1service-records'
+  /api/v1/customers/{id}/satisfaction:
+    $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}~1satisfaction'
+
+components:
+  # 引用全局通用组件
+  schemas:
+    ApiResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+    PagedResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/PagedResponse'
+    ErrorResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'

@@ -3,5 +3,7 @@ info:
   title: Uanalytics 业务域 API 聚合
   version: 1.0.0
 paths:
-  /智能分析与ai功能:
-    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1智能分析与ai功能'
+  /api/v1/ai/analysis/predict:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1analysis~1predict'
+  /api/v1/ai/analysis/insights:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1analysis~1insights'

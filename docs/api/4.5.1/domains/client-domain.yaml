@@ -1,7 +1,30 @@
 openapi: 3.0.3
 info:
-  title: Uclient 业务域 API 聚合
+  title: 客户端业务域 API 聚合
   version: 1.0.0
+  description: 客户端相关的API聚合，包括移动端应用等功能
+
 paths:
-  /移动端应用模块:
-    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1移动端应用模块'
+  # 移动端应用模块暂未实现，添加占位符路径
+  /api/v1/client/placeholder:
+    get:
+      summary: 客户端占位符接口
+      description: 客户端模块占位符接口，待实现
+      operationId: client_placeholder
+      responses:
+        '200':
+          description: 占位符响应
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+components:
+  schemas:
+    # 引用全局通用组件
+    ApiResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+    PagedResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/PagedResponse'
+    ErrorResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'

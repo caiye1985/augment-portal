@@ -1,11 +1,46 @@
 openapi: 3.0.3
 info:
-  title: Uauth 业务域 API 聚合
+  title: 认证业务域 API 聚合
   version: 1.0.0
+  description: 认证相关的API聚合，包括用户认证、权限管理、会话管理等功能
+
 paths:
-  /基础架构模块:
-    $ref: '../modules/REQ-001-基础架构模块/openapi.yaml#/paths/~1基础架构模块'
-  /用户与权限管理模块:
-    $ref: '../modules/REQ-022-用户与权限管理模块/openapi.yaml#/paths/~1用户与权限管理模块'
-  /资源权限管理模块:
-    $ref: '../modules/REQ-021-资源权限管理模块/openapi.yaml#/paths/~1资源权限管理模块'
+  # 基础架构模块 - 认证相关API
+  /api/v1/auth/login:
+    $ref: '../modules/REQ-001-基础架构模块/openapi.yaml#/paths/~1api~1v1~1auth~1login'
+  /api/v1/auth/logout:
+    $ref: '../modules/REQ-001-基础架构模块/openapi.yaml#/paths/~1api~1v1~1auth~1logout'
+  /api/v1/auth/refresh:
+    $ref: '../modules/REQ-001-基础架构模块/openapi.yaml#/paths/~1api~1v1~1auth~1refresh'
+  /api/v1/auth/check-permission:
+    $ref: '../modules/REQ-001-基础架构模块/openapi.yaml#/paths/~1api~1v1~1auth~1check-permission'
+  /api/v1/auth/sessions:
+    $ref: '../modules/REQ-001-基础架构模块/openapi.yaml#/paths/~1api~1v1~1auth~1sessions'
+  /api/v1/auth/sessions/{session_id}:
+    $ref: '../modules/REQ-001-基础架构模块/openapi.yaml#/paths/~1api~1v1~1auth~1sessions~1{session_id}'
+
+  # 用户与权限管理模块 - 用户管理API
+  /api/v1/users:
+    $ref: '../modules/REQ-022-用户与权限管理模块/openapi.yaml#/paths/~1api~1v1~1users'
+  /api/v1/users/{id}:
+    $ref: '../modules/REQ-022-用户与权限管理模块/openapi.yaml#/paths/~1api~1v1~1users~1{id}'
+
+  # 角色管理API
+  /api/v1/roles:
+    $ref: '../modules/REQ-022-用户与权限管理模块/openapi.yaml#/paths/~1api~1v1~1roles'
+  /api/v1/roles/{id}:
+    $ref: '../modules/REQ-022-用户与权限管理模块/openapi.yaml#/paths/~1api~1v1~1roles~1{id}'
+
+  # 权限管理API
+  /api/v1/permissions:
+    $ref: '../modules/REQ-022-用户与权限管理模块/openapi.yaml#/paths/~1api~1v1~1permissions'
+
+components:
+  # 引用全局通用组件
+  schemas:
+    ApiResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+    PagedResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/PagedResponse'
+    ErrorResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
