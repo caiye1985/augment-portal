@@ -1,7 +1,7 @@
 ## 任务：生成 AI开发助手专用的移动端技术实现规范（REQ-020专用优化版）
 
 ### 背景与目标
-为AI开发助手生成结构化、标准化的移动端技术实现规范文档，专门针对REQ-020移动端应用模块的特殊需求进行优化。此文档专门设计为AI可解析的格式，包含完整的Flutter技术实现细节、移动端特性配置和代码生成指导。重点关注移动办公场景、离线功能、推送通知、地理位置服务、多媒体处理等移动端核心特性。采用迭代式处理，每次专注1-2个模块，确保AI能够基于此规范生成高质量的移动端代码。
+为AI开发助手生成结构化、标准化的移动端技术实现规范文档，专门针对REQ-020移动端应用模块的特殊需求进行优化。此文档专门设计为AI可解析的格式，包含完整的Flutter技术实现细节、移动端特性配置和代码生成指导。重点关注移动办公场景、离线功能、推送通知、地理位置服务、多媒体处理等移动端核心特性。确保AI能够基于此规范生成高质量的移动端代码。
 
 ### 前置要求
 1. **核心参考文档**：
@@ -9,10 +9,10 @@
    - Mock 数据规范：`$MOCK_GUIDE`
    - 模块 PRD：`$MODULE_FILE`
    - API 定义：`$API_BUNDLE`
-   - 技术栈规范：`docs/prd/split/4.5/appendix/03-technology-stack.md`
-   - 移动端模块PRD：`docs/prd/split/4.5/modules/REQ-020.md`
-   - 业务流程：`docs/prd/split/4.5/globals/04-business-processes.md`
-   - 术语表：`docs/prd/split/4.5/appendix/01-glossary-and-references.md`
+   - 技术栈规范：`docs/prd/split/$VERSION/appendix/03-technology-stack.md`
+   - 移动端模块PRD：`docs/prd/split/$VERSION/modules/REQ-020.md`
+   - 业务流程：`docs/prd/split/$VERSION/globals/04-business-processes.md`
+   - 术语表：`docs/prd/split/$VERSION/appendix/01-glossary-and-references.md`
 
 2. **技术约束**：
    - Flutter 3.x + Dart语言
@@ -131,7 +131,7 @@
    - 无网络状态处理
 
 ### 输出要求
-生成文件：`docs/prd/mobile/$MODULE_ID-mobile-prd.md`
+生成文件：`docs/ai_prd/$VERSION/mobile/$MODULE_ID-mobile-prd.md`
 
 **文档结构（REQ-020专用优化）**：
 1. **模块概述**（移动端价值、用户目标、功能定位、REQ-020特色）

@@ -6,18 +6,18 @@
 ### 前置要求
 1. **参考文档**：
    - 全局上下文：`$GLOBAL_FILE`
-   - 技术栈规范：`docs/prd/split/4.5/appendix/03-technology-stack.md`
-   - 架构设计：`docs/prd/split/4.5/appendix/05-architecture-diagrams.md`
-   - 业务流程：`docs/prd/split/4.5/globals/04-business-processes.md`
-   - 开发优先级：`docs/prd/split/4.5/appendix/02-development-priorities.md`
+   - 技术栈规范：`docs/prd/split/$VERSION/appendix/03-technology-stack.md`
+   - 架构设计：`docs/prd/split/$VERSION/appendix/05-architecture-diagrams.md`
+   - 业务流程：`docs/prd/split/$VERSION/globals/04-business-processes.md`
+   - 开发优先级：`docs/prd/split/$VERSION/appendix/02-development-priorities.md`
 
 2. **技术约束**：
-   - Vue.js 3.4.15 + Composition API
-   - Vite 5.0.12 构建工具
-   - Element Plus 2.4.4 UI组件库
-   - Pinia 2.1.7 状态管理
-   - Vue Router 4.2.5 路由管理
-   - Axios 1.6.2 HTTP客户端
+   - Vue.js 3.5.13 + Composition API
+   - Vite 6.0.1 构建工具
+   - Element Plus 2.8.8 UI组件库
+   - Pinia 2.2.6 状态管理
+   - Vue Router 4.4.5 路由管理
+   - Axios 1.7.7 HTTP客户端
 
 3. **设计规范**：
    - 响应式设计，支持桌面端和移动端
@@ -28,7 +28,7 @@
 ### 实现步骤
 
 #### Step 1：创建标准化PRD框架
-为每个需要前端开发的模块生成 `docs/prd/frontend/{MODULE_ID}-frontend-prd.md`，包含以下标准结构：
+为每个需要前端开发的模块生成 `docs/ai_prd/$VERSION/frontend/{MODULE_ID}-frontend-prd.md`，包含以下标准结构：
 
 1. **模块概述**
    - 业务价值和用户目标

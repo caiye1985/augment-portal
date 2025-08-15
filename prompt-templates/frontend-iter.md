@@ -9,16 +9,18 @@
    - Mock 数据规范：`$MOCK_GUIDE`
    - 模块 PRD：`$MODULE_FILE`
    - API 定义：`$API_BUNDLE`
-   - 技术栈规范：`docs/prd/split/4.5/appendix/03-technology-stack.md`
-   - 架构设计：`docs/prd/split/4.5/appendix/05-architecture-diagrams.md`
-   - 业务流程：`docs/prd/split/4.5/globals/04-business-processes.md`
-   - 术语表：`docs/prd/split/4.5/appendix/01-glossary-and-references.md`
+   - 技术栈规范：`docs/prd/split/$VERSION/appendix/03-technology-stack.md`
+   - 架构设计：`docs/prd/split/$VERSION/appendix/05-architecture-diagrams.md`
+   - 业务流程：`docs/prd/split/$VERSION/globals/04-business-processes.md`
+   - 术语表：`docs/prd/split/$VERSION/appendix/01-glossary-and-references.md`
 
 2. **技术约束**：
-   - Vue.js 3.4.15 + Composition API + TypeScript
-   - Element Plus 2.4.4 UI组件库
-   - Pinia 2.1.7 状态管理 + Vue Router 4.2.5
-   - Axios 1.6.2 HTTP客户端
+   - Vue.js 3.5.13 + Composition API
+   - Vite 6.0.1 构建工具
+   - Element Plus 2.8.8 UI组件库
+   - Pinia 2.2.6 状态管理
+   - Vue Router 4.4.5 路由管理
+   - Axios 1.7.7 HTTP客户端
    - 响应式设计，支持桌面端和移动端
    - 无障碍访问和国际化支持
 
@@ -117,7 +119,7 @@
    - 字体大小调节
 
 ### 输出要求
-生成文件：`docs/prd/frontend/$MODULE_ID-frontend-prd.md`
+生成文件：`docs/ai_prd/$VERSION/frontend/$MODULE_ID-frontend-prd.md`
 
 **文档结构**：
 1. **模块概述**（业务价值、用户目标、界面定位）

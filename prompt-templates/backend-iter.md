@@ -9,13 +9,14 @@
    - 模块 PRD：`$MODULE_FILE`
    - API 定义：`$API_BUNDLE`
    - Mock 数据规范：`$MOCK_GUIDE`
-   - 技术栈规范：`docs/prd/split/4.5/appendix/03-technology-stack.md`
-   - 架构设计：`docs/prd/split/4.5/appendix/05-architecture-diagrams.md`
-   - 业务流程：`docs/prd/split/4.5/globals/04-business-processes.md`
+   - 技术栈规范：`docs/prd/split/$VERSION/appendix/03-technology-stack.md`
+   - 架构设计：`docs/prd/split/$VERSION/appendix/05-architecture-diagrams.md`
+   - 业务流程：`docs/prd/split/$VERSION/globals/04-business-processes.md`
 
 2. **技术约束**：
-   - Spring Boot 3.2.11 + Spring Security + Spring Data JPA
-   - PostgreSQL 15.5 + Redis 7.2.4
+   - Spring Boot 3.3.6 + Spring Security + Spring Data JPA
+   - PostgreSQL 16.6 数据库
+   - Redis 7.4.1 缓存
    - 多租户架构，所有业务实体包含tenant_id
    - RESTful API设计，统一异常处理
    - 代码覆盖率 ≥ 80%，接口响应时间 ≤ 500ms
@@ -98,7 +99,7 @@
    - 建立自动化检查的配置化定义
 
 ### 输出要求
-生成文件：`docs/prd/backend/$MODULE_ID-backend-prd.md`
+生成文件：`docs/ai_prd/$VERSION/backend/$MODULE_ID-backend-prd.md`
 
 **AI专用结构化文档格式**：
 

@@ -5,13 +5,13 @@
 
 ### 前置要求
 1. **核心参考文档**：
-   - 全局上下文：`$GLOBAL_FILE`
-   - Mock 数据规范：`$MOCK_GUIDE`
-   - 当前模块 PRD：`$MODULE_FILE`
-   - API 初始化合并文件：`$API_BUNDLE`
-   - 技术栈规范：`docs/prd/split/$VERSION/appendix/03-technology-stack.md`
-   - 业务流程文档：`docs/prd/split/$VERSION/globals/04-business-processes.md`
-   - 术语表：`docs/prd/split/$VERSION/appendix/01-glossary-and-references.md`
+   - 全局上下文：`docs/global-context.md`
+   - Mock 数据规范：`docs/prd/split/4.5.1/globals/05-mock-data-guidelines.md`
+   - 当前模块 PRD：`docs/prd/split/4.5.1/modules/REQ-022.md`
+   - API 初始化合并文件：`docs/api/4.5.1/global-api-index.yaml`
+   - 技术栈规范：`docs/prd/split/4.5.1/appendix/03-technology-stack.md`
+   - 业务流程文档：`docs/prd/split/4.5.1/globals/04-business-processes.md`
+   - 术语表：`docs/prd/split/4.5.1/appendix/01-glossary-and-references.md`
 
 2. **技术约束**：
    - 严格遵循 OpenAPI 3.0.3 规范
@@ -52,7 +52,7 @@
    - 权限要求和安全级别
 
 #### Step 2：编写 OpenAPI 模块文件
-**路径**：`docs/api/$VERSION/modules/$MODULE_ID-$MODULE_NAME/openapi.yaml`
+**路径**：`docs/api/4.5.1/modules/REQ-022-用户与权限管理模块/openapi.yaml`
 
 必须包含：
 1. `info` 节点（title、version 与 `global-api-index.yaml` 一致）。
@@ -63,7 +63,7 @@
    - operationId 命名规则：`<domain>_<action>`（小写_分隔，动词用英文现在时）。
 4. `components.schemas`：  
    - 仅定义**模块独有**的 schema
-   - 引用全局或域定义，使用 `DOLLAR_REF: '../global-api-index.yaml#/components/schemas/...'` 或 `DOLLAR_REF: '../domains/{domain}.yaml#/components/schemas/...'`。
+   - 引用全局或域定义，使用 `$ref: '../global-api-index.yaml#/components/schemas/...'` 或 `$ref: '../domains/{domain}.yaml#/components/schemas/...'`。
 5. 响应：
    - **成功响应**（`200`）引用全局 `ApiResponse` 或 `PagedResponse`。
    - **错误响应**（`400` / `401` / `403` / `404` / `409` / `500`）必须引用全局标准错误响应模型。
@@ -76,7 +76,7 @@
 
 #### Step 4：校验与质量控制
 1. swagger-cli validate 必须通过。
-2. 所有 `DOLLAR_REF` 路径必须可解析且有效。
+2. 所有 `$ref` 路径必须可解析且有效。
 3. tag 分类正确（与 domain 文件一致）。
 4. 覆盖率检测：确认 PRD 列出的功能接口均有定义。
 5. 确保 Mock Server 可直接运行。
@@ -91,11 +91,11 @@
 - `HEAD`：获取元信息（如需）
 
 ### 输出要求
-1. 输出完整的 `docs/api/$VERSION/modules/$MODULE_ID-$MODULE_NAME/openapi.yaml` 文件内容。
+1. 输出完整的 `docs/api/4.5.1/modules/REQ-022-用户与权限管理模块/openapi.yaml` 文件内容。
 2. 不包含全局/域级 schema 的重复定义。
 3. 所有示例数据必须符合 Mock 数据规范，贴合 IT运维业务语境。
 4. 文件可独立通过 swagger-cli validate。
 
 ### 验证命令
 ```bash
-swagger-cli validate docs/api/$VERSION/modules/$MODULE_ID-$MODULE_NAME/openapi.yaml
+swagger-cli validate docs/api/4.5.1/modules/REQ-022-用户与权限管理模块/openapi.yaml

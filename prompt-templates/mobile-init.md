@@ -6,13 +6,13 @@
 ### 前置要求
 1. **参考文档**：
    - 全局上下文：`$GLOBAL_FILE`
-   - 技术栈规范：`docs/prd/split/4.5/appendix/03-technology-stack.md`
-   - 架构设计：`docs/prd/split/4.5/appendix/05-architecture-diagrams.md`
-   - 业务流程：`docs/prd/split/4.5/globals/04-business-processes.md`
-   - 移动端模块PRD：`docs/prd/split/4.5/modules/REQ-020.md`
+   - 技术栈规范：`docs/prd/split/$VERSION/appendix/03-technology-stack.md`
+   - 架构设计：`docs/prd/split/$VERSION/appendix/05-architecture-diagrams.md`
+   - 业务流程：`docs/prd/split/$VERSION/globals/04-business-processes.md`
+   - 移动端模块PRD：`docs/prd/split/$VERSION/modules/REQ-020.md`
 
 2. **技术约束**：
-   - Flutter 3.x框架
+   - Flutter 3.24.5框架
    - Dart语言开发
    - 支持iOS 12+和Android 8.0+
    - 原生性能和用户体验
@@ -28,7 +28,7 @@
 ### 实现步骤
 
 #### Step 1：创建标准化PRD框架
-为移动端相关的模块生成 `docs/prd/mobile/{MODULE_ID}-mobile-prd.md`，包含以下标准结构：
+为移动端相关的模块生成 `docs/ai_prd/$VERSION/mobile/{MODULE_ID}-mobile-prd.md`，包含以下标准结构：
 
 1. **模块概述**
    - 移动端业务价值和用户目标
