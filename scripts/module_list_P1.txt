@@ -6,3 +6,4 @@ REQ-012 docs/prd/split/4.5/modules/REQ-012.md
 REQ-016 docs/prd/split/4.5/modules/REQ-016.md
 REQ-017 docs/prd/split/4.5/modules/REQ-017.md
 REQ-018 docs/prd/split/4.5/modules/REQ-018.md
+REQ-020 docs/prd/split/4.5/modules/REQ-020.md

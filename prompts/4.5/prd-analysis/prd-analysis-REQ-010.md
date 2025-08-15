@@ -32,8 +32,8 @@
 ### 改进输入与参考
 - **当前模块PRD**：`docs/prd/split/4.5/modules/REQ-010.md`（版本 4.5）
 - **全局上下文**：`docs/global-context.md`
-- **业务流程文档**：`docs/prd/split/4.5/globals/04-business-processes.md`
-- **技术栈规范**：`docs/prd/split/4.5/appendix/03-technology-stack.md`
+- **业务流程文档**：`docs/prd/split/4.5.1/globals/04-business-processes.md`
+- **技术栈规范**：`docs/prd/split/4.5.1/appendix/03-technology-stack.md`
 - **API设计最佳实践**：RESTful设计原则、OpenAPI规范、微服务架构模式
 - **数据库设计规范**：关系型数据库设计原则、索引优化策略、事务处理规范
 

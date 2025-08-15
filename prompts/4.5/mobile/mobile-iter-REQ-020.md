@@ -5,10 +5,10 @@
 
 ### 前置要求
 1. **核心参考文档**：
-   - 全局上下文：`$GLOBAL_FILE`
-   - Mock 数据规范：`$MOCK_GUIDE`
-   - 模块 PRD：`$MODULE_FILE`
-   - API 定义：`$API_BUNDLE`
+   - 全局上下文：`docs/global-context.md`
+   - Mock 数据规范：`docs/prd/split/4.5/globals/05-mock-data-guidelines.md`
+   - 模块 PRD：`docs/prd/split/4.5/modules/REQ-020.md`
+   - API 定义：`docs/api/4.5/global-api-index.yaml`
    - 技术栈规范：`docs/prd/split/4.5/appendix/03-technology-stack.md`
    - 移动端模块PRD：`docs/prd/split/4.5/modules/REQ-020.md`
    - 业务流程：`docs/prd/split/4.5/globals/04-business-processes.md`
@@ -131,7 +131,7 @@
    - 无网络状态处理
 
 ### 输出要求
-生成文件：`docs/prd/mobile/$MODULE_ID-mobile-prd.md`
+生成文件：`docs/prd/mobile/REQ-020-mobile-prd.md`
 
 **文档结构（REQ-020专用优化）**：
 1. **模块概述**（移动端价值、用户目标、功能定位、REQ-020特色）

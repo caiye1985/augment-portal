@@ -32,8 +32,8 @@
 ### 改进输入与参考
 - **当前模块PRD**：`docs/prd/split/4.5/modules/REQ-016.md`（版本 4.5）
 - **全局上下文**：`docs/global-context.md`
-- **业务流程文档**：`docs/prd/split/4.5/globals/04-business-processes.md`
-- **技术栈规范**：`docs/prd/split/4.5/appendix/03-technology-stack.md`
+- **业务流程文档**：`docs/prd/split/4.5.1/globals/04-business-processes.md`
+- **技术栈规范**：`docs/prd/split/4.5.1/appendix/03-technology-stack.md`
 - **API设计最佳实践**：RESTful设计原则、OpenAPI规范、微服务架构模式
 - **数据库设计规范**：关系型数据库设计原则、索引优化策略、事务处理规范
 
@@ -226,3 +226,9 @@
 - **保持原PRD的核心业务逻辑**，重点在技术细节和实施规范的完善
 - **确保新版本号正确**：从 4.5 升级到 4.5.1
 - **文档应直接可用**：生成的PRD文档应能直接用于后续的API设计和系统开发
+
+请将改进后的PRD内容保存为新的文件版本，而不是直接在回复中输出完整的PRD文档内容。
+
+具体要求：
+1. 将生成的 模块PRD 4.5.1版本保存到文件系统中
+2. 文件路径应为：`docs/prd/split/4.5.1/modules/REQ-016.md`

@@ -9,10 +9,10 @@
    - Mock 数据规范：`docs/prd/split/4.5/globals/05-mock-data-guidelines.md`
    - 模块 PRD：`docs/prd/split/4.5/modules/REQ-001.md`
    - API 定义：`docs/api/4.5/global-api-index.yaml`
-   - 技术栈规范：`docs/prd/split/4.5/appendix/03-technology-stack.md`
+   - 技术栈规范：`docs/prd/split/4.5.1/appendix/03-technology-stack.md`
    - 移动端模块PRD：`docs/prd/split/4.5/modules/REQ-020.md`
-   - 业务流程：`docs/prd/split/4.5/globals/04-business-processes.md`
-   - 术语表：`docs/prd/split/4.5/appendix/01-glossary-and-references.md`
+   - 业务流程：`docs/prd/split/4.5.1/globals/04-business-processes.md`
+   - 术语表：`docs/prd/split/4.5.1/appendix/01-glossary-and-references.md`
 
 2. **技术约束**：
    - Flutter 3.x + Dart语言
@@ -116,7 +116,7 @@
    - 无网络状态处理
 
 ### 输出要求
-生成文件：`docs/prd/mobile/REQ-001-mobile-prd.md`
+生成文件：`docs/prd/mobile/REQ-0020-mobile-prd.md`
 
 **文档结构**：
 1. **模块概述**（移动端价值、用户目标、功能定位）
