@@ -1,5 +1,0 @@
-openapi: 3.0.3
-info:
-  title: Uclient 业务域 API 聚合
-  version: 1.0.0
-paths:

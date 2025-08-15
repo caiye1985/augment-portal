@@ -63,7 +63,7 @@
    - operationId 命名规则：`<domain>_<action>`（小写_分隔，动词用英文现在时）。
 4. `components.schemas`：  
    - 仅定义**模块独有**的 schema
-   - 引用全局或域定义，使用 `DOLLAR_REF: '../global-api-index.yaml#/components/schemas/...'` 或 `DOLLAR_REF: '../domains/{domain}.yaml#/components/schemas/...'`。
+   - 引用全局或域定义，使用 `DOLLAR_REF: '../../global-api-index.yaml#/components/schemas/...'` 或 `DOLLAR_REF: '../domains/{domain}.yaml#/components/schemas/...'`。
 5. 响应：
    - **成功响应**（`200`）引用全局 `ApiResponse` 或 `PagedResponse`。
    - **错误响应**（`400` / `401` / `403` / `404` / `409` / `500`）必须引用全局标准错误响应模型。

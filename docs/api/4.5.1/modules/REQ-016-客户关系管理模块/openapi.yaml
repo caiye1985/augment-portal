@@ -1,7 +1,405 @@
 openapi: 3.0.3
 info:
-  title: 客户关系管理模块 API
+  title: IT运维门户系统 API
   version: 1.0.0
-paths: {}
-components:
-  schemas: {}
+  description: 客户关系管理模块 API 规范
+
+tags:
+  - name: customer-profile
+    description: 客户档案管理
+  - name: customer-contacts
+    description: 客户联系人管理
+  - name: customer-contracts
+    description: 客户合同管理
+  - name: customer-health
+    description: 客户健康度管理
+  - name: customer-success
+    description: 客户成功管理
+  - name: customer-communications
+    description: 客户沟通管理
+  - name: customer-analysis
+    description: 客户分析
+  - name: customer-portal
+    description: 客户门户
+
+paths:
+  # 客户档案管理API
+  /api/v1/customers:
+    post:
+      tags:
+        - customer-profile
+      summary: 创建客户档案
+      description: 创建新的客户档案，包括基本信息和联系人信息
+      operationId: customer_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerCreateRequest'
+      responses:
+        '200':
+          description: 客户创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/CustomerCreateResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '403':
+          description: 权限不足
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '409':
+          description: 客户信息重复
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+
+    get:
+      tags:
+        - customer-profile
+      summary: 获取客户列表
+      description: 分页查询客户列表，支持多条件筛选和排序
+      operationId: customer_list
+      parameters:
+        - name: page
+          in: query
+          description: 页码，从1开始
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页数量
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+        - name: status
+          in: query
+          description: 客户状态筛选
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              enum: [1, 2, 3]
+            example: [1, 2]
+        - name: level
+          in: query
+          description: 客户等级筛选
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              enum: [1, 2, 3, 4]
+            example: [3, 4]
+        - name: industry
+          in: query
+          description: 行业筛选
+          required: false
+          schema:
+            type: string
+            example: "软件开发"
+        - name: assigned_manager_id
+          in: query
+          description: 客户经理ID筛选
+          required: false
+          schema:
+            type: integer
+            format: int64
+            example: 1001
+        - name: health_score_min
+          in: query
+          description: 最低健康度评分
+          required: false
+          schema:
+            type: number
+            format: float
+            minimum: 0
+            maximum: 100
+            example: 70.0
+        - name: health_score_max
+          in: query
+          description: 最高健康度评分
+          required: false
+          schema:
+            type: number
+            format: float
+            minimum: 0
+            maximum: 100
+            example: 100.0
+        - name: keyword
+          in: query
+          description: 关键词搜索（客户名称、编码）
+          required: false
+          schema:
+            type: string
+            example: "ABC科技"
+        - name: sort
+          in: query
+          description: 排序字段
+          required: false
+          schema:
+            type: string
+            enum: [created_at, updated_at, health_score, ltv, next_renewal_date]
+            default: created_at
+            example: "health_score"
+        - name: order
+          in: query
+          description: 排序方向
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+            example: "desc"
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/CustomerListItem'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+
+  /api/v1/customers/{id}:
+    get:
+      tags:
+        - customer-profile
+      summary: 获取客户详情
+      description: 获取指定客户的详细信息，包括联系人、标签等
+      operationId: customer_get_detail
+      parameters:
+        - name: id
+          in: path
+          description: 客户ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 12345
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/CustomerDetailResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '403':
+          description: 权限不足
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '404':
+          description: 客户不存在
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - customer-profile
+      summary: 更新客户信息
+      description: 更新指定客户的基本信息
+      operationId: customer_update
+      parameters:
+        - name: id
+          in: path
+          description: 客户ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 12345
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerUpdateRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Customer'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '403':
+          description: 权限不足
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '404':
+          description: 客户不存在
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '409':
+          description: 客户信息重复
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - customer-profile
+      summary: 删除客户
+      description: 删除指定客户（软删除）
+      operationId: customer_delete
+      parameters:
+        - name: id
+          in: path
+          description: 客户ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 12345
+      responses:
+        '200':
+          description: 删除成功
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '403':
+          description: 权限不足
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '404':
+          description: 客户不存在
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
