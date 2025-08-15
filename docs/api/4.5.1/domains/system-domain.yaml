@@ -60,10 +60,16 @@ paths:
     $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1settings'
 
   # 运维管理模块 API
-  /api/v1/operations/health:
-    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1operations~1health'
-  /api/v1/operations/metrics:
-    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1operations~1metrics'
+  /api/v1/ops/assets:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1assets'
+  /api/v1/ops/alerts/events:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1alerts~1events'
+  /api/v1/ops/playbooks:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1playbooks'
+  /api/v1/ops/tasks:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1tasks'
+  /api/v1/ops/monitor-configs:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1monitor-configs'
 
 components:
   # 引用全局通用组件

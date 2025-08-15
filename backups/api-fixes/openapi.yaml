@@ -1,0 +1,1912 @@
+openapi: 3.0.3
+info:
+  title: 数据分析与商业智能模块 API
+  version: 1.0.0
+  description: REQ-023 数据分析与商业智能模块 API 规范，提供多维数据分析、实时监控、智能预测、自定义报表等功能
+tags:
+- name: 分析任务管理
+  description: 数据分析任务的创建、执行、监控和管理
+- name: 分析结果管理
+  description: 分析结果的查询、导出、分享和缓存管理
+- name: 模型管理
+  description: 机器学习模型的训练、部署、版本管理和预测
+- name: 数据源管理
+  description: 数据源的连接、同步、质量监控和统计分析
+- name: 仪表板管理
+  description: 实时监控仪表板的配置、发布和数据展示
+- name: 预警管理
+  description: 数据预警规则的配置、监控和历史记录
+- name: 洞察管理
+  description: AI智能洞察的生成、反馈和管理
+paths:
+  /api/v1/analytics/tasks:
+    post:
+      tags:
+      - 分析任务管理
+      summary: 创建分析任务
+      description: 创建新的数据分析任务，支持多维分析、预测建模、实时监控等类型
+      operationId: analytics_task_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAnalysisTaskRequest'
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AnalysisTaskInfo'
+        '400':
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '422':
+          $ref: ../../global-api-index.yaml#/components/responses/UnprocessableEntity
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+    get:
+      tags:
+      - 分析任务管理
+      summary: 获取分析任务列表
+      description: 分页查询分析任务列表，支持按类型、状态、创建时间等条件筛选
+      operationId: analytics_task_list
+      parameters:
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: task_type
+        in: query
+        description: 任务类型筛选
+        schema:
+          $ref: '#/components/schemas/TaskType'
+      - name: status
+        in: query
+        description: 任务状态筛选
+        schema:
+          $ref: '#/components/schemas/TaskStatus'
+      - name: created_start
+        in: query
+        description: 创建时间开始
+        schema:
+          type: string
+          format: date-time
+          example: '2024-08-01T00:00:00Z'
+      - name: created_end
+        in: query
+        description: 创建时间结束
+        schema:
+          type: string
+          format: date-time
+          example: '2024-08-31T23:59:59Z'
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/AnalysisTaskInfo'
+        '400':
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/analytics/tasks/{id}:
+    get:
+      tags:
+      - 分析任务管理
+      summary: 获取分析任务详情
+      description: 获取指定分析任务的详细信息，包括配置参数、执行历史等
+      operationId: analytics_task_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 任务ID
+        schema:
+          type: integer
+          example: 12345
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AnalysisTaskDetailInfo'
+        '404':
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+    put:
+      tags:
+      - 分析任务管理
+      summary: 更新分析任务
+      description: 更新分析任务的配置参数，仅支持更新未执行或已完成的任务
+      operationId: analytics_task_update
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 任务ID
+        schema:
+          type: integer
+          example: 12345
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAnalysisTaskRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AnalysisTaskInfo'
+        '400':
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
+        '404':
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
+        '409':
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+    delete:
+      tags:
+      - 分析任务管理
+      summary: 删除分析任务
+      description: 删除指定的分析任务，仅支持删除未执行或已完成的任务
+      operationId: analytics_task_delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 任务ID
+        schema:
+          type: integer
+          example: 12345
+      responses:
+        '200':
+          description: 删除成功
+          content:
+            application/json:
+              schema:
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+        '404':
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
+        '409':
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/analytics/tasks/{id}/execute:
+    post:
+      tags:
+      - 分析任务管理
+      summary: 执行分析任务
+      description: 立即执行指定的分析任务，支持同步和异步执行模式
+      operationId: analytics_task_execute
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 任务ID
+        schema:
+          type: integer
+          example: 12345
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                async:
+                  type: boolean
+                  description: 是否异步执行
+                  default: true
+                  example: true
+                priority:
+                  type: integer
+                  description: 执行优先级(1-高，2-中，3-低)
+                  minimum: 1
+                  maximum: 3
+                  default: 2
+                  example: 1
+      responses:
+        '200':
+          description: 执行成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        execution_id:
+                          type: string
+                          description: 执行ID
+                          example: exec_20240814_143000_001
+                        estimated_duration:
+                          type: integer
+                          description: 预估执行时间(秒)
+                          example: 300
+                        status:
+                          $ref: '#/components/schemas/TaskStatus'
+        '404':
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
+        '409':
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/analytics/tasks/{id}/pause:
+    post:
+      tags:
+      - 分析任务管理
+      summary: 暂停分析任务
+      description: 暂停正在执行的分析任务
+      operationId: analytics_task_pause
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 任务ID
+        schema:
+          type: integer
+          example: 12345
+      responses:
+        '200':
+          description: 暂停成功
+          content:
+            application/json:
+              schema:
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+        '404':
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
+        '409':
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/analytics/tasks/{id}/resume:
+    post:
+      tags:
+      - 分析任务管理
+      summary: 恢复分析任务
+      description: 恢复已暂停的分析任务
+      operationId: analytics_task_resume
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 任务ID
+        schema:
+          type: integer
+          example: 12345
+      responses:
+        '200':
+          description: 恢复成功
+          content:
+            application/json:
+              schema:
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+        '404':
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
+        '409':
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/analytics/tasks/{id}/status:
+    get:
+      tags:
+      - 分析任务管理
+      summary: 获取任务执行状态
+      description: 获取分析任务的实时执行状态和进度信息
+      operationId: analytics_task_status
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 任务ID
+        schema:
+          type: integer
+          example: 12345
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TaskExecutionStatus'
+        '404':
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/analytics/tasks/{id}/logs:
+    get:
+      tags:
+      - 分析任务管理
+      summary: 获取任务执行日志
+      description: 获取分析任务的执行日志信息，支持分页查询
+      operationId: analytics_task_logs
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 任务ID
+        schema:
+          type: integer
+          example: 12345
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 50
+      - name: level
+        in: query
+        description: 日志级别筛选
+        schema:
+          type: string
+          enum:
+          - DEBUG
+          - INFO
+          - WARN
+          - ERROR
+          example: INFO
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/TaskExecutionLog'
+        '404':
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/analytics/results:
+    get:
+      tags:
+      - 分析结果管理
+      summary: 获取分析结果列表
+      description: 分页查询分析结果列表，支持按任务、类型、时间等条件筛选
+      operationId: analytics_result_list
+      parameters:
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: task_id
+        in: query
+        description: 任务ID筛选
+        schema:
+          type: integer
+          example: 12345
+      - name: result_type
+        in: query
+        description: 结果类型筛选
+        schema:
+          $ref: '#/components/schemas/ResultType'
+      - name: created_start
+        in: query
+        description: 创建时间开始
+        schema:
+          type: string
+          format: date-time
+          example: '2024-08-01T00:00:00Z'
+      - name: created_end
+        in: query
+        description: 创建时间结束
+        schema:
+          type: string
+          format: date-time
+          example: '2024-08-31T23:59:59Z'
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/AnalysisResultInfo'
+        '400':
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/analytics/results/{id}:
+    get:
+      tags:
+      - 分析结果管理
+      summary: 获取分析结果详情
+      description: 获取指定分析结果的详细信息，包括图表数据、洞察建议等
+      operationId: analytics_result_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 结果ID
+        schema:
+          type: integer
+          example: 67890
+      - name: include_insights
+        in: query
+        description: 是否包含洞察建议
+        schema:
+          type: boolean
+          default: false
+          example: true
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AnalysisResultDetailInfo'
+        '404':
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/analytics/results/{id}/export:
+    post:
+      tags:
+      - 分析结果管理
+      summary: 导出分析结果
+      description: 将分析结果导出为指定格式的文件
+      operationId: analytics_result_export
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 结果ID
+        schema:
+          type: integer
+          example: 67890
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - format
+              properties:
+                format:
+                  type: string
+                  enum:
+                  - excel
+                  - pdf
+                  - csv
+                  - json
+                  description: 导出格式
+                  example: excel
+                include_charts:
+                  type: boolean
+                  description: 是否包含图表
+                  default: true
+                  example: true
+                include_insights:
+                  type: boolean
+                  description: 是否包含洞察建议
+                  default: true
+                  example: true
+      responses:
+        '200':
+          description: 导出成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        download_url:
+                          type: string
+                          description: 下载链接
+                          example: https://cdn.example.com/exports/analysis_67890_20240814.xlsx
+                        file_size:
+                          type: integer
+                          description: 文件大小(字节)
+                          example: 2048576
+                        expires_at:
+                          type: string
+                          format: date-time
+                          description: 链接过期时间
+                          example: '2024-08-15T14:30:00Z'
+        '404':
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
+        '422':
+          $ref: ../../global-api-index.yaml#/components/responses/UnprocessableEntity
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/analytics/models:
+    post:
+      tags:
+      - 模型管理
+      summary: 创建分析模型
+      description: 创建新的机器学习分析模型
+      operationId: analytics_model_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAnalysisModelRequest'
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AnalysisModelInfo'
+        '400':
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '422':
+          $ref: ../../global-api-index.yaml#/components/responses/UnprocessableEntity
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+    get:
+      tags:
+      - 模型管理
+      summary: 获取模型列表
+      description: 分页查询分析模型列表，支持按类型、状态等条件筛选
+      operationId: analytics_model_list
+      parameters:
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: model_type
+        in: query
+        description: 模型类型筛选
+        schema:
+          $ref: '#/components/schemas/ModelType'
+      - name: status
+        in: query
+        description: 模型状态筛选
+        schema:
+          $ref: '#/components/schemas/ModelStatus'
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/AnalysisModelInfo'
+        '400':
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/analytics/models/{id}/train:
+    post:
+      tags:
+      - 模型管理
+      summary: 训练模型
+      description: 启动指定模型的训练任务
+      operationId: analytics_model_train
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 模型ID
+        schema:
+          type: integer
+          example: 1001
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                force_retrain:
+                  type: boolean
+                  description: 是否强制重新训练
+                  default: false
+                  example: false
+                training_config:
+                  type: object
+                  description: 训练配置覆盖
+                  example:
+                    epochs: 100
+                    batch_size: 32
+      responses:
+        '200':
+          description: 训练启动成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        training_job_id:
+                          type: string
+                          description: 训练任务ID
+                          example: train_20240814_143000_001
+                        estimated_duration:
+                          type: integer
+                          description: 预估训练时间(秒)
+                          example: 1800
+        '404':
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
+        '409':
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/analytics/models/{id}/predict:
+    post:
+      tags:
+      - 模型管理
+      summary: 模型预测
+      description: 使用指定模型进行预测
+      operationId: analytics_model_predict
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 模型ID
+        schema:
+          type: integer
+          example: 1001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - input_data
+              properties:
+                input_data:
+                  type: object
+                  description: 输入数据
+                  example:
+                    priority: high
+                    category: network
+                    customer_type: enterprise
+                    engineer_level: 3
+                return_confidence:
+                  type: boolean
+                  description: 是否返回置信度
+                  default: true
+                  example: true
+      responses:
+        '200':
+          description: 预测成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        prediction:
+                          type: number
+                          description: 预测结果
+                          example: 4.2
+                        confidence:
+                          type: number
+                          description: 置信度(0-1)
+                          example: 0.85
+                        model_version:
+                          type: string
+                          description: 模型版本
+                          example: v1.2.0
+        '400':
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
+        '404':
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
+        '422':
+          $ref: ../../global-api-index.yaml#/components/responses/UnprocessableEntity
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/analytics/datasets:
+    post:
+      tags:
+      - 数据源管理
+      summary: 创建数据源
+      description: 创建新的数据源配置
+      operationId: analytics_dataset_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAnalysisDatasetRequest'
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AnalysisDatasetInfo'
+        '400':
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '422':
+          $ref: ../../global-api-index.yaml#/components/responses/UnprocessableEntity
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+    get:
+      tags:
+      - 数据源管理
+      summary: 获取数据源列表
+      description: 分页查询数据源列表，支持按类型、状态等条件筛选
+      operationId: analytics_dataset_list
+      parameters:
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: dataset_type
+        in: query
+        description: 数据集类型筛选
+        schema:
+          $ref: '#/components/schemas/DatasetType'
+      - name: status
+        in: query
+        description: 状态筛选
+        schema:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          example: 1
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/AnalysisDatasetInfo'
+        '400':
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
+        '401':
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
+        '403':
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
+        '500':
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+components:
+  schemas:
+    TaskType:
+      type: string
+      enum:
+      - operational_analysis
+      - predictive_analysis
+      - real_time_monitoring
+      - custom_report
+      description: 任务类型
+      example: operational_analysis
+    TaskStatus:
+      type: string
+      enum:
+      - pending
+      - running
+      - completed
+      - failed
+      - paused
+      description: 任务状态
+      example: completed
+    ResultType:
+      type: string
+      enum:
+      - chart
+      - table
+      - metric
+      - prediction
+      - dashboard
+      - report
+      description: 结果类型
+      example: dashboard
+    ModelType:
+      type: string
+      enum:
+      - regression
+      - classification
+      - clustering
+      - time_series
+      - anomaly_detection
+      description: 模型类型
+      example: regression
+    ModelStatus:
+      type: string
+      enum:
+      - training
+      - deployed
+      - offline
+      - failed
+      description: 模型状态
+      example: deployed
+    DatasetType:
+      type: string
+      enum:
+      - structured
+      - unstructured
+      - streaming
+      description: 数据集类型
+      example: structured
+    AlertType:
+      type: string
+      enum:
+      - threshold
+      - anomaly
+      - trend
+      - pattern
+      description: 预警类型
+      example: threshold
+    InsightType:
+      type: string
+      enum:
+      - trend
+      - anomaly
+      - correlation
+      - recommendation
+      description: 洞察类型
+      example: trend
+    CreateAnalysisTaskRequest:
+      type: object
+      required:
+      - task_name
+      - task_type
+      - analysis_config
+      properties:
+        task_name:
+          type: string
+          description: 任务名称
+          maxLength: 100
+          example: 月度运营效率分析
+        task_type:
+          $ref: '#/components/schemas/TaskType'
+        analysis_config:
+          type: object
+          description: 分析配置
+          properties:
+            metrics:
+              type: array
+              description: 分析指标
+              items:
+                type: string
+              example:
+              - ticket_volume
+              - resolution_time
+              - satisfaction_score
+            dimensions:
+              type: array
+              description: 分析维度
+              items:
+                type: string
+              example:
+              - department
+              - priority
+              - category
+            time_range:
+              type: object
+              description: 时间范围
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - absolute
+                  - relative
+                  example: relative
+                value:
+                  type: string
+                  example: last_month
+            aggregation:
+              type: object
+              description: 聚合配置
+              properties:
+                time_granularity:
+                  type: string
+                  enum:
+                  - hour
+                  - day
+                  - week
+                  - month
+                  example: day
+                statistical_methods:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - avg
+                    - sum
+                    - count
+                    - max
+                    - min
+                  example:
+                  - avg
+                  - sum
+                  - count
+        data_source_config:
+          type: object
+          description: 数据源配置
+          properties:
+            dataset_id:
+              type: integer
+              description: 数据集ID
+              example: 123
+            filters:
+              type: object
+              description: 数据过滤条件
+              example:
+                status:
+                - completed
+                - closed
+        schedule_config:
+          type: object
+          description: 调度配置
+          properties:
+            enabled:
+              type: boolean
+              description: 是否启用调度
+              example: true
+            frequency:
+              type: string
+              enum:
+              - once
+              - daily
+              - weekly
+              - monthly
+              example: monthly
+            cron_expression:
+              type: string
+              description: Cron表达式
+              example: 0 9 1 * *
+        model_id:
+          type: integer
+          description: 关联模型ID
+          example: 789
+        priority:
+          type: integer
+          description: 优先级(1-高，2-中，3-低)
+          minimum: 1
+          maximum: 3
+          default: 2
+          example: 1
+    UpdateAnalysisTaskRequest:
+      type: object
+      properties:
+        task_name:
+          type: string
+          description: 任务名称
+          maxLength: 100
+          example: 月度运营效率分析(更新版)
+        analysis_config:
+          type: object
+          description: 分析配置
+        data_source_config:
+          type: object
+          description: 数据源配置
+        schedule_config:
+          type: object
+          description: 调度配置
+        priority:
+          type: integer
+          description: 优先级
+          minimum: 1
+          maximum: 3
+          example: 2
+    AnalysisTaskInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 任务ID
+          example: 12345
+        tenant_id:
+          type: integer
+          description: 租户ID
+          example: 1001
+        task_name:
+          type: string
+          description: 任务名称
+          example: 月度运营效率分析
+        task_type:
+          $ref: '#/components/schemas/TaskType'
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        priority:
+          type: integer
+          description: 优先级
+          example: 1
+        model_id:
+          type: integer
+          description: 关联模型ID
+          example: 789
+        created_by:
+          type: integer
+          description: 创建人ID
+          example: 2001
+        last_run_time:
+          type: string
+          format: date-time
+          description: 最后执行时间
+          example: '2024-08-01T09:00:00Z'
+        next_run_time:
+          type: string
+          format: date-time
+          description: 下次执行时间
+          example: '2024-09-01T09:00:00Z'
+        execution_count:
+          type: integer
+          description: 执行次数
+          example: 5
+        avg_execution_time:
+          type: integer
+          description: 平均执行时间(秒)
+          example: 285
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: '2024-08-01T09:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+          example: '2024-08-14T14:30:00Z'
+    AnalysisTaskDetailInfo:
+      allOf:
+      - $ref: '#/components/schemas/AnalysisTaskInfo'
+      - type: object
+        properties:
+          analysis_config:
+            type: object
+            description: 分析配置详情
+            example:
+              metrics:
+              - ticket_volume
+              - resolution_time
+              dimensions:
+              - department
+              - priority
+              time_range:
+                type: relative
+                value: last_month
+          data_source_config:
+            type: object
+            description: 数据源配置详情
+            example:
+              dataset_id: 123
+              filters:
+                status:
+                - completed
+                - closed
+          schedule_config:
+            type: object
+            description: 调度配置详情
+            example:
+              enabled: true
+              frequency: monthly
+              cron_expression: 0 9 1 * *
+          execution_history:
+            type: array
+            description: 执行历史
+            items:
+              type: object
+              properties:
+                execution_id:
+                  type: string
+                  example: exec_20240801_090000_001
+                start_time:
+                  type: string
+                  format: date-time
+                  example: '2024-08-01T09:00:00Z'
+                end_time:
+                  type: string
+                  format: date-time
+                  example: '2024-08-01T09:04:45Z'
+                status:
+                  $ref: '#/components/schemas/TaskStatus'
+                execution_time:
+                  type: integer
+                  description: 执行时间(秒)
+                  example: 285
+    TaskExecutionStatus:
+      type: object
+      properties:
+        task_id:
+          type: integer
+          description: 任务ID
+          example: 12345
+        execution_id:
+          type: string
+          description: 执行ID
+          example: exec_20240814_143000_001
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        progress:
+          type: number
+          description: 执行进度(0-100)
+          minimum: 0
+          maximum: 100
+          example: 75.5
+        current_step:
+          type: string
+          description: 当前执行步骤
+          example: 数据聚合计算
+        start_time:
+          type: string
+          format: date-time
+          description: 开始时间
+          example: '2024-08-14T14:30:00Z'
+        estimated_end_time:
+          type: string
+          format: date-time
+          description: 预计结束时间
+          example: '2024-08-14T14:35:00Z'
+        data_processed:
+          type: integer
+          description: 已处理数据量(行数)
+          example: 125000
+        total_data:
+          type: integer
+          description: 总数据量(行数)
+          example: 165000
+    TaskExecutionLog:
+      type: object
+      properties:
+        log_id:
+          type: string
+          description: 日志ID
+          example: log_20240814_143001_001
+        task_id:
+          type: integer
+          description: 任务ID
+          example: 12345
+        execution_id:
+          type: string
+          description: 执行ID
+          example: exec_20240814_143000_001
+        level:
+          type: string
+          enum:
+          - DEBUG
+          - INFO
+          - WARN
+          - ERROR
+          description: 日志级别
+          example: INFO
+        message:
+          type: string
+          description: 日志消息
+          example: 开始执行数据查询，预计处理165000条记录
+        timestamp:
+          type: string
+          format: date-time
+          description: 日志时间
+          example: '2024-08-14T14:30:01Z'
+        details:
+          type: object
+          description: 详细信息
+          example:
+            query_time: 2.5
+            record_count: 165000
+    AnalysisResultInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 结果ID
+          example: 67890
+        tenant_id:
+          type: integer
+          description: 租户ID
+          example: 1001
+        task_id:
+          type: integer
+          description: 任务ID
+          example: 12345
+        result_name:
+          type: string
+          description: 结果名称
+          example: 7月运营效率分析报告
+        result_type:
+          $ref: '#/components/schemas/ResultType'
+        confidence_score:
+          type: number
+          description: 置信度评分(0-100)
+          minimum: 0
+          maximum: 100
+          example: 95.6
+        execution_time:
+          type: integer
+          description: 执行时间(秒)
+          example: 285
+        data_period_start:
+          type: string
+          format: date-time
+          description: 数据周期开始
+          example: '2024-07-01T00:00:00Z'
+        data_period_end:
+          type: string
+          format: date-time
+          description: 数据周期结束
+          example: '2024-07-31T23:59:59Z'
+        data_volume:
+          type: integer
+          description: 数据量(行数)
+          example: 125000
+        is_cached:
+          type: boolean
+          description: 是否已缓存
+          example: true
+        cache_ttl:
+          type: integer
+          description: 缓存过期时间(秒)
+          example: 3600
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: '2024-08-01T09:04:45Z'
+    AnalysisResultDetailInfo:
+      allOf:
+      - $ref: '#/components/schemas/AnalysisResultInfo'
+      - type: object
+        properties:
+          result_data:
+            type: object
+            description: 结果数据详情
+            properties:
+              summary:
+                type: object
+                description: 汇总信息
+                example:
+                  total_tickets: 1250
+                  avg_resolution_time: 4.2
+                  satisfaction_score: 4.6
+                  efficiency_trend: improving
+              metrics:
+                type: object
+                description: 指标数据
+                example:
+                  ticket_volume:
+                    current: 1250
+                    previous: 1180
+                    change_rate: 5.9
+                  resolution_time:
+                    current: 4.2
+                    previous: 4.5
+                    change_rate: -6.7
+              charts:
+                type: array
+                description: 图表数据
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: ticket_trend
+                    type:
+                      type: string
+                      enum:
+                      - line
+                      - bar
+                      - pie
+                      - scatter
+                      - heatmap
+                      example: line
+                    title:
+                      type: string
+                      example: 工单量趋势
+                    data:
+                      type: object
+                      description: 图表数据
+                      example:
+                        labels:
+                        - 7月1日
+                        - 7月8日
+                        - 7月15日
+                        datasets:
+                        - label: 工单数量
+                          data:
+                          - 280
+                          - 320
+                          - 295
+          insights:
+            type: array
+            description: 智能洞察
+            items:
+              $ref: '#/components/schemas/AnalysisInsightInfo'
+    CreateAnalysisModelRequest:
+      type: object
+      required:
+      - model_name
+      - model_type
+      - model_algorithm
+      - model_config
+      properties:
+        model_name:
+          type: string
+          description: 模型名称
+          maxLength: 100
+          example: 工单处理时间预测模型
+        model_type:
+          $ref: '#/components/schemas/ModelType'
+        model_algorithm:
+          type: string
+          description: 算法类型
+          enum:
+          - linear_regression
+          - random_forest
+          - lstm
+          - arima
+          - svm
+          - xgboost
+          example: random_forest
+        model_config:
+          type: object
+          description: 模型配置
+          properties:
+            features:
+              type: array
+              description: 特征字段
+              items:
+                type: string
+              example:
+              - priority
+              - category
+              - customer_type
+              - engineer_level
+            target:
+              type: string
+              description: 目标字段
+              example: resolution_time
+            parameters:
+              type: object
+              description: 算法参数
+              example:
+                n_estimators: 100
+                max_depth: 10
+                random_state: 42
+        training_data_config:
+          type: object
+          description: 训练数据配置
+          properties:
+            dataset_id:
+              type: integer
+              description: 数据集ID
+              example: 2001
+            train_ratio:
+              type: number
+              description: 训练集比例
+              minimum: 0.1
+              maximum: 0.9
+              example: 0.8
+            validation_ratio:
+              type: number
+              description: 验证集比例
+              minimum: 0.1
+              maximum: 0.5
+              example: 0.2
+            time_range:
+              type: object
+              description: 训练数据时间范围
+              properties:
+                start:
+                  type: string
+                  format: date-time
+                  example: '2024-01-01T00:00:00Z'
+                end:
+                  type: string
+                  format: date-time
+                  example: '2024-07-31T23:59:59Z'
+    AnalysisModelInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 模型ID
+          example: 1001
+        tenant_id:
+          type: integer
+          description: 租户ID
+          example: 1001
+        model_name:
+          type: string
+          description: 模型名称
+          example: 工单处理时间预测模型
+        model_type:
+          $ref: '#/components/schemas/ModelType'
+        model_algorithm:
+          type: string
+          description: 算法类型
+          example: random_forest
+        version:
+          type: string
+          description: 版本号
+          example: v1.2.0
+        status:
+          $ref: '#/components/schemas/ModelStatus'
+        accuracy_score:
+          type: number
+          description: 准确率评分(0-100)
+          minimum: 0
+          maximum: 100
+          example: 92.5
+        training_time:
+          type: integer
+          description: 训练时间(秒)
+          example: 1800
+        model_size:
+          type: integer
+          description: 模型文件大小(字节)
+          example: 52428800
+        created_by:
+          type: integer
+          description: 创建人ID
+          example: 2001
+        deployed_at:
+          type: string
+          format: date-time
+          description: 部署时间
+          example: '2024-08-01T10:30:00Z'
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: '2024-08-01T09:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+          example: '2024-08-14T14:30:00Z'
+    AnalysisInsightInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 洞察ID
+          example: 1
+        insight_type:
+          $ref: '#/components/schemas/InsightType'
+        insight_title:
+          type: string
+          description: 洞察标题
+          example: 工单量持续增长
+        insight_content:
+          type: string
+          description: 洞察内容
+          example: 7月工单量较6月增长5.9%，主要集中在网络故障类别，建议加强网络设备预防性维护
+        confidence_score:
+          type: number
+          description: 置信度评分(0-100)
+          minimum: 0
+          maximum: 100
+          example: 92.5
+        business_impact:
+          type: string
+          enum:
+          - high
+          - medium
+          - low
+          description: 业务影响程度
+          example: medium
+        action_recommendation:
+          type: string
+          description: 行动建议
+          example: 制定网络设备预防性维护计划，减少故障发生率
+        status:
+          type: integer
+          description: 状态(1-新生成，2-已确认，3-已应用，4-已忽略)
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          example: 1
+        feedback_score:
+          type: integer
+          description: 用户反馈评分(1-5)
+          minimum: 1
+          maximum: 5
+          example: 4
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: '2024-08-01T09:04:45Z'
+    CreateAnalysisDatasetRequest:
+      type: object
+      required:
+      - dataset_name
+      - dataset_type
+      - data_source_type
+      - connection_config
+      properties:
+        dataset_name:
+          type: string
+          description: 数据集名称
+          maxLength: 100
+          example: 工单处理历史数据
+        dataset_type:
+          $ref: '#/components/schemas/DatasetType'
+        data_source_type:
+          type: string
+          enum:
+          - database
+          - file
+          - api
+          - stream
+          description: 数据源类型
+          example: database
+        connection_config:
+          type: object
+          description: 连接配置
+          properties:
+            host:
+              type: string
+              description: 主机地址
+              example: db.example.com
+            port:
+              type: integer
+              description: 端口号
+              example: 5432
+            database:
+              type: string
+              description: 数据库名
+              example: ops_portal
+            username:
+              type: string
+              description: 用户名
+              example: analytics_user
+            password:
+              type: string
+              description: 密码
+              example: '********'
+            ssl_enabled:
+              type: boolean
+              description: 是否启用SSL
+              example: true
+        schema_config:
+          type: object
+          description: 数据模式配置
+          properties:
+            table_name:
+              type: string
+              description: 表名
+              example: tickets
+            fields:
+              type: array
+              description: 字段定义
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: ticket_id
+                  type:
+                    type: string
+                    enum:
+                    - string
+                    - integer
+                    - number
+                    - boolean
+                    - date
+                    - datetime
+                    example: integer
+                  description:
+                    type: string
+                    example: 工单ID
+        sync_config:
+          type: object
+          description: 同步配置
+          properties:
+            enabled:
+              type: boolean
+              description: 是否启用自动同步
+              example: true
+            frequency:
+              type: string
+              enum:
+              - realtime
+              - hourly
+              - daily
+              - weekly
+              description: 同步频率
+              example: hourly
+            incremental:
+              type: boolean
+              description: 是否增量同步
+              example: true
+    AnalysisDatasetInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 数据集ID
+          example: 2001
+        tenant_id:
+          type: integer
+          description: 租户ID
+          example: 1001
+        dataset_name:
+          type: string
+          description: 数据集名称
+          example: 工单处理历史数据
+        dataset_type:
+          $ref: '#/components/schemas/DatasetType'
+        data_source_type:
+          type: string
+          description: 数据源类型
+          example: database
+        status:
+          type: integer
+          description: 状态(1-正常，2-同步中，3-异常，4-已停用)
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          example: 1
+        last_sync_time:
+          type: string
+          format: date-time
+          description: 最后同步时间
+          example: '2024-08-14T14:00:00Z'
+        next_sync_time:
+          type: string
+          format: date-time
+          description: 下次同步时间
+          example: '2024-08-14T15:00:00Z'
+        record_count:
+          type: integer
+          description: 记录数量
+          example: 125000
+        data_size:
+          type: integer
+          description: 数据大小(字节)
+          example: 52428800
+        quality_score:
+          type: number
+          description: 数据质量评分(0-100)
+          minimum: 0
+          maximum: 100
+          example: 98.5
+        created_by:
+          type: integer
+          description: 创建人ID
+          example: 2001
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: '2024-08-01T09:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+          example: '2024-08-14T14:30:00Z'

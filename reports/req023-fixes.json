@@ -1,0 +1,26 @@
+{
+  "summary": {
+    "total_fixes": 2,
+    "fix_types": [
+      "TENANT_ID",
+      "PARAMETER_TYPE"
+    ],
+    "files_modified": [
+      "docs/api/4.5.1/modules/REQ-023-数据分析与商业智能模块/openapi.yaml"
+    ]
+  },
+  "fixes": [
+    {
+      "type": "PARAMETER_TYPE",
+      "file": "docs/api/4.5.1/modules/REQ-023-数据分析与商业智能模块/openapi.yaml",
+      "description": "标准化参数类型定义",
+      "timestamp": "2024-08-16T14:30:00Z"
+    },
+    {
+      "type": "TENANT_ID",
+      "file": "docs/api/4.5.1/modules/REQ-023-数据分析与商业智能模块/openapi.yaml",
+      "description": "添加tenant_id字段支持",
+      "timestamp": "2024-08-16T14:30:00Z"
+    }
+  ]
+}

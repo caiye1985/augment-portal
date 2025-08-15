@@ -5,73 +5,110 @@ info:
   description: REQ-009 运维管理 API 规范
 
 tags:
-  - name: operations
-    description: 运维管理
+  - name: assets
+    description: 资产管理
+  - name: alerts
+    description: 告警管理
+  - name: playbooks
+    description: 运维剧本管理
+  - name: tasks
+    description: 运维任务管理
+  - name: monitoring
+    description: 监控配置管理
 
 paths:
-  /api/v1/operations/health:
+  # 资产管理 API
+  /api/v1/ops/assets:
     get:
       tags:
-        - operations
-      summary: 系统健康检查
-      description: 检查系统各组件健康状态
-      operationId: operations_health_check
-      responses:
-        '200':
-          description: 健康检查成功
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/HealthStatus'
-        '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
-  /api/v1/operations/metrics:
-    get:
-      tags:
-        - operations
-      summary: 获取系统指标
-      description: 获取系统性能指标数据
-      operationId: operations_get_metrics
+        - assets
+      summary: 获取资产列表
+      description: 分页查询资产列表，支持多条件筛选
+      operationId: assets_list
       parameters:
-        - name: start_time
+        - name: asset_type
           in: query
-          description: 开始时间
+          description: 资产类型
           schema:
             type: string
-            format: date-time
-            example: "2024-08-15T00:00:00Z"
-        - name: end_time
+            enum: [server, network, storage, application]
+            example: "server"
+        - name: status
           in: query
-          description: 结束时间
+          description: 资产状态
           schema:
             type: string
-            format: date-time
-            example: "2024-08-15T23:59:59Z"
-        - name: metric_type
+            enum: [active, inactive, maintenance, decommissioned]
+            example: "active"
+        - name: environment
           in: query
-          description: 指标类型
+          description: 环境
           schema:
             type: string
-            enum: [cpu, memory, disk, network]
-            example: "cpu"
+            enum: [production, staging, development, test]
+            example: "production"
+        - name: location
+          in: query
+          description: 物理位置
+          schema:
+            type: string
+            example: "beijing-dc1"
+        - name: search
+          in: query
+          description: 搜索关键词（资产名称、主机名、IP地址）
+          schema:
+            type: string
+            example: "web-server"
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+        - name: sort_by
+          in: query
+          description: 排序字段
+          schema:
+            type: string
+            enum: [asset_name, created_at, updated_at, last_sync_at]
+            default: "created_at"
+            example: "created_at"
+        - name: sort_order
+          in: query
+          description: 排序方向
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: "desc"
+            example: "desc"
       responses:
         '200':
-          description: 获取成功
+          description: 查询成功
           content:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
                   - type: object
                     properties:
                       data:
-                        $ref: '#/components/schemas/SystemMetrics'
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/AssetInfo'
         '400':
           $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
@@ -81,99 +118,2517 @@ paths:
         '500':
           $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
 
+    post:
+      tags:
+        - assets
+      summary: 创建资产
+      description: 手动创建新的资产记录
+      operationId: assets_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetCreateRequest'
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AssetInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ops/assets/{asset_id}:
+    get:
+      tags:
+        - assets
+      summary: 获取资产详情
+      description: 根据资产ID获取详细信息
+      operationId: assets_get
+      parameters:
+        - name: asset_id
+          in: path
+          required: true
+          description: 资产ID
+          schema:
+            type: integer
+            format: int64
+            example: 1001
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AssetDetailInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    put:
+      tags:
+        - assets
+      summary: 更新资产信息
+      description: 更新指定资产的信息
+      operationId: assets_update
+      parameters:
+        - name: asset_id
+          in: path
+          required: true
+          description: 资产ID
+          schema:
+            type: integer
+            format: int64
+            example: 1001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetUpdateRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AssetInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    delete:
+      tags:
+        - assets
+      summary: 删除资产
+      description: 删除指定的资产记录
+      operationId: assets_delete
+      parameters:
+        - name: asset_id
+          in: path
+          required: true
+          description: 资产ID
+          schema:
+            type: integer
+            format: int64
+            example: 1001
+      responses:
+        '200':
+          description: 删除成功
+          content:
+            application/json:
+              schema:
+                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ops/assets/sync:
+    post:
+      tags:
+        - assets
+      summary: 同步资产数据
+      description: 从外部系统（如Netbox）同步资产数据
+      operationId: assets_sync
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetSyncRequest'
+      responses:
+        '200':
+          description: 同步任务已启动
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AssetSyncResponse'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ops/assets/batch:
+    post:
+      tags:
+        - assets
+      summary: 批量资产操作
+      description: 批量更新资产状态或属性
+      operationId: assets_batch_operation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetBatchRequest'
+      responses:
+        '200':
+          description: 批量操作成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AssetBatchResponse'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '422':
+          $ref: '../../global-api-index.yaml#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ops/assets/{asset_id}/monitor-config:
+    get:
+      tags:
+        - assets
+      summary: 获取资产监控配置
+      description: 获取指定资产的监控配置信息
+      operationId: assets_get_monitor_config
+      parameters:
+        - name: asset_id
+          in: path
+          required: true
+          description: 资产ID
+          schema:
+            type: integer
+            format: int64
+            example: 1001
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/AssetMonitorConfig'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - assets
+      summary: 配置资产监控
+      description: 为指定资产配置监控规则
+      operationId: assets_create_monitor_config
+      parameters:
+        - name: asset_id
+          in: path
+          required: true
+          description: 资产ID
+          schema:
+            type: integer
+            format: int64
+            example: 1001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetMonitorConfigRequest'
+      responses:
+        '200':
+          description: 配置成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AssetMonitorConfig'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 告警管理 API
+  /api/v1/ops/alerts/events:
+    get:
+      tags:
+        - alerts
+      summary: 查询告警事件
+      description: 分页查询告警事件列表，支持多条件筛选
+      operationId: alerts_list_events
+      parameters:
+        - name: status
+          in: query
+          description: 告警状态（多个状态用逗号分隔）
+          schema:
+            type: string
+            example: "new,processing"
+        - name: severity
+          in: query
+          description: 严重级别（多个级别用逗号分隔）
+          schema:
+            type: string
+            example: "high,critical"
+        - name: asset_id
+          in: query
+          description: 资产ID
+          schema:
+            type: integer
+            format: int64
+            example: 1001
+        - name: source_system
+          in: query
+          description: 来源系统
+          schema:
+            type: string
+            enum: [nightingale, prometheus, custom]
+            example: "nightingale"
+        - name: start_time
+          in: query
+          description: 开始时间
+          schema:
+            type: string
+            format: date-time
+            example: "2025-01-15T00:00:00Z"
+        - name: end_time
+          in: query
+          description: 结束时间
+          schema:
+            type: string
+            format: date-time
+            example: "2025-01-15T23:59:59Z"
+        - name: search
+          in: query
+          description: 搜索关键词（告警标题、描述）
+          schema:
+            type: string
+            example: "CPU使用率"
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+        - name: sort_by
+          in: query
+          description: 排序字段
+          schema:
+            type: string
+            enum: [created_at, last_occurrence, severity]
+            default: "created_at"
+            example: "created_at"
+        - name: sort_order
+          in: query
+          description: 排序方向
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: "desc"
+            example: "desc"
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/AlertEventInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - alerts
+      summary: 接收告警事件
+      description: 接收来自外部监控系统的告警事件
+      operationId: alerts_receive_event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertEventRequest'
+      responses:
+        '200':
+          description: 接收成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AlertEventResponse'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ops/alerts/events/{event_id}:
+    get:
+      tags:
+        - alerts
+      summary: 获取告警事件详情
+      description: 根据事件ID获取告警事件详细信息
+      operationId: alerts_get_event
+      parameters:
+        - name: event_id
+          in: path
+          required: true
+          description: 告警事件ID
+          schema:
+            type: integer
+            format: int64
+            example: 2001
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AlertEventDetailInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ops/alerts/events/{event_id}/process:
+    put:
+      tags:
+        - alerts
+      summary: 处理告警事件
+      description: 对指定告警事件进行处理操作
+      operationId: alerts_process_event
+      parameters:
+        - name: event_id
+          in: path
+          required: true
+          description: 告警事件ID
+          schema:
+            type: integer
+            format: int64
+            example: 2001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertProcessRequest'
+      responses:
+        '200':
+          description: 处理成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AlertProcessResponse'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ops/alerts/batch-process:
+    post:
+      tags:
+        - alerts
+      summary: 批量处理告警事件
+      description: 批量处理多个告警事件
+      operationId: alerts_batch_process
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertBatchProcessRequest'
+      responses:
+        '200':
+          description: 批量处理成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AlertBatchProcessResponse'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '422':
+          $ref: '../../global-api-index.yaml#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 运维剧本管理 API
+  /api/v1/ops/playbooks:
+    get:
+      tags:
+        - playbooks
+      summary: 获取运维剧本列表
+      description: 分页查询运维剧本列表，支持多条件筛选
+      operationId: playbooks_list
+      parameters:
+        - name: playbook_type
+          in: query
+          description: 剧本类型
+          schema:
+            type: string
+            enum: [diagnostic, repair, deployment, maintenance]
+            example: "repair"
+        - name: category
+          in: query
+          description: 分类
+          schema:
+            type: string
+            enum: [system, application, network, database]
+            example: "system"
+        - name: risk_level
+          in: query
+          description: 风险等级
+          schema:
+            type: string
+            enum: [low, medium, high, critical]
+            example: "medium"
+        - name: status
+          in: query
+          description: 状态
+          schema:
+            type: string
+            enum: [active, inactive, testing, deprecated]
+            example: "active"
+        - name: search
+          in: query
+          description: 搜索关键词（剧本名称、描述）
+          schema:
+            type: string
+            example: "nginx重启"
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+        - name: sort_by
+          in: query
+          description: 排序字段
+          schema:
+            type: string
+            enum: [playbook_name, created_at, last_executed_at, success_rate]
+            default: "created_at"
+            example: "created_at"
+        - name: sort_order
+          in: query
+          description: 排序方向
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: "desc"
+            example: "desc"
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/PlaybookInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - playbooks
+      summary: 创建运维剧本
+      description: 创建新的运维剧本
+      operationId: playbooks_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaybookCreateRequest'
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/PlaybookInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ops/playbooks/{playbook_id}:
+    get:
+      tags:
+        - playbooks
+      summary: 获取运维剧本详情
+      description: 根据剧本ID获取详细信息
+      operationId: playbooks_get
+      parameters:
+        - name: playbook_id
+          in: path
+          required: true
+          description: 剧本ID
+          schema:
+            type: integer
+            format: int64
+            example: 3001
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/PlaybookDetailInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ops/playbooks/{playbook_id}/execute:
+    post:
+      tags:
+        - playbooks
+      summary: 执行运维剧本
+      description: 执行指定的运维剧本
+      operationId: playbooks_execute
+      parameters:
+        - name: playbook_id
+          in: path
+          required: true
+          description: 剧本ID
+          schema:
+            type: integer
+            format: int64
+            example: 3001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaybookExecuteRequest'
+      responses:
+        '200':
+          description: 执行已启动
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/PlaybookExecuteResponse'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ops/playbooks/executions/{execution_id}:
+    get:
+      tags:
+        - playbooks
+      summary: 查询剧本执行状态
+      description: 根据执行ID查询剧本执行状态和结果
+      operationId: playbooks_get_execution
+      parameters:
+        - name: execution_id
+          in: path
+          required: true
+          description: 执行ID
+          schema:
+            type: integer
+            format: int64
+            example: 4001
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/PlaybookExecutionInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 运维任务管理 API
+  /api/v1/ops/tasks:
+    get:
+      tags:
+        - tasks
+      summary: 查询运维任务列表
+      description: 分页查询运维任务列表，支持多条件筛选
+      operationId: tasks_list
+      parameters:
+        - name: task_type
+          in: query
+          description: 任务类型
+          schema:
+            type: string
+            enum: [alert_handling, scheduled_maintenance, manual_operation]
+            example: "alert_handling"
+        - name: task_status
+          in: query
+          description: 任务状态（多个状态用逗号分隔）
+          schema:
+            type: string
+            example: "running,pending"
+        - name: priority
+          in: query
+          description: 优先级（多个级别用逗号分隔）
+          schema:
+            type: string
+            example: "high,critical"
+        - name: executor_id
+          in: query
+          description: 执行人ID
+          schema:
+            type: integer
+            format: int64
+            example: 1001
+        - name: start_time
+          in: query
+          description: 开始时间
+          schema:
+            type: string
+            format: date-time
+            example: "2025-01-15T00:00:00Z"
+        - name: end_time
+          in: query
+          description: 结束时间
+          schema:
+            type: string
+            format: date-time
+            example: "2025-01-15T23:59:59Z"
+        - name: search
+          in: query
+          description: 搜索关键词（任务名称、描述）
+          schema:
+            type: string
+            example: "nginx重启"
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+        - name: sort_by
+          in: query
+          description: 排序字段
+          schema:
+            type: string
+            enum: [created_at, start_time, priority]
+            default: "created_at"
+            example: "created_at"
+        - name: sort_order
+          in: query
+          description: 排序方向
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: "desc"
+            example: "desc"
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/TaskInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ops/tasks/{task_id}:
+    get:
+      tags:
+        - tasks
+      summary: 获取运维任务详情
+      description: 根据任务ID获取详细信息
+      operationId: tasks_get
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          description: 任务ID
+          schema:
+            type: integer
+            format: int64
+            example: 5001
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TaskDetailInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ops/tasks/{task_id}/control:
+    put:
+      tags:
+        - tasks
+      summary: 控制任务执行
+      description: 对运维任务进行控制操作（取消、暂停、恢复等）
+      operationId: tasks_control
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          description: 任务ID
+          schema:
+            type: integer
+            format: int64
+            example: 5001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskControlRequest'
+      responses:
+        '200':
+          description: 控制成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TaskControlResponse'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 监控配置管理 API
+  /api/v1/ops/monitor-configs:
+    get:
+      tags:
+        - monitoring
+      summary: 查询监控配置列表
+      description: 分页查询监控配置列表，支持多条件筛选
+      operationId: monitor_configs_list
+      parameters:
+        - name: asset_id
+          in: query
+          description: 资产ID
+          schema:
+            type: integer
+            format: int64
+            example: 1001
+        - name: monitor_type
+          in: query
+          description: 监控类型
+          schema:
+            type: string
+            enum: [system, application, network, custom]
+            example: "system"
+        - name: status
+          in: query
+          description: 状态
+          schema:
+            type: string
+            enum: [active, inactive, error]
+            example: "active"
+        - name: search
+          in: query
+          description: 搜索关键词（配置名称）
+          schema:
+            type: string
+            example: "CPU监控"
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/MonitorConfigInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ops/monitor-configs/{config_id}:
+    get:
+      tags:
+        - monitoring
+      summary: 获取监控配置详情
+      description: 根据配置ID获取详细信息
+      operationId: monitor_configs_get
+      parameters:
+        - name: config_id
+          in: path
+          required: true
+          description: 配置ID
+          schema:
+            type: integer
+            format: int64
+            example: 6001
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/MonitorConfigDetailInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
 components:
   schemas:
-    HealthStatus:
+    # 资产管理相关Schema
+    AssetInfo:
       type: object
       properties:
-        overall_status:
+        asset_id:
+          type: integer
+          format: int64
+          description: 资产ID
+          example: 1001
+        tenant_id:
+          type: integer
+          format: int64
+          description: 租户ID
+          example: 123
+        asset_type:
           type: string
-          description: 整体状态
-          enum: [healthy, degraded, unhealthy]
-          example: "healthy"
-        components:
-          type: array
-          description: 组件状态列表
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: 组件名称
-                example: "database"
-              status:
-                type: string
-                description: 组件状态
-                enum: [healthy, degraded, unhealthy]
-                example: "healthy"
-              response_time:
-                type: number
-                description: 响应时间（毫秒）
-                example: 15.5
-              last_check:
-                type: string
-                format: date-time
-                description: 最后检查时间
-                example: "2024-08-15T10:30:00Z"
-        timestamp:
+          description: 资产类型
+          enum: [server, network, storage, application]
+          example: "server"
+        asset_name:
+          type: string
+          description: 资产名称
+          example: "web-server-01"
+        asset_code:
+          type: string
+          description: 资产编码
+          example: "SRV-20250115-001"
+        ip_address:
+          type: string
+          description: IP地址
+          example: "192.168.1.100"
+        hostname:
+          type: string
+          description: 主机名
+          example: "web01.example.com"
+        status:
+          type: string
+          description: 状态
+          enum: [active, inactive, maintenance, decommissioned]
+          example: "active"
+        environment:
+          type: string
+          description: 环境
+          enum: [production, staging, development, test]
+          example: "production"
+        location:
+          type: string
+          description: 物理位置
+          example: "beijing-dc1"
+        netbox_id:
+          type: string
+          description: Netbox中的ID
+          example: "netbox-1001"
+        last_sync_at:
           type: string
           format: date-time
-          description: 检查时间
-          example: "2024-08-15T10:30:00Z"
+          description: 最后同步时间
+          example: "2025-01-15T10:30:00Z"
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2025-01-15T09:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+          example: "2025-01-15T10:30:00Z"
 
-    SystemMetrics:
+    AssetDetailInfo:
+      allOf:
+        - $ref: '#/components/schemas/AssetInfo'
+        - type: object
+          properties:
+            metadata:
+              type: object
+              description: 扩展元数据
+              example:
+                cpu_cores: 8
+                memory_gb: 32
+                disk_gb: 500
+                os_version: "Ubuntu 20.04"
+            monitor_configs:
+              type: array
+              description: 监控配置列表
+              items:
+                $ref: '#/components/schemas/AssetMonitorConfig'
+            recent_alerts:
+              type: array
+              description: 最近告警列表
+              items:
+                $ref: '#/components/schemas/AlertEventInfo'
+
+    AssetCreateRequest:
+      type: object
+      required:
+        - asset_type
+        - asset_name
+      properties:
+        asset_type:
+          type: string
+          enum: [server, network, storage, application]
+          example: "server"
+        asset_name:
+          type: string
+          example: "web-server-02"
+        asset_code:
+          type: string
+          example: "SRV-20250115-002"
+        ip_address:
+          type: string
+          example: "192.168.1.101"
+        hostname:
+          type: string
+          example: "web02.example.com"
+        environment:
+          type: string
+          enum: [production, staging, development, test]
+          example: "production"
+        location:
+          type: string
+          example: "beijing-dc1"
+        metadata:
+          type: object
+          description: 扩展元数据
+          example:
+            cpu_cores: 8
+            memory_gb: 32
+
+    AssetUpdateRequest:
       type: object
       properties:
-        metric_type:
+        asset_name:
           type: string
-          description: 指标类型
-          example: "cpu"
-        time_range:
+          example: "web-server-01-updated"
+        status:
+          type: string
+          enum: [active, inactive, maintenance, decommissioned]
+          example: "maintenance"
+        environment:
+          type: string
+          enum: [production, staging, development, test]
+          example: "production"
+        location:
+          type: string
+          example: "beijing-dc2"
+        metadata:
           type: object
-          description: 时间范围
-          properties:
-            start_time:
-              type: string
-              format: date-time
-              description: 开始时间
-              example: "2024-08-15T00:00:00Z"
-            end_time:
-              type: string
-              format: date-time
-              description: 结束时间
-              example: "2024-08-15T23:59:59Z"
-        data_points:
+          description: 扩展元数据
+          example:
+            cpu_cores: 16
+            memory_gb: 64
+
+    AssetSyncRequest:
+      type: object
+      required:
+        - sync_type
+        - source_system
+      properties:
+        sync_type:
+          type: string
+          description: 同步类型
+          enum: [full, incremental]
+          example: "incremental"
+        source_system:
+          type: string
+          description: 来源系统
+          enum: [netbox, cmdb, manual]
+          example: "netbox"
+        asset_types:
           type: array
-          description: 数据点列表
+          description: 要同步的资产类型
+          items:
+            type: string
+            enum: [server, network, storage, application]
+          example: ["server", "network"]
+        force_update:
+          type: boolean
+          description: 是否强制更新
+          default: false
+          example: false
+
+    AssetSyncResponse:
+      type: object
+      properties:
+        sync_task_id:
+          type: string
+          description: 同步任务ID
+          example: "sync-20250115-001"
+        estimated_duration:
+          type: integer
+          description: 预估时长（秒）
+          example: 300
+        status:
+          type: string
+          description: 任务状态
+          enum: [running, completed, failed]
+          example: "running"
+
+    AssetBatchRequest:
+      type: object
+      required:
+        - action
+        - asset_ids
+      properties:
+        action:
+          type: string
+          description: 批量操作类型
+          enum: [update_status, update_location, update_environment, delete]
+          example: "update_status"
+        asset_ids:
+          type: array
+          description: 资产ID列表
+          items:
+            type: integer
+            format: int64
+          example: [1001, 1002, 1003]
+        parameters:
+          type: object
+          description: 操作参数
+          example:
+            status: "maintenance"
+            reason: "计划维护"
+
+    AssetBatchResponse:
+      type: object
+      properties:
+        total_count:
+          type: integer
+          description: 总数量
+          example: 3
+        success_count:
+          type: integer
+          description: 成功数量
+          example: 2
+        failed_count:
+          type: integer
+          description: 失败数量
+          example: 1
+        results:
+          type: array
+          description: 详细结果
           items:
             type: object
             properties:
-              timestamp:
+              asset_id:
+                type: integer
+                format: int64
+                example: 1001
+              success:
+                type: boolean
+                example: true
+              error_message:
                 type: string
-                format: date-time
-                description: 时间戳
-                example: "2024-08-15T10:30:00Z"
-              value:
-                type: number
-                description: 指标值
-                example: 65.5
-              unit:
-                type: string
-                description: 单位
-                example: "percent"
-        summary:
+                example: "权限不足"
+
+    AssetMonitorConfig:
+      type: object
+      properties:
+        config_id:
+          type: integer
+          format: int64
+          description: 配置ID
+          example: 6001
+        asset_id:
+          type: integer
+          format: int64
+          description: 资产ID
+          example: 1001
+        monitor_type:
+          type: string
+          description: 监控类型
+          enum: [system, application, network, custom]
+          example: "system"
+        config_name:
+          type: string
+          description: 配置名称
+          example: "基础系统监控"
+        monitor_items:
           type: object
-          description: 汇总信息
+          description: 监控项配置
+          example:
+            cpu:
+              threshold: 80
+              interval: 60
+            memory:
+              threshold: 85
+              interval: 60
+        collection_interval:
+          type: integer
+          description: 采集间隔（秒）
+          example: 60
+        alert_rules:
+          type: array
+          description: 告警规则配置
+          items:
+            type: object
+            properties:
+              metric:
+                type: string
+                example: "cpu_usage"
+              operator:
+                type: string
+                enum: [">", ">=", "<", "<=", "==", "!="]
+                example: ">"
+              threshold:
+                type: number
+                example: 80
+              duration:
+                type: integer
+                description: 持续时间（秒）
+                example: 300
+              severity:
+                type: string
+                enum: [critical, high, medium, low]
+                example: "high"
+        status:
+          type: string
+          description: 状态
+          enum: [active, inactive, error]
+          example: "active"
+        last_check_at:
+          type: string
+          format: date-time
+          description: 最后检查时间
+          example: "2025-01-15T10:30:00Z"
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2025-01-15T09:00:00Z"
+
+    AssetMonitorConfigRequest:
+      type: object
+      required:
+        - monitor_type
+        - config_name
+        - monitor_items
+      properties:
+        monitor_type:
+          type: string
+          enum: [system, application, network, custom]
+          example: "system"
+        config_name:
+          type: string
+          example: "基础系统监控"
+        monitor_items:
+          type: object
+          description: 监控项配置
+          example:
+            cpu:
+              threshold: 80
+              interval: 60
+            memory:
+              threshold: 85
+              interval: 60
+        collection_interval:
+          type: integer
+          description: 采集间隔（秒）
+          default: 60
+          example: 60
+        alert_rules:
+          type: array
+          description: 告警规则配置
+          items:
+            type: object
+            properties:
+              metric:
+                type: string
+                example: "cpu_usage"
+              operator:
+                type: string
+                enum: [">", ">=", "<", "<=", "==", "!="]
+                example: ">"
+              threshold:
+                type: number
+                example: 80
+              duration:
+                type: integer
+                example: 300
+              severity:
+                type: string
+                enum: [critical, high, medium, low]
+                example: "high"
+
+    # 告警管理相关Schema
+    AlertEventInfo:
+      type: object
+      properties:
+        event_id:
+          type: integer
+          format: int64
+          description: 事件ID
+          example: 2001
+        tenant_id:
+          type: integer
+          format: int64
+          description: 租户ID
+          example: 123
+        alert_id:
+          type: string
+          description: 外部告警ID
+          example: "alert-20250115-001"
+        rule_id:
+          type: integer
+          format: int64
+          description: 触发规则ID
+          example: 7001
+        asset_id:
+          type: integer
+          format: int64
+          description: 关联资产ID
+          example: 1001
+        asset_name:
+          type: string
+          description: 资产名称
+          example: "web-server-01"
+        event_type:
+          type: string
+          description: 事件类型
+          enum: [alert, recovery, timeout]
+          example: "alert"
+        severity:
+          type: string
+          description: 严重级别
+          enum: [critical, high, medium, low]
+          example: "high"
+        title:
+          type: string
+          description: 告警标题
+          example: "服务器CPU使用率过高"
+        description:
+          type: string
+          description: 告警描述
+          example: "web-server-01 CPU使用率达到85%，持续时间超过5分钟"
+        source_system:
+          type: string
+          description: 来源系统
+          enum: [nightingale, prometheus, custom]
+          example: "nightingale"
+        status:
+          type: string
+          description: 状态
+          enum: [new, processing, resolved, closed, suppressed]
+          example: "new"
+        auto_processed:
+          type: boolean
+          description: 是否自动处理
+          example: false
+        task_id:
+          type: integer
+          format: int64
+          description: 关联任务ID
+          example: 5001
+        ticket_id:
+          type: integer
+          format: int64
+          description: 关联工单ID
+          example: 8001
+        duplicate_count:
+          type: integer
+          description: 重复次数
+          example: 1
+        first_occurrence:
+          type: string
+          format: date-time
+          description: 首次发生时间
+          example: "2025-01-15T10:30:00Z"
+        last_occurrence:
+          type: string
+          format: date-time
+          description: 最后发生时间
+          example: "2025-01-15T10:35:00Z"
+        resolved_at:
+          type: string
+          format: date-time
+          description: 解决时间
+          example: "2025-01-15T10:45:00Z"
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2025-01-15T10:30:00Z"
+        assigned_to:
+          type: integer
+          format: int64
+          description: 分派给
+          example: 1001
+
+    AlertEventDetailInfo:
+      allOf:
+        - $ref: '#/components/schemas/AlertEventInfo'
+        - type: object
           properties:
-            average:
-              type: number
-              description: 平均值
-              example: 60.2
-            maximum:
-              type: number
-              description: 最大值
-              example: 85.7
-            minimum:
-              type: number
-              description: 最小值
-              example: 45.3
+            raw_data:
+              type: object
+              description: 原始告警数据
+              example:
+                metric: "cpu_usage"
+                value: 85.2
+                timestamp: "2025-01-15T10:30:00Z"
+                labels:
+                  instance: "web-server-01"
+                  job: "node-exporter"
+            processing_history:
+              type: array
+              description: 处理历史
+              items:
+                type: object
+                properties:
+                  action:
+                    type: string
+                    example: "auto_resolve_attempt"
+                  result:
+                    type: string
+                    example: "failed"
+                  message:
+                    type: string
+                    example: "剧本执行失败"
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2025-01-15T10:32:00Z"
+                  operator_id:
+                    type: integer
+                    format: int64
+                    example: 1001
+
+    AlertEventRequest:
+      type: object
+      required:
+        - alert_id
+        - source_system
+        - severity
+        - title
+      properties:
+        alert_id:
+          type: string
+          description: 外部告警ID
+          example: "alert-20250115-001"
+        source_system:
+          type: string
+          enum: [nightingale, prometheus, custom]
+          example: "nightingale"
+        severity:
+          type: string
+          enum: [critical, high, medium, low]
+          example: "high"
+        title:
+          type: string
+          description: 告警标题
+          example: "服务器CPU使用率过高"
+        description:
+          type: string
+          description: 告警描述
+          example: "web-server-01 CPU使用率达到85%"
+        asset_id:
+          type: integer
+          format: int64
+          description: 关联资产ID
+          example: 1001
+        raw_data:
+          type: object
+          description: 原始告警数据
+          example:
+            metric: "cpu_usage"
+            value: 85.2
+            timestamp: "2025-01-15T10:30:00Z"
+        tags:
+          type: object
+          description: 标签信息
+          example:
+            environment: "production"
+            service: "web"
+
+    AlertEventResponse:
+      type: object
+      properties:
+        event_id:
+          type: integer
+          format: int64
+          description: 生成的事件ID
+          example: 2001
+        processing_action:
+          type: string
+          description: 处理动作
+          enum: [auto_resolve, create_ticket, notify_only, suppressed]
+          example: "auto_resolve"
+        task_id:
+          type: integer
+          format: int64
+          description: 生成的任务ID
+          example: 5001
+        estimated_resolution_time:
+          type: integer
+          description: 预估解决时间（分钟）
+          example: 15
+
+    AlertProcessRequest:
+      type: object
+      required:
+        - action
+      properties:
+        action:
+          type: string
+          description: 处理动作
+          enum: [auto_resolve, manual_resolve, create_ticket, suppress, escalate]
+          example: "auto_resolve"
+        playbook_id:
+          type: integer
+          format: int64
+          description: 执行剧本ID
+          example: 3001
+        assigned_to:
+          type: integer
+          format: int64
+          description: 分派给
+          example: 1001
+        comment:
+          type: string
+          description: 处理备注
+          example: "自动执行修复脚本"
+        suppress_duration:
+          type: integer
+          description: 抑制时长（分钟）
+          example: 60
+
+    AlertProcessResponse:
+      type: object
+      properties:
+        processing_result:
+          type: string
+          description: 处理结果
+          enum: [success, failed, pending]
+          example: "success"
+        task_id:
+          type: integer
+          format: int64
+          description: 生成的任务ID
+          example: 5001
+        ticket_id:
+          type: integer
+          format: int64
+          description: 生成的工单ID
+          example: 8001
+        execution_id:
+          type: integer
+          format: int64
+          description: 剧本执行ID
+          example: 4001
+        message:
+          type: string
+          description: 处理消息
+          example: "剧本执行已启动"
+
+    AlertBatchProcessRequest:
+      type: object
+      required:
+        - event_ids
+        - action
+      properties:
+        event_ids:
+          type: array
+          description: 告警事件ID列表
+          items:
+            type: integer
+            format: int64
+          example: [2001, 2002, 2003]
+        action:
+          type: string
+          description: 批量处理动作
+          enum: [suppress, resolve, escalate, assign]
+          example: "suppress"
+        duration:
+          type: integer
+          description: 抑制时长（分钟）
+          example: 60
+        reason:
+          type: string
+          description: 处理原因
+          example: "计划维护期间抑制告警"
+        assigned_to:
+          type: integer
+          format: int64
+          description: 分派给
+          example: 1001
+
+    AlertBatchProcessResponse:
+      type: object
+      properties:
+        total_count:
+          type: integer
+          description: 总数量
+          example: 3
+        success_count:
+          type: integer
+          description: 成功数量
+          example: 2
+        failed_count:
+          type: integer
+          description: 失败数量
+          example: 1
+        results:
+          type: array
+          description: 详细结果
+          items:
+            type: object
+            properties:
+              event_id:
+                type: integer
+                format: int64
+                example: 2001
+              success:
+                type: boolean
+                example: true
+              error_message:
+                type: string
+                example: "告警已解决"
+
+    # 运维剧本管理相关Schema
+    PlaybookInfo:
+      type: object
+      properties:
+        playbook_id:
+          type: integer
+          format: int64
+          description: 剧本ID
+          example: 3001
+        tenant_id:
+          type: integer
+          format: int64
+          description: 租户ID
+          example: 123
+        playbook_name:
+          type: string
+          description: 剧本名称
+          example: "Nginx服务重启"
+        playbook_code:
+          type: string
+          description: 剧本编码
+          example: "PB-NGINX-RESTART-001"
+        playbook_type:
+          type: string
+          description: 剧本类型
+          enum: [diagnostic, repair, deployment, maintenance]
+          example: "repair"
+        category:
+          type: string
+          description: 分类
+          enum: [system, application, network, database]
+          example: "application"
+        description:
+          type: string
+          description: 剧本描述
+          example: "重启Nginx服务并验证状态"
+        script_language:
+          type: string
+          description: 脚本语言
+          enum: [bash, python, ansible, powershell]
+          example: "bash"
+        execution_timeout:
+          type: integer
+          description: 执行超时时间（秒）
+          example: 300
+        risk_level:
+          type: string
+          description: 风险等级
+          enum: [low, medium, high, critical]
+          example: "medium"
+        approval_required:
+          type: boolean
+          description: 是否需要审批
+          example: false
+        version:
+          type: string
+          description: 版本号
+          example: "1.0.0"
+        status:
+          type: string
+          description: 状态
+          enum: [active, inactive, testing, deprecated]
+          example: "active"
+        success_rate:
+          type: number
+          description: 成功率
+          example: 95.5
+        avg_execution_time:
+          type: integer
+          description: 平均执行时间（秒）
+          example: 180
+        last_executed_at:
+          type: string
+          format: date-time
+          description: 最后执行时间
+          example: "2025-01-15T10:30:00Z"
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2025-01-15T09:00:00Z"
+
+    PlaybookDetailInfo:
+      allOf:
+        - $ref: '#/components/schemas/PlaybookInfo'
+        - type: object
+          properties:
+            script_content:
+              type: string
+              description: 脚本内容
+              example: |
+                #!/bin/bash
+                sudo systemctl restart nginx
+                sudo systemctl status nginx
+            parameters_schema:
+              type: object
+              description: 参数模式定义
+              example:
+                type: "object"
+                properties:
+                  service_name:
+                    type: "string"
+                    default: "nginx"
+                  timeout:
+                    type: "integer"
+                    default: 300
+            execution_history:
+              type: array
+              description: 执行历史
+              items:
+                type: object
+                properties:
+                  execution_id:
+                    type: integer
+                    format: int64
+                    example: 4001
+                  execution_status:
+                    type: string
+                    enum: [pending, running, success, failed, timeout, cancelled]
+                    example: "success"
+                  start_time:
+                    type: string
+                    format: date-time
+                    example: "2025-01-15T10:30:00Z"
+                  duration:
+                    type: integer
+                    description: 执行时长（秒）
+                    example: 180
+                  executor_name:
+                    type: string
+                    example: "张三"
+
+    PlaybookCreateRequest:
+      type: object
+      required:
+        - playbook_name
+        - playbook_type
+        - script_content
+        - script_language
+      properties:
+        playbook_name:
+          type: string
+          example: "Nginx服务重启"
+        playbook_code:
+          type: string
+          example: "PB-NGINX-RESTART-001"
+        playbook_type:
+          type: string
+          enum: [diagnostic, repair, deployment, maintenance]
+          example: "repair"
+        category:
+          type: string
+          enum: [system, application, network, database]
+          example: "application"
+        description:
+          type: string
+          example: "重启Nginx服务并验证状态"
+        script_content:
+          type: string
+          example: |
+            #!/bin/bash
+            sudo systemctl restart nginx
+            sudo systemctl status nginx
+        script_language:
+          type: string
+          enum: [bash, python, ansible, powershell]
+          example: "bash"
+        parameters_schema:
+          type: object
+          description: 参数模式定义
+          example:
+            type: "object"
+            properties:
+              service_name:
+                type: "string"
+                default: "nginx"
+        execution_timeout:
+          type: integer
+          description: 执行超时时间（秒）
+          default: 3600
+          example: 300
+        risk_level:
+          type: string
+          enum: [low, medium, high, critical]
+          example: "medium"
+        approval_required:
+          type: boolean
+          default: false
+          example: false
+
+    PlaybookExecuteRequest:
+      type: object
+      required:
+        - target_assets
+      properties:
+        target_assets:
+          type: array
+          description: 目标资产ID列表
+          items:
+            type: integer
+            format: int64
+          example: [1001, 1002]
+        parameters:
+          type: object
+          description: 执行参数
+          example:
+            service_name: "nginx"
+            action: "restart"
+            timeout: 300
+        execution_mode:
+          type: string
+          description: 执行模式
+          enum: [manual, auto, scheduled]
+          default: "manual"
+          example: "manual"
+        approval_required:
+          type: boolean
+          description: 是否需要审批
+          default: false
+          example: false
+        scheduled_time:
+          type: string
+          format: date-time
+          description: 计划执行时间
+          example: "2025-01-15T11:00:00Z"
+
+    PlaybookExecuteResponse:
+      type: object
+      properties:
+        execution_id:
+          type: integer
+          format: int64
+          description: 执行ID
+          example: 4001
+        task_id:
+          type: integer
+          format: int64
+          description: 任务ID
+          example: 5001
+        estimated_duration:
+          type: integer
+          description: 预估执行时长（秒）
+          example: 180
+        status:
+          type: string
+          description: 执行状态
+          enum: [pending, running, success, failed, timeout, cancelled]
+          example: "running"
+        approval_id:
+          type: integer
+          format: int64
+          description: 审批ID（如需审批）
+          example: 9001
+
+    PlaybookExecutionInfo:
+      type: object
+      properties:
+        execution_id:
+          type: integer
+          format: int64
+          description: 执行ID
+          example: 4001
+        playbook_id:
+          type: integer
+          format: int64
+          description: 剧本ID
+          example: 3001
+        playbook_name:
+          type: string
+          description: 剧本名称
+          example: "Nginx服务重启"
+        execution_status:
+          type: string
+          description: 执行状态
+          enum: [pending, running, success, failed, timeout, cancelled]
+          example: "success"
+        execution_mode:
+          type: string
+          description: 执行模式
+          enum: [manual, auto, scheduled]
+          example: "manual"
+        start_time:
+          type: string
+          format: date-time
+          description: 开始时间
+          example: "2025-01-15T10:30:00Z"
+        end_time:
+          type: string
+          format: date-time
+          description: 结束时间
+          example: "2025-01-15T10:33:00Z"
+        duration:
+          type: integer
+          description: 执行时长（秒）
+          example: 180
+        target_assets:
+          type: array
+          description: 目标资产执行结果
+          items:
+            type: object
+            properties:
+              asset_id:
+                type: integer
+                format: int64
+                example: 1001
+              asset_name:
+                type: string
+                example: "web-server-01"
+              status:
+                type: string
+                enum: [success, failed, timeout]
+                example: "success"
+              output:
+                type: string
+                example: "nginx服务重启成功"
+              error_message:
+                type: string
+                example: ""
+        output_result:
+          type: string
+          description: 执行输出
+          example: "所有目标服务器nginx服务重启成功"
+        error_message:
+          type: string
+          description: 错误信息
+          example: ""
+        exit_code:
+          type: integer
+          description: 退出码
+          example: 0
+        executor_name:
+          type: string
+          description: 执行人姓名
+          example: "张三"
+
+    # 运维任务管理相关Schema
+    TaskInfo:
+      type: object
+      properties:
+        task_id:
+          type: integer
+          format: int64
+          description: 任务ID
+          example: 5001
+        tenant_id:
+          type: integer
+          format: int64
+          description: 租户ID
+          example: 123
+        task_type:
+          type: string
+          description: 任务类型
+          enum: [alert_handling, scheduled_maintenance, manual_operation]
+          example: "alert_handling"
+        task_name:
+          type: string
+          description: 任务名称
+          example: "处理CPU使用率告警"
+        task_description:
+          type: string
+          description: 任务描述
+          example: "自动执行nginx重启脚本解决CPU使用率过高问题"
+        priority:
+          type: string
+          description: 优先级
+          enum: [critical, high, medium, low]
+          example: "high"
+        task_status:
+          type: string
+          description: 任务状态
+          enum: [pending, running, success, failed, cancelled]
+          example: "running"
+        progress_percentage:
+          type: integer
+          description: 进度百分比
+          minimum: 0
+          maximum: 100
+          example: 75
+        playbook_id:
+          type: integer
+          format: int64
+          description: 关联剧本ID
+          example: 3001
+        execution_id:
+          type: integer
+          format: int64
+          description: 执行记录ID
+          example: 4001
+        asset_count:
+          type: integer
+          description: 目标资产数量
+          example: 2
+        start_time:
+          type: string
+          format: date-time
+          description: 开始时间
+          example: "2025-01-15T10:30:00Z"
+        end_time:
+          type: string
+          format: date-time
+          description: 结束时间
+          example: "2025-01-15T10:33:00Z"
+        estimated_duration:
+          type: integer
+          description: 预估时长（秒）
+          example: 300
+        actual_duration:
+          type: integer
+          description: 实际时长（秒）
+          example: 180
+        executor_id:
+          type: integer
+          format: int64
+          description: 执行人ID
+          example: 1001
+        executor_name:
+          type: string
+          description: 执行人姓名
+          example: "张三"
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2025-01-15T10:30:00Z"
+
+    TaskDetailInfo:
+      allOf:
+        - $ref: '#/components/schemas/TaskInfo'
+        - type: object
+          properties:
+            asset_ids:
+              type: array
+              description: 目标资产ID列表
+              items:
+                type: integer
+                format: int64
+              example: [1001, 1002]
+            result_summary:
+              type: string
+              description: 结果摘要
+              example: "2台服务器nginx服务重启成功"
+            result_detail:
+              type: object
+              description: 详细结果
+              example:
+                success_count: 2
+                failed_count: 0
+                assets:
+                  - asset_id: 1001
+                    status: "success"
+                    message: "nginx重启成功"
+                  - asset_id: 1002
+                    status: "success"
+                    message: "nginx重启成功"
+            error_message:
+              type: string
+              description: 错误信息
+              example: ""
+            logs:
+              type: array
+              description: 执行日志
+              items:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2025-01-15T10:30:30Z"
+                  level:
+                    type: string
+                    enum: [info, warn, error]
+                    example: "info"
+                  message:
+                    type: string
+                    example: "开始执行nginx重启脚本"
+
+    TaskControlRequest:
+      type: object
+      required:
+        - action
+      properties:
+        action:
+          type: string
+          description: 控制动作
+          enum: [cancel, pause, resume, retry]
+          example: "cancel"
+        reason:
+          type: string
+          description: 操作原因
+          example: "用户取消操作"
+        force_stop:
+          type: boolean
+          description: 是否强制停止
+          default: false
+          example: false
+
+    TaskControlResponse:
+      type: object
+      properties:
+        control_result:
+          type: string
+          description: 控制结果
+          enum: [success, failed, not_applicable]
+          example: "success"
+        new_status:
+          type: string
+          description: 新状态
+          enum: [pending, running, success, failed, cancelled]
+          example: "cancelled"
+        message:
+          type: string
+          description: 控制消息
+          example: "任务已成功取消"
+
+    # 监控配置管理相关Schema
+    MonitorConfigInfo:
+      type: object
+      properties:
+        config_id:
+          type: integer
+          format: int64
+          description: 配置ID
+          example: 6001
+        tenant_id:
+          type: integer
+          format: int64
+          description: 租户ID
+          example: 123
+        asset_id:
+          type: integer
+          format: int64
+          description: 资产ID
+          example: 1001
+        asset_name:
+          type: string
+          description: 资产名称
+          example: "web-server-01"
+        monitor_type:
+          type: string
+          description: 监控类型
+          enum: [system, application, network, custom]
+          example: "system"
+        config_name:
+          type: string
+          description: 配置名称
+          example: "基础系统监控"
+        collection_interval:
+          type: integer
+          description: 采集间隔（秒）
+          example: 60
+        status:
+          type: string
+          description: 状态
+          enum: [active, inactive, error]
+          example: "active"
+        last_check_at:
+          type: string
+          format: date-time
+          description: 最后检查时间
+          example: "2025-01-15T10:30:00Z"
+        error_message:
+          type: string
+          description: 错误信息
+          example: ""
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2025-01-15T09:00:00Z"
+
+    MonitorConfigDetailInfo:
+      allOf:
+        - $ref: '#/components/schemas/MonitorConfigInfo'
+        - type: object
+          properties:
+            monitor_items:
+              type: object
+              description: 监控项配置
+              example:
+                cpu:
+                  threshold: 80
+                  interval: 60
+                memory:
+                  threshold: 85
+                  interval: 60
+                disk:
+                  threshold: 90
+                  interval: 300
+            alert_rules:
+              type: array
+              description: 告警规则配置
+              items:
+                type: object
+                properties:
+                  metric:
+                    type: string
+                    example: "cpu_usage"
+                  operator:
+                    type: string
+                    enum: [">", ">=", "<", "<=", "==", "!="]
+                    example: ">"
+                  threshold:
+                    type: number
+                    example: 80
+                  duration:
+                    type: integer
+                    example: 300
+                  severity:
+                    type: string
+                    enum: [critical, high, medium, low]
+                    example: "high"
+            recent_metrics:
+              type: array
+              description: 最近指标数据
+              items:
+                type: object
+                properties:
+                  metric_name:
+                    type: string
+                    example: "cpu_usage"
+                  value:
+                    type: number
+                    example: 65.5
+                  unit:
+                    type: string
+                    example: "percent"
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2025-01-15T10:30:00Z"

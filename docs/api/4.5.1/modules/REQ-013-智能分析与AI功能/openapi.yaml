@@ -1,21 +1,240 @@
 openapi: 3.0.3
 info:
-  title: 智能分析与AI功能 API
+  title: IT运维门户系统 API
   version: 1.0.0
   description: REQ-013 智能分析与AI功能 API 规范
 
 tags:
+  - name: ai-diagnosis
+    description: 智能故障诊断
+  - name: ai-prediction
+    description: 预测性维护
+  - name: ai-chat
+    description: 智能问答系统
+  - name: ai-anomaly
+    description: 异常检测
+  - name: ai-models
+    description: AI模型管理
+  - name: ai-training
+    description: 训练管理
+  - name: ai-datasets
+    description: 数据集管理
   - name: ai-analysis
-    description: AI智能分析
+    description: 分析记录管理
+  - name: ai-feedback
+    description: 反馈管理
+  - name: ai-monitoring
+    description: 系统监控
+  - name: ai-statistics
+    description: 统计分析
 
 paths:
-  /api/v1/ai/analysis/predict:
+  # 智能故障诊断 API
+  /api/v1/ai/diagnosis:
     post:
       tags:
-        - ai-analysis
-      summary: AI预测分析
-      description: 使用AI模型进行预测分析
-      operationId: ai_predict
+        - ai-diagnosis
+      summary: 故障诊断分析
+      description: 基于AI的故障根因分析和解决方案推荐
+      operationId: ai_diagnosis_analyze
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiagnosisRequest'
+      responses:
+        '200':
+          description: 诊断成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/DiagnosisResult'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+    get:
+      tags:
+        - ai-diagnosis
+      summary: 查询诊断历史记录
+      description: 分页查询故障诊断历史记录
+      operationId: ai_diagnosis_list
+      parameters:
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+        - name: analysis_type
+          in: query
+          description: 分析类型
+          schema:
+            type: string
+            enum: [diagnosis, prediction, qa, anomaly, classification]
+            example: "diagnosis"
+        - name: start_time
+          in: query
+          description: 开始时间
+          schema:
+            type: string
+            format: date-time
+            example: "2025-08-01T00:00:00Z"
+        - name: end_time
+          in: query
+          description: 结束时间
+          schema:
+            type: string
+            format: date-time
+            example: "2025-08-15T23:59:59Z"
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/AnalysisRecordInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ai/diagnosis/{diagnosisId}:
+    get:
+      tags:
+        - ai-diagnosis
+      summary: 获取诊断结果详情
+      description: 根据诊断ID获取详细的诊断结果
+      operationId: ai_diagnosis_get
+      parameters:
+        - name: diagnosisId
+          in: path
+          required: true
+          description: 诊断ID
+          schema:
+            type: string
+            example: "DIAG_20250815_001"
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/DiagnosisResult'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ai/diagnosis/batch:
+    post:
+      tags:
+        - ai-diagnosis
+      summary: 批量故障诊断
+      description: 批量提交多个故障诊断请求
+      operationId: ai_diagnosis_batch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - requests
+              properties:
+                requests:
+                  type: array
+                  description: 诊断请求列表
+                  items:
+                    $ref: '#/components/schemas/DiagnosisRequest'
+                  maxItems: 10
+      responses:
+        '200':
+          description: 批量诊断成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          results:
+                            type: array
+                            description: 诊断结果列表
+                            items:
+                              $ref: '#/components/schemas/DiagnosisResult'
+                          success_count:
+                            type: integer
+                            description: 成功数量
+                            example: 8
+                          failed_count:
+                            type: integer
+                            description: 失败数量
+                            example: 2
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 预测性维护 API
+  /api/v1/ai/prediction:
+    post:
+      tags:
+        - ai-prediction
+      summary: 设备故障预测
+      description: 基于历史数据进行设备故障预测和性能趋势分析
+      operationId: ai_prediction_analyze
       requestBody:
         required: true
         content:
@@ -42,31 +261,84 @@ paths:
           $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
         '500':
           $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
-  /api/v1/ai/analysis/insights:
     get:
       tags:
-        - ai-analysis
-      summary: 获取AI洞察
-      description: 获取AI分析洞察结果
-      operationId: ai_get_insights
+        - ai-prediction
+      summary: 查询预测历史记录
+      description: 分页查询预测分析历史记录
+      operationId: ai_prediction_list
       parameters:
-        - name: category
+        - name: page
           in: query
-          description: 分析类别
-          schema:
-            type: string
-            enum: [performance, security, cost, trend]
-            example: "performance"
-        - name: time_range
-          in: query
-          description: 时间范围（天）
+          description: 页码
           schema:
             type: integer
             minimum: 1
-            maximum: 365
-            default: 30
-            example: 30
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+        - name: prediction_type
+          in: query
+          description: 预测类型
+          schema:
+            type: string
+            enum: [equipment_failure, performance_trend, capacity_planning]
+            example: "equipment_failure"
+        - name: system_id
+          in: query
+          description: 系统ID
+          schema:
+            type: string
+            example: "sys_db_001"
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/AnalysisRecordInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ai/prediction/{predictionId}:
+    get:
+      tags:
+        - ai-prediction
+      summary: 获取预测结果详情
+      description: 根据预测ID获取详细的预测结果
+      operationId: ai_prediction_get
+      parameters:
+        - name: predictionId
+          in: path
+          required: true
+          description: 预测ID
+          schema:
+            type: string
+            example: "PRED_20250815_001"
       responses:
         '200':
           description: 获取成功
@@ -78,7 +350,740 @@ paths:
                   - type: object
                     properties:
                       data:
-                        $ref: '#/components/schemas/AIInsights'
+                        $ref: '#/components/schemas/PredictionResult'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ai/prediction/capacity-planning:
+    post:
+      tags:
+        - ai-prediction
+      summary: 容量规划预测
+      description: 基于历史使用数据进行容量规划预测
+      operationId: ai_prediction_capacity_planning
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - system_id
+                - resource_type
+                - historical_data
+                - planning_horizon
+              properties:
+                system_id:
+                  type: string
+                  description: 系统ID
+                  example: "sys_web_001"
+                resource_type:
+                  type: string
+                  description: 资源类型
+                  enum: [cpu, memory, disk, network, database_connections]
+                  example: "cpu"
+                historical_data:
+                  type: object
+                  description: 历史数据
+                  properties:
+                    time_range:
+                      type: object
+                      properties:
+                        start_time:
+                          type: string
+                          format: date-time
+                          example: "2025-07-15T00:00:00Z"
+                        end_time:
+                          type: string
+                          format: date-time
+                          example: "2025-08-15T00:00:00Z"
+                    metrics:
+                      type: object
+                      description: 指标数据
+                      additionalProperties: true
+                planning_horizon:
+                  type: object
+                  description: 规划时间窗口
+                  properties:
+                    unit:
+                      type: string
+                      enum: [days, weeks, months]
+                      example: "months"
+                    value:
+                      type: integer
+                      minimum: 1
+                      example: 6
+      responses:
+        '200':
+          description: 容量规划成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/CapacityPlanningResult'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 智能问答系统 API
+  /api/v1/ai/chat:
+    post:
+      tags:
+        - ai-chat
+      summary: 智能问答
+      description: 基于大语言模型的智能问答服务，支持多轮对话和上下文理解
+      operationId: ai_chat_ask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: 问答成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ChatResponse'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ai/chat/sessions:
+    get:
+      tags:
+        - ai-chat
+      summary: 查询对话会话列表
+      description: 分页查询用户的对话会话历史
+      operationId: ai_chat_sessions_list
+      parameters:
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+        - name: user_id
+          in: query
+          description: 用户ID
+          schema:
+            type: integer
+            example: 1001
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/ChatSessionInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ai/chat/sessions/{sessionId}:
+    get:
+      tags:
+        - ai-chat
+      summary: 获取对话会话详情
+      description: 获取指定会话的完整对话历史
+      operationId: ai_chat_session_get
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          description: 会话ID
+          schema:
+            type: string
+            example: "session_user123_001"
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ChatSessionDetail'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - ai-chat
+      summary: 删除对话会话
+      description: 删除指定的对话会话及其历史记录
+      operationId: ai_chat_session_delete
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          description: 会话ID
+          schema:
+            type: string
+            example: "session_user123_001"
+      responses:
+        '200':
+          description: 删除成功
+          content:
+            application/json:
+              schema:
+                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 异常检测 API
+  /api/v1/ai/anomaly-detection:
+    post:
+      tags:
+        - ai-anomaly
+      summary: 实时异常检测
+      description: 基于机器学习算法进行实时异常检测和分析
+      operationId: ai_anomaly_detect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnomalyDetectionRequest'
+      responses:
+        '200':
+          description: 检测成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AnomalyDetectionResult'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # AI模型管理 API
+  /api/v1/ai/models:
+    get:
+      tags:
+        - ai-models
+      summary: 查询AI模型列表
+      description: 分页查询AI模型列表，支持按类型、状态等条件筛选
+      operationId: ai_models_list
+      parameters:
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+        - name: model_type
+          in: query
+          description: 模型类型
+          schema:
+            type: string
+            enum: [diagnosis, prediction, qa, anomaly, classification]
+            example: "diagnosis"
+        - name: status
+          in: query
+          description: 模型状态
+          schema:
+            type: string
+            enum: [draft, training, testing, active, deprecated]
+            example: "active"
+        - name: business_domain
+          in: query
+          description: 业务领域
+          schema:
+            type: string
+            enum: [server, network, database, application]
+            example: "server"
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/AIModelInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+    post:
+      tags:
+        - ai-models
+      summary: 创建AI模型
+      description: 创建新的AI模型定义
+      operationId: ai_models_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIModelCreateRequest'
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AIModelInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ai/models/{modelId}:
+    get:
+      tags:
+        - ai-models
+      summary: 获取AI模型详情
+      description: 根据模型ID获取详细的模型信息
+      operationId: ai_models_get
+      parameters:
+        - name: modelId
+          in: path
+          required: true
+          description: 模型ID
+          schema:
+            type: integer
+            example: 1001
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AIModelDetail'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+    put:
+      tags:
+        - ai-models
+      summary: 更新AI模型信息
+      description: 更新AI模型的基本信息和配置
+      operationId: ai_models_update
+      parameters:
+        - name: modelId
+          in: path
+          required: true
+          description: 模型ID
+          schema:
+            type: integer
+            example: 1001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIModelUpdateRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AIModelInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - ai-models
+      summary: 删除AI模型
+      description: 删除指定的AI模型（仅限草稿状态）
+      operationId: ai_models_delete
+      parameters:
+        - name: modelId
+          in: path
+          required: true
+          description: 模型ID
+          schema:
+            type: integer
+            example: 1001
+      responses:
+        '200':
+          description: 删除成功
+          content:
+            application/json:
+              schema:
+                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 训练任务管理 API
+  /api/v1/ai/training/jobs:
+    get:
+      tags:
+        - ai-training
+      summary: 查询训练任务列表
+      description: 分页查询训练任务列表，支持按状态、模型等条件筛选
+      operationId: ai_training_jobs_list
+      parameters:
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: size
+          in: query
+          description: 每页大小
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+            example: 20
+        - name: model_id
+          in: query
+          description: 模型ID
+          schema:
+            type: integer
+            example: 1001
+        - name: status
+          in: query
+          description: 任务状态
+          schema:
+            type: string
+            enum: [pending, running, completed, failed, cancelled]
+            example: "running"
+        - name: job_type
+          in: query
+          description: 任务类型
+          schema:
+            type: string
+            enum: [initial, retrain, finetune, transfer]
+            example: "initial"
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/TrainingJobInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+    post:
+      tags:
+        - ai-training
+      summary: 创建训练任务
+      description: 创建新的AI模型训练任务
+      operationId: ai_training_jobs_create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingJobCreateRequest'
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TrainingJobInfo'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ai/training/jobs/{jobId}:
+    get:
+      tags:
+        - ai-training
+      summary: 获取训练任务详情
+      description: 根据任务ID获取详细的训练任务信息
+      operationId: ai_training_jobs_get
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          description: 训练任务ID
+          schema:
+            type: integer
+            example: 2001
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TrainingJobDetail'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ai/training/jobs/{jobId}/start:
+    post:
+      tags:
+        - ai-training
+      summary: 启动训练任务
+      description: 启动指定的训练任务
+      operationId: ai_training_jobs_start
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          description: 训练任务ID
+          schema:
+            type: integer
+            example: 2001
+      responses:
+        '200':
+          description: 启动成功
+          content:
+            application/json:
+              schema:
+                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+        '400':
+          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+        '404':
+          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+        '409':
+          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  # 系统监控与统计 API
+  /api/v1/ai/monitoring/health:
+    get:
+      tags:
+        - ai-monitoring
+      summary: 获取AI系统健康状态
+      description: 获取AI系统的整体健康状态和关键指标
+      operationId: ai_monitoring_health
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SystemHealthStatus'
+        '401':
+          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+        '403':
+          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+        '500':
+          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
+
+  /api/v1/ai/statistics/usage:
+    get:
+      tags:
+        - ai-statistics
+      summary: 获取使用统计
+      description: 获取AI功能的使用统计信息
+      operationId: ai_statistics_usage
+      parameters:
+        - name: time_range
+          in: query
+          description: 时间范围（天）
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 365
+            default: 30
+            example: 30
+        - name: analysis_type
+          in: query
+          description: 分析类型
+          schema:
+            type: string
+            enum: [diagnosis, prediction, qa, anomaly, classification]
+            example: "diagnosis"
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/UsageStatistics'
         '400':
           $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
         '401':
@@ -90,37 +1095,431 @@ paths:
 
 components:
   schemas:
+    # 故障诊断相关 Schemas
+    DiagnosisRequest:
+      type: object
+      required:
+        - request_id
+        - problem_description
+        - system_info
+      properties:
+        request_id:
+          type: string
+          description: 请求ID
+          example: "diag_20250815_001"
+        problem_description:
+          type: string
+          description: 问题描述
+          example: "服务器CPU使用率持续100%，系统响应缓慢"
+        system_info:
+          type: object
+          description: 系统信息
+          required:
+            - server_id
+            - os_type
+            - application
+            - environment
+          properties:
+            server_id:
+              type: string
+              description: 服务器ID
+              example: "srv-001"
+            os_type:
+              type: string
+              description: 操作系统类型
+              enum: [linux, windows, unix, macos]
+              example: "linux"
+            application:
+              type: string
+              description: 应用类型
+              example: "web_server"
+            environment:
+              type: string
+              description: 环境类型
+              enum: [production, staging, development, test]
+              example: "production"
+        monitoring_data:
+          type: object
+          description: 监控数据
+          properties:
+            time_range:
+              type: object
+              properties:
+                start_time:
+                  type: string
+                  format: date-time
+                  description: 开始时间
+                  example: "2025-08-15T10:00:00Z"
+                end_time:
+                  type: string
+                  format: date-time
+                  description: 结束时间
+                  example: "2025-08-15T10:30:00Z"
+            metrics:
+              type: object
+              description: 性能指标
+              properties:
+                cpu_usage:
+                  type: array
+                  description: CPU使用率
+                  items:
+                    type: number
+                  example: [95, 98, 100, 100, 99]
+                memory_usage:
+                  type: array
+                  description: 内存使用率
+                  items:
+                    type: number
+                  example: [78, 82, 85, 88, 90]
+                disk_io:
+                  type: array
+                  description: 磁盘I/O
+                  items:
+                    type: number
+                  example: [45, 52, 48, 55, 60]
+                network_io:
+                  type: array
+                  description: 网络I/O
+                  items:
+                    type: number
+                  example: [120, 135, 140, 145, 150]
+        log_data:
+          type: object
+          description: 日志数据
+          properties:
+            error_logs:
+              type: array
+              description: 错误日志
+              items:
+                type: string
+              example: ["ERROR: Database connection timeout at 10:15:23", "WARN: High memory usage detected at 10:20:15"]
+            system_logs:
+              type: array
+              description: 系统日志
+              items:
+                type: string
+              example: ["INFO: Service restart initiated at 10:25:00"]
+        context_info:
+          type: object
+          description: 上下文信息
+          properties:
+            recent_changes:
+              type: array
+              description: 最近变更
+              items:
+                type: string
+              example: ["deployed new version v2.1.0"]
+            related_tickets:
+              type: array
+              description: 相关工单
+              items:
+                type: string
+              example: ["TICKET-12345"]
+            similar_issues:
+              type: array
+              description: 类似问题
+              items:
+                type: string
+              example: ["ISSUE-67890"]
+
+    DiagnosisResult:
+      type: object
+      properties:
+        diagnosis_id:
+          type: string
+          description: 诊断ID
+          example: "DIAG_20250815_001"
+        request_id:
+          type: string
+          description: 请求ID
+          example: "diag_20250815_001"
+        analysis_result:
+          type: object
+          description: 分析结果
+          properties:
+            root_cause:
+              type: object
+              description: 根因分析
+              properties:
+                primary:
+                  type: object
+                  description: 主要原因
+                  properties:
+                    cause:
+                      type: string
+                      description: 原因描述
+                      example: "数据库连接池耗尽"
+                    confidence:
+                      type: number
+                      description: 置信度
+                      example: 92.5
+                    evidence:
+                      type: array
+                      description: 证据列表
+                      items:
+                        type: string
+                      example: ["数据库连接超时错误频繁出现", "CPU使用率与数据库查询量正相关", "内存使用率持续上升"]
+                secondary:
+                  type: array
+                  description: 次要原因
+                  items:
+                    type: object
+                    properties:
+                      cause:
+                        type: string
+                        example: "内存泄漏"
+                      confidence:
+                        type: number
+                        example: 78.3
+                      evidence:
+                        type: array
+                        items:
+                          type: string
+                        example: ["内存使用率持续上升且未释放"]
+            impact_assessment:
+              type: object
+              description: 影响评估
+              properties:
+                severity:
+                  type: string
+                  description: 严重程度
+                  enum: [low, medium, high, critical]
+                  example: "high"
+                affected_services:
+                  type: array
+                  description: 受影响服务
+                  items:
+                    type: string
+                  example: ["web_service", "api_service"]
+                estimated_downtime:
+                  type: string
+                  description: 预计停机时间
+                  example: "持续中"
+                business_impact:
+                  type: string
+                  description: 业务影响
+                  example: "用户访问缓慢，可能导致订单丢失"
+            recommended_solutions:
+              type: array
+              description: 推荐解决方案
+              items:
+                type: object
+                properties:
+                  priority:
+                    type: integer
+                    description: 优先级
+                    example: 1
+                  action:
+                    type: string
+                    description: 操作描述
+                    example: "重启数据库连接池"
+                  description:
+                    type: string
+                    description: 详细描述
+                    example: "清理现有连接，重新建立连接池"
+                  estimated_time:
+                    type: string
+                    description: 预计时间
+                    example: "5分钟"
+                  risk_level:
+                    type: string
+                    description: 风险级别
+                    enum: [low, medium, high]
+                    example: "low"
+                  steps:
+                    type: array
+                    description: 执行步骤
+                    items:
+                      type: string
+                    example: ["1. 备份当前连接池配置", "2. 执行连接池重启命令", "3. 验证连接池状态", "4. 监控系统性能恢复"]
+            preventive_measures:
+              type: array
+              description: 预防措施
+              items:
+                type: string
+              example: ["配置数据库连接池监控告警", "定期进行内存泄漏检测", "建立系统性能基线监控"]
+        model_info:
+          type: object
+          description: 模型信息
+          properties:
+            model_id:
+              type: string
+              description: 模型ID
+              example: "model_diagnosis_001"
+            model_version:
+              type: string
+              description: 模型版本
+              example: "v2.1.0"
+            confidence:
+              type: number
+              description: 整体置信度
+              example: 92.5
+            processing_time:
+              type: number
+              description: 处理时间（秒）
+              example: 3.2
+        related_knowledge:
+          type: array
+          description: 相关知识
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+                description: 知识标题
+                example: "数据库连接池优化指南"
+              url:
+                type: string
+                description: 知识链接
+                example: "/knowledge/db-connection-pool"
+              relevance:
+                type: number
+                description: 相关度
+                example: 95.8
+
+    # 预测性维护相关 Schemas
     PredictionRequest:
       type: object
       required:
-        - model_type
-        - input_data
+        - request_id
+        - prediction_type
+        - target_system
+        - historical_data
+        - prediction_horizon
       properties:
-        model_type:
+        request_id:
           type: string
-          description: 模型类型
-          enum: [workload_prediction, failure_prediction, resource_optimization]
-          example: "workload_prediction"
-        input_data:
+          description: 请求ID
+          example: "pred_20250815_001"
+        prediction_type:
+          type: string
+          description: 预测类型
+          enum: [equipment_failure, performance_trend, capacity_planning]
+          example: "equipment_failure"
+        target_system:
           type: object
-          description: 输入数据
-          additionalProperties: true
-          example:
-            historical_data: [100, 120, 95, 110, 130]
-            time_period: "daily"
-            forecast_days: 7
-        parameters:
+          description: 目标系统
+          required:
+            - system_id
+            - system_type
+            - system_name
+          properties:
+            system_id:
+              type: string
+              description: 系统ID
+              example: "sys_db_001"
+            system_type:
+              type: string
+              description: 系统类型
+              enum: [database, web_server, application_server, network_device]
+              example: "database"
+            system_name:
+              type: string
+              description: 系统名称
+              example: "主数据库服务器"
+        historical_data:
           type: object
-          description: 模型参数
-          additionalProperties: true
+          description: 历史数据
+          required:
+            - time_range
+            - metrics
+          properties:
+            time_range:
+              type: object
+              properties:
+                start_time:
+                  type: string
+                  format: date-time
+                  description: 开始时间
+                  example: "2025-07-15T00:00:00Z"
+                end_time:
+                  type: string
+                  format: date-time
+                  description: 结束时间
+                  example: "2025-08-15T00:00:00Z"
+            metrics:
+              type: object
+              description: 指标数据
+              properties:
+                cpu_usage:
+                  type: string
+                  description: CPU使用率时序数据
+                  example: "time_series_data"
+                memory_usage:
+                  type: string
+                  description: 内存使用率时序数据
+                  example: "time_series_data"
+                disk_usage:
+                  type: string
+                  description: 磁盘使用率时序数据
+                  example: "time_series_data"
+                network_traffic:
+                  type: string
+                  description: 网络流量时序数据
+                  example: "time_series_data"
+                error_rate:
+                  type: string
+                  description: 错误率时序数据
+                  example: "time_series_data"
+        prediction_horizon:
+          type: object
+          description: 预测时间窗口
+          required:
+            - unit
+            - value
+          properties:
+            unit:
+              type: string
+              description: 时间单位
+              enum: [hours, days, weeks, months]
+              example: "days"
+            value:
+              type: integer
+              description: 时间值
+              minimum: 1
+              example: 30
+        alert_thresholds:
+          type: object
+          description: 告警阈值
+          properties:
+            failure_probability:
+              type: number
+              description: 故障概率阈值
+              minimum: 0
+              maximum: 1
+              example: 0.7
+            performance_degradation:
+              type: number
+              description: 性能下降阈值
+              minimum: 0
+              maximum: 1
+              example: 0.5
 
     PredictionResult:
       type: object
       properties:
-        model_type:
+        prediction_id:
           type: string
-          description: 模型类型
-          example: "workload_prediction"
+          description: 预测ID
+          example: "PRED_20250815_001"
+        request_id:
+          type: string
+          description: 请求ID
+          example: "pred_20250815_001"
+        prediction_type:
+          type: string
+          description: 预测类型
+          example: "equipment_failure"
+        target_system:
+          type: object
+          description: 目标系统信息
+          properties:
+            system_id:
+              type: string
+              example: "sys_db_001"
+            system_name:
+              type: string
+              example: "主数据库服务器"
         predictions:
           type: array
           description: 预测结果
@@ -131,95 +1530,1141 @@ components:
                 type: string
                 format: date-time
                 description: 预测时间点
-                example: "2024-08-16T10:30:00Z"
-              predicted_value:
+                example: "2025-08-16T10:30:00Z"
+              failure_probability:
                 type: number
-                description: 预测值
-                example: 125.5
+                description: 故障概率
+                example: 0.15
+              performance_score:
+                type: number
+                description: 性能评分
+                example: 85.5
+              risk_level:
+                type: string
+                description: 风险级别
+                enum: [low, medium, high, critical]
+                example: "low"
               confidence:
                 type: number
                 description: 置信度
-                example: 0.85
-        accuracy_metrics:
+                example: 0.92
+        recommendations:
+          type: array
+          description: 预测建议
+          items:
+            type: object
+            properties:
+              action:
+                type: string
+                description: 建议操作
+                example: "增加数据库连接池大小"
+              priority:
+                type: string
+                description: 优先级
+                enum: [low, medium, high, urgent]
+                example: "medium"
+              estimated_impact:
+                type: string
+                description: 预计影响
+                example: "可降低故障概率20%"
+        model_info:
           type: object
-          description: 准确性指标
+          description: 模型信息
           properties:
-            mae:
+            model_id:
+              type: string
+              example: "model_prediction_001"
+            model_version:
+              type: string
+              example: "v1.5.0"
+            algorithm:
+              type: string
+              example: "LSTM"
+            accuracy:
               type: number
-              description: 平均绝对误差
-              example: 5.2
-            rmse:
-              type: number
-              description: 均方根误差
-              example: 7.8
-            r_squared:
-              type: number
-              description: 决定系数
-              example: 0.92
-        generated_at:
-          type: string
-          format: date-time
-          description: 生成时间
-          example: "2024-08-15T10:30:00Z"
+              example: 94.2
 
-    AIInsights:
+    CapacityPlanningResult:
       type: object
       properties:
-        category:
+        planning_id:
           type: string
-          description: 分析类别
-          example: "performance"
-        insights:
+          description: 规划ID
+          example: "CAP_20250815_001"
+        system_id:
+          type: string
+          description: 系统ID
+          example: "sys_web_001"
+        resource_type:
+          type: string
+          description: 资源类型
+          example: "cpu"
+        current_usage:
+          type: object
+          description: 当前使用情况
+          properties:
+            average_usage:
+              type: number
+              description: 平均使用率
+              example: 65.5
+            peak_usage:
+              type: number
+              description: 峰值使用率
+              example: 89.2
+            trend:
+              type: string
+              description: 趋势
+              enum: [increasing, stable, decreasing]
+              example: "increasing"
+        capacity_forecast:
           type: array
-          description: 洞察列表
+          description: 容量预测
+          items:
+            type: object
+            properties:
+              time_period:
+                type: string
+                description: 时间段
+                example: "2025-09"
+              predicted_usage:
+                type: number
+                description: 预测使用率
+                example: 78.5
+              capacity_threshold:
+                type: number
+                description: 容量阈值
+                example: 80.0
+              risk_level:
+                type: string
+                enum: [low, medium, high]
+                example: "medium"
+        scaling_recommendations:
+          type: array
+          description: 扩容建议
+          items:
+            type: object
+            properties:
+              timeline:
+                type: string
+                description: 时间线
+                example: "2025年10月前"
+              action:
+                type: string
+                description: 建议操作
+                example: "增加2个CPU核心"
+              estimated_cost:
+                type: number
+                description: 预计成本
+                example: 5000.00
+              business_justification:
+                type: string
+                description: 业务理由
+                example: "避免性能瓶颈，保障业务连续性"
+
+    # 智能问答相关 Schemas
+    ChatRequest:
+      type: object
+      required:
+        - request_id
+        - session_id
+        - question
+      properties:
+        request_id:
+          type: string
+          description: 请求ID
+          example: "chat_20250815_001"
+        session_id:
+          type: string
+          description: 会话ID
+          example: "session_user123_001"
+        question:
+          type: string
+          description: 用户问题
+          example: "如何配置Nginx负载均衡？"
+        context:
+          type: object
+          description: 上下文信息
+          properties:
+            user_role:
+              type: string
+              description: 用户角色
+              example: "运维工程师"
+            system_environment:
+              type: string
+              description: 系统环境
+              example: "linux"
+            previous_questions:
+              type: array
+              description: 历史问题
+              items:
+                type: object
+                properties:
+                  question:
+                    type: string
+                    example: "Nginx有哪些负载均衡算法？"
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2025-08-15T10:25:00Z"
+            current_task:
+              type: object
+              description: 当前任务
+              properties:
+                task_type:
+                  type: string
+                  example: "system_configuration"
+                related_systems:
+                  type: array
+                  items:
+                    type: string
+                  example: ["nginx", "web_server"]
+        preferences:
+          type: object
+          description: 用户偏好
+          properties:
+            response_format:
+              type: string
+              description: 响应格式
+              enum: [text, structured, code, step_by_step]
+              example: "structured"
+            include_examples:
+              type: boolean
+              description: 是否包含示例
+              example: true
+            include_references:
+              type: boolean
+              description: 是否包含参考资料
+              example: true
+            max_response_length:
+              type: integer
+              description: 最大响应长度
+              example: 1000
+
+    ChatResponse:
+      type: object
+      properties:
+        chat_id:
+          type: string
+          description: 对话ID
+          example: "CHAT_20250815_001"
+        request_id:
+          type: string
+          description: 请求ID
+          example: "chat_20250815_001"
+        session_id:
+          type: string
+          description: 会话ID
+          example: "session_user123_001"
+        question:
+          type: string
+          description: 用户问题
+          example: "如何配置Nginx负载均衡？"
+        answer:
+          type: string
+          description: AI回答
+          example: "Nginx负载均衡配置主要通过upstream模块实现..."
+        confidence:
+          type: number
+          description: 回答置信度
+          example: 0.95
+        sources:
+          type: array
+          description: 知识来源
           items:
             type: object
             properties:
               title:
                 type: string
-                description: 洞察标题
-                example: "CPU使用率异常增长"
-              description:
+                description: 来源标题
+                example: "Nginx官方文档"
+              url:
                 type: string
-                description: 洞察描述
-                example: "过去7天CPU使用率平均增长15%，建议检查资源配置"
+                description: 来源链接
+                example: "https://nginx.org/docs/load_balancing.html"
+              relevance:
+                type: number
+                description: 相关度
+                example: 0.98
+        follow_up_questions:
+          type: array
+          description: 后续问题建议
+          items:
+            type: string
+          example: ["如何配置健康检查？", "负载均衡算法有哪些？", "如何监控负载均衡状态？"]
+        processing_time:
+          type: number
+          description: 处理时间（秒）
+          example: 2.5
+
+    # 异常检测相关 Schemas
+    AnomalyDetectionRequest:
+      type: object
+      required:
+        - request_id
+        - detection_type
+        - data_source
+        - metrics
+      properties:
+        request_id:
+          type: string
+          description: 请求ID
+          example: "anomaly_20250815_001"
+        detection_type:
+          type: string
+          description: 检测类型
+          enum: [real_time, batch, streaming]
+          example: "real_time"
+        data_source:
+          type: object
+          description: 数据源
+          required:
+            - source_type
+            - source_id
+            - time_window
+          properties:
+            source_type:
+              type: string
+              description: 数据源类型
+              enum: [metrics, logs, events, traces]
+              example: "metrics"
+            source_id:
+              type: string
+              description: 数据源ID
+              example: "metrics_server_001"
+            time_window:
+              type: object
+              description: 时间窗口
+              properties:
+                duration:
+                  type: string
+                  description: 持续时间
+                  example: "5m"
+                end_time:
+                  type: string
+                  format: date-time
+                  description: 结束时间
+                  example: "2025-08-15T10:30:00Z"
+        metrics:
+          type: array
+          description: 指标数据
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: 指标名称
+                example: "cpu_usage"
+              values:
+                type: array
+                description: 指标值
+                items:
+                  type: number
+                example: [45.2, 47.1, 89.5, 91.2, 93.8]
+              timestamps:
+                type: array
+                description: 时间戳
+                items:
+                  type: string
+                example: ["10:25:00", "10:26:00", "10:27:00", "10:28:00", "10:29:00"]
+        detection_config:
+          type: object
+          description: 检测配置
+          properties:
+            sensitivity:
+              type: string
+              description: 敏感度
+              enum: [low, medium, high]
+              example: "medium"
+            algorithms:
+              type: array
+              description: 检测算法
+              items:
+                type: string
+                enum: [isolation_forest, statistical, one_class_svm, lstm]
+              example: ["isolation_forest", "statistical"]
+            confidence_threshold:
+              type: number
+              description: 置信度阈值
+              minimum: 0
+              maximum: 1
+              example: 0.8
+
+    AnomalyDetectionResult:
+      type: object
+      properties:
+        detection_id:
+          type: string
+          description: 检测ID
+          example: "ANOM_20250815_001"
+        request_id:
+          type: string
+          description: 请求ID
+          example: "anomaly_20250815_001"
+        detection_summary:
+          type: object
+          description: 检测摘要
+          properties:
+            total_points:
+              type: integer
+              description: 总数据点数
+              example: 100
+            anomaly_count:
+              type: integer
+              description: 异常点数量
+              example: 5
+            anomaly_rate:
+              type: number
+              description: 异常率
+              example: 0.05
+            overall_score:
+              type: number
+              description: 整体异常评分
+              example: 0.85
+        anomalies:
+          type: array
+          description: 异常详情
+          items:
+            type: object
+            properties:
+              timestamp:
+                type: string
+                format: date-time
+                description: 异常时间
+                example: "2025-08-15T10:27:00Z"
+              metric_name:
+                type: string
+                description: 异常指标
+                example: "cpu_usage"
+              actual_value:
+                type: number
+                description: 实际值
+                example: 89.5
+              expected_range:
+                type: object
+                description: 期望范围
+                properties:
+                  min:
+                    type: number
+                    example: 40.0
+                  max:
+                    type: number
+                    example: 60.0
+              anomaly_score:
+                type: number
+                description: 异常评分
+                example: 0.92
               severity:
                 type: string
                 description: 严重程度
                 enum: [low, medium, high, critical]
-                example: "medium"
-              confidence:
-                type: number
-                description: 置信度
-                example: 0.78
-              recommendations:
-                type: array
-                description: 建议措施
-                items:
-                  type: string
-                example: ["增加CPU资源", "优化应用程序", "检查后台进程"]
-              impact:
+                example: "high"
+              description:
                 type: string
-                description: 影响评估
-                example: "可能导致系统响应变慢"
-        summary:
-          type: object
-          description: 汇总信息
-          properties:
-            total_insights:
-              type: integer
-              description: 洞察总数
-              example: 5
-            critical_count:
-              type: integer
-              description: 严重问题数
-              example: 1
-            high_count:
-              type: integer
-              description: 高优先级问题数
-              example: 2
-        generated_at:
+                description: 异常描述
+                example: "CPU使用率异常飙升，超出正常范围"
+        recommendations:
+          type: array
+          description: 处理建议
+          items:
+            type: object
+            properties:
+              action:
+                type: string
+                description: 建议操作
+                example: "检查CPU密集型进程"
+              priority:
+                type: string
+                enum: [low, medium, high, urgent]
+                example: "high"
+              estimated_time:
+                type: string
+                description: 预计处理时间
+                example: "10分钟"
+
+    # AI模型管理相关 Schemas
+    AIModelInfo:
+      type: object
+      properties:
+        model_id:
+          type: integer
+          description: 模型ID
+          example: 1001
+        model_name:
+          type: string
+          description: 模型名称
+          example: "故障诊断模型v2.0"
+        model_type:
+          type: string
+          description: 模型类型
+          enum: [diagnosis, prediction, qa, anomaly, classification]
+          example: "diagnosis"
+        model_category:
+          type: string
+          description: 模型分类
+          enum: [local, cloud, hybrid]
+          example: "local"
+        algorithm_type:
+          type: string
+          description: 算法类型
+          enum: [neural_network, tree, svm, ensemble]
+          example: "neural_network"
+        business_domain:
+          type: string
+          description: 业务领域
+          enum: [server, network, database, application]
+          example: "server"
+        model_description:
+          type: string
+          description: 模型描述
+          example: "基于深度学习的服务器故障诊断模型"
+        status:
+          type: string
+          description: 模型状态
+          enum: [draft, training, testing, active, deprecated]
+          example: "active"
+        current_version:
+          type: string
+          description: 当前版本
+          example: "v2.0.1"
+        accuracy:
+          type: number
+          description: 准确率
+          example: 92.5
+        created_at:
           type: string
           format: date-time
-          description: 生成时间
-          example: "2024-08-15T10:30:00Z"
+          description: 创建时间
+          example: "2025-01-15T09:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+          example: "2025-08-15T14:30:00Z"
+
+    AIModelCreateRequest:
+      type: object
+      required:
+        - model_name
+        - model_type
+        - model_category
+        - algorithm_type
+        - business_domain
+      properties:
+        model_name:
+          type: string
+          description: 模型名称
+          example: "故障诊断模型v3.0"
+        model_type:
+          type: string
+          description: 模型类型
+          enum: [diagnosis, prediction, qa, anomaly, classification]
+          example: "diagnosis"
+        model_category:
+          type: string
+          description: 模型分类
+          enum: [local, cloud, hybrid]
+          example: "local"
+        algorithm_type:
+          type: string
+          description: 算法类型
+          enum: [neural_network, tree, svm, ensemble]
+          example: "neural_network"
+        business_domain:
+          type: string
+          description: 业务领域
+          enum: [server, network, database, application]
+          example: "server"
+        model_description:
+          type: string
+          description: 模型描述
+          example: "基于Transformer架构的故障诊断模型"
+        input_schema:
+          type: object
+          description: 输入数据Schema
+          additionalProperties: true
+        output_schema:
+          type: object
+          description: 输出数据Schema
+          additionalProperties: true
+        resource_requirements:
+          type: object
+          description: 资源需求
+          properties:
+            cpu_cores:
+              type: integer
+              description: CPU核心数
+              example: 4
+            memory_gb:
+              type: integer
+              description: 内存GB
+              example: 8
+            gpu_count:
+              type: integer
+              description: GPU数量
+              example: 1
+
+    # 训练任务相关 Schemas
+    TrainingJobInfo:
+      type: object
+      properties:
+        job_id:
+          type: integer
+          description: 任务ID
+          example: 2001
+        model_id:
+          type: integer
+          description: 模型ID
+          example: 1001
+        job_name:
+          type: string
+          description: 任务名称
+          example: "故障诊断模型训练-v3.0"
+        job_type:
+          type: string
+          description: 任务类型
+          enum: [initial, retrain, finetune, transfer]
+          example: "initial"
+        status:
+          type: string
+          description: 任务状态
+          enum: [pending, running, completed, failed, cancelled]
+          example: "running"
+        progress_percentage:
+          type: integer
+          description: 训练进度百分比
+          example: 65
+        current_epoch:
+          type: integer
+          description: 当前训练轮次
+          example: 13
+        total_epochs:
+          type: integer
+          description: 总训练轮次
+          example: 20
+        training_loss:
+          type: number
+          description: 训练损失
+          example: 0.0245
+        validation_loss:
+          type: number
+          description: 验证损失
+          example: 0.0312
+        start_time:
+          type: string
+          format: date-time
+          description: 开始时间
+          example: "2025-08-15T09:00:00Z"
+        estimated_end_time:
+          type: string
+          format: date-time
+          description: 预计结束时间
+          example: "2025-08-15T15:30:00Z"
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2025-08-15T08:45:00Z"
+
+    # 分析记录相关 Schemas
+    AnalysisRecordInfo:
+      type: object
+      properties:
+        record_id:
+          type: integer
+          description: 记录ID
+          example: 3001
+        request_id:
+          type: string
+          description: 请求ID
+          example: "diag_20250815_001"
+        analysis_type:
+          type: string
+          description: 分析类型
+          enum: [diagnosis, prediction, qa, anomaly, classification]
+          example: "diagnosis"
+        model_version_id:
+          type: integer
+          description: 模型版本ID
+          example: 1001
+        user_id:
+          type: integer
+          description: 用户ID
+          example: 1001
+        source_module:
+          type: string
+          description: 来源模块
+          example: "ticket_system"
+        confidence_score:
+          type: number
+          description: 置信度评分
+          example: 92.5
+        processing_time_ms:
+          type: integer
+          description: 处理时间（毫秒）
+          example: 3200
+        cache_hit:
+          type: boolean
+          description: 是否命中缓存
+          example: false
+        status:
+          type: string
+          description: 状态
+          enum: [processing, completed, failed, timeout]
+          example: "completed"
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2025-08-15T10:30:00Z"
+
+    # 系统监控相关 Schemas
+    SystemHealthStatus:
+      type: object
+      properties:
+        overall_status:
+          type: string
+          description: 整体状态
+          enum: [healthy, warning, critical, unknown]
+          example: "healthy"
+        ai_services:
+          type: object
+          description: AI服务状态
+          properties:
+            diagnosis_service:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [online, offline, degraded]
+                  example: "online"
+                response_time:
+                  type: number
+                  description: 响应时间（秒）
+                  example: 2.5
+                success_rate:
+                  type: number
+                  description: 成功率
+                  example: 0.98
+            prediction_service:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [online, offline, degraded]
+                  example: "online"
+                response_time:
+                  type: number
+                  example: 8.2
+                success_rate:
+                  type: number
+                  example: 0.95
+        resource_usage:
+          type: object
+          description: 资源使用情况
+          properties:
+            cpu_usage:
+              type: number
+              description: CPU使用率
+              example: 65.5
+            memory_usage:
+              type: number
+              description: 内存使用率
+              example: 72.3
+            gpu_usage:
+              type: number
+              description: GPU使用率
+              example: 45.8
+        active_models:
+          type: integer
+          description: 活跃模型数量
+          example: 12
+        running_jobs:
+          type: integer
+          description: 运行中的训练任务数量
+          example: 3
+        last_updated:
+          type: string
+          format: date-time
+          description: 最后更新时间
+          example: "2025-08-15T14:30:00Z"
+
+    UsageStatistics:
+      type: object
+      properties:
+        time_range:
+          type: object
+          description: 统计时间范围
+          properties:
+            start_date:
+              type: string
+              format: date
+              description: 开始日期
+              example: "2025-07-16"
+            end_date:
+              type: string
+              format: date
+              description: 结束日期
+              example: "2025-08-15"
+        total_requests:
+          type: integer
+          description: 总请求数
+          example: 15420
+        successful_requests:
+          type: integer
+          description: 成功请求数
+          example: 14891
+        failed_requests:
+          type: integer
+          description: 失败请求数
+          example: 529
+        success_rate:
+          type: number
+          description: 成功率
+          example: 0.966
+        average_response_time:
+          type: number
+          description: 平均响应时间（秒）
+          example: 4.2
+        by_analysis_type:
+          type: object
+          description: 按分析类型统计
+          properties:
+            diagnosis:
+              type: object
+              properties:
+                count:
+                  type: integer
+                  example: 8520
+                success_rate:
+                  type: number
+                  example: 0.97
+                avg_response_time:
+                  type: number
+                  example: 3.8
+            prediction:
+              type: object
+              properties:
+                count:
+                  type: integer
+                  example: 3240
+                success_rate:
+                  type: number
+                  example: 0.95
+                avg_response_time:
+                  type: number
+                  example: 12.5
+            qa:
+              type: object
+              properties:
+                count:
+                  type: integer
+                  example: 2890
+                success_rate:
+                  type: number
+                  example: 0.98
+                avg_response_time:
+                  type: number
+                  example: 2.1
+            anomaly:
+              type: object
+              properties:
+                count:
+                  type: integer
+                  example: 770
+                success_rate:
+                  type: number
+                  example: 0.96
+                avg_response_time:
+                  type: number
+                  example: 1.8
+        top_users:
+          type: array
+          description: 使用量最高的用户
+          items:
+            type: object
+            properties:
+              user_id:
+                type: integer
+                example: 1001
+              user_name:
+                type: string
+                example: "张三"
+              request_count:
+                type: integer
+                example: 1250
+              success_rate:
+                type: number
+                example: 0.98
+
+    # 辅助 Schemas
+    ChatSessionInfo:
+      type: object
+      properties:
+        session_id:
+          type: string
+          description: 会话ID
+          example: "session_user123_001"
+        user_id:
+          type: integer
+          description: 用户ID
+          example: 1001
+        session_title:
+          type: string
+          description: 会话标题
+          example: "Nginx配置相关咨询"
+        message_count:
+          type: integer
+          description: 消息数量
+          example: 8
+        last_message_time:
+          type: string
+          format: date-time
+          description: 最后消息时间
+          example: "2025-08-15T14:25:00Z"
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2025-08-15T10:15:00Z"
+
+    ChatSessionDetail:
+      type: object
+      properties:
+        session_id:
+          type: string
+          description: 会话ID
+          example: "session_user123_001"
+        user_id:
+          type: integer
+          description: 用户ID
+          example: 1001
+        session_title:
+          type: string
+          description: 会话标题
+          example: "Nginx配置相关咨询"
+        messages:
+          type: array
+          description: 消息列表
+          items:
+            type: object
+            properties:
+              message_id:
+                type: string
+                description: 消息ID
+                example: "msg_001"
+              role:
+                type: string
+                description: 角色
+                enum: [user, assistant]
+                example: "user"
+              content:
+                type: string
+                description: 消息内容
+                example: "如何配置Nginx负载均衡？"
+              timestamp:
+                type: string
+                format: date-time
+                description: 时间戳
+                example: "2025-08-15T10:15:00Z"
+              confidence:
+                type: number
+                description: 置信度（仅AI回复）
+                example: 0.95
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2025-08-15T10:15:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新时间
+          example: "2025-08-15T14:25:00Z"
+
+    AIModelDetail:
+      allOf:
+        - $ref: '#/components/schemas/AIModelInfo'
+        - type: object
+          properties:
+            input_schema:
+              type: object
+              description: 输入数据Schema
+              additionalProperties: true
+            output_schema:
+              type: object
+              description: 输出数据Schema
+              additionalProperties: true
+            performance_metrics:
+              type: object
+              description: 性能指标
+              properties:
+                accuracy:
+                  type: number
+                  example: 92.5
+                precision:
+                  type: number
+                  example: 91.8
+                recall:
+                  type: number
+                  example: 93.2
+                f1_score:
+                  type: number
+                  example: 92.5
+            resource_requirements:
+              type: object
+              description: 资源需求
+              properties:
+                cpu_cores:
+                  type: integer
+                  example: 4
+                memory_gb:
+                  type: integer
+                  example: 8
+                gpu_count:
+                  type: integer
+                  example: 1
+            versions:
+              type: array
+              description: 版本列表
+              items:
+                type: object
+                properties:
+                  version_id:
+                    type: integer
+                    example: 1001
+                  version_number:
+                    type: string
+                    example: "v2.0.1"
+                  is_active:
+                    type: boolean
+                    example: true
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2025-08-01T09:00:00Z"
+
+    AIModelUpdateRequest:
+      type: object
+      properties:
+        model_name:
+          type: string
+          description: 模型名称
+          example: "故障诊断模型v2.1"
+        model_description:
+          type: string
+          description: 模型描述
+          example: "优化后的故障诊断模型，提升了准确率"
+        resource_requirements:
+          type: object
+          description: 资源需求
+          properties:
+            cpu_cores:
+              type: integer
+              example: 6
+            memory_gb:
+              type: integer
+              example: 12
+            gpu_count:
+              type: integer
+              example: 2
+
+    TrainingJobCreateRequest:
+      type: object
+      required:
+        - model_id
+        - dataset_id
+        - job_name
+        - job_type
+      properties:
+        model_id:
+          type: integer
+          description: 模型ID
+          example: 1001
+        dataset_id:
+          type: integer
+          description: 数据集ID
+          example: 2001
+        job_name:
+          type: string
+          description: 任务名称
+          example: "故障诊断模型重训练-v2.1"
+        job_type:
+          type: string
+          description: 任务类型
+          enum: [initial, retrain, finetune, transfer]
+          example: "retrain"
+        training_config:
+          type: object
+          description: 训练配置
+          properties:
+            epochs:
+              type: integer
+              description: 训练轮次
+              example: 50
+            batch_size:
+              type: integer
+              description: 批次大小
+              example: 32
+            learning_rate:
+              type: number
+              description: 学习率
+              example: 0.001
+        hyperparameters:
+          type: object
+          description: 超参数
+          additionalProperties: true
+        resource_config:
+          type: object
+          description: 资源配置
+          properties:
+            cpu_cores:
+              type: integer
+              example: 8
+            memory_gb:
+              type: integer
+              example: 16
+            gpu_count:
+              type: integer
+              example: 2
+
+    TrainingJobDetail:
+      allOf:
+        - $ref: '#/components/schemas/TrainingJobInfo'
+        - type: object
+          properties:
+            model_name:
+              type: string
+              description: 模型名称
+              example: "故障诊断模型v2.0"
+            dataset_name:
+              type: string
+              description: 数据集名称
+              example: "故障诊断训练数据集v1.0"
+            training_config:
+              type: object
+              description: 训练配置
+              additionalProperties: true
+            hyperparameters:
+              type: object
+              description: 超参数
+              additionalProperties: true
+            training_metrics:
+              type: object
+              description: 训练指标
+              properties:
+                loss_history:
+                  type: array
+                  description: 损失历史
+                  items:
+                    type: number
+                  example: [0.8, 0.6, 0.4, 0.3, 0.25]
+                accuracy_history:
+                  type: array
+                  description: 准确率历史
+                  items:
+                    type: number
+                  example: [0.7, 0.8, 0.85, 0.9, 0.92]
+            error_message:
+              type: string
+              description: 错误信息（如果失败）
+              example: "训练数据格式错误"

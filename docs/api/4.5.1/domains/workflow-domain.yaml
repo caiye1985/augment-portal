@@ -2,22 +2,42 @@ openapi: 3.0.3
 info:
   title: 工作流业务域 API 聚合
   version: 1.0.0
-  description: 工作流相关的API聚合，包括工作流引擎等功能
+  description: 工作流相关的API聚合，包括工作流引擎、流程管理、任务管理等功能
 
 paths:
-  # 工作流引擎系统模块暂未实现，添加占位符路径
-  /api/v1/workflow/placeholder:
-    get:
-      summary: 工作流占位符接口
-      description: 工作流模块占位符接口，待实现
-      operationId: workflow_placeholder
-      responses:
-        '200':
-          description: 占位符响应
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
+  # 流程定义管理
+  /api/v1/workflow/definitions:
+    $ref: '../modules/REQ-014-工作流引擎系统/openapi.yaml#/paths/~1api~1v1~1workflow~1definitions'
+  /api/v1/workflow/definitions/{id}:
+    $ref: '../modules/REQ-014-工作流引擎系统/openapi.yaml#/paths/~1api~1v1~1workflow~1definitions~1{id}'
+  /api/v1/workflow/definitions/{id}/publish:
+    $ref: '../modules/REQ-014-工作流引擎系统/openapi.yaml#/paths/~1api~1v1~1workflow~1definitions~1{id}~1publish'
+
+  # 流程实例管理
+  /api/v1/workflow/instances/start:
+    $ref: '../modules/REQ-014-工作流引擎系统/openapi.yaml#/paths/~1api~1v1~1workflow~1instances~1start'
+  /api/v1/workflow/instances:
+    $ref: '../modules/REQ-014-工作流引擎系统/openapi.yaml#/paths/~1api~1v1~1workflow~1instances'
+  /api/v1/workflow/instances/{instance_id}:
+    $ref: '../modules/REQ-014-工作流引擎系统/openapi.yaml#/paths/~1api~1v1~1workflow~1instances~1{instance_id}'
+  /api/v1/workflow/instances/{instance_id}/suspend:
+    $ref: '../modules/REQ-014-工作流引擎系统/openapi.yaml#/paths/~1api~1v1~1workflow~1instances~1{instance_id}~1suspend'
+  /api/v1/workflow/instances/{instance_id}/resume:
+    $ref: '../modules/REQ-014-工作流引擎系统/openapi.yaml#/paths/~1api~1v1~1workflow~1instances~1{instance_id}~1resume'
+
+  # 任务管理
+  /api/v1/workflow/tasks/pending:
+    $ref: '../modules/REQ-014-工作流引擎系统/openapi.yaml#/paths/~1api~1v1~1workflow~1tasks~1pending'
+  /api/v1/workflow/tasks/{task_id}:
+    $ref: '../modules/REQ-014-工作流引擎系统/openapi.yaml#/paths/~1api~1v1~1workflow~1tasks~1{task_id}'
+  /api/v1/workflow/tasks/{task_id}/complete:
+    $ref: '../modules/REQ-014-工作流引擎系统/openapi.yaml#/paths/~1api~1v1~1workflow~1tasks~1{task_id}~1complete'
+  /api/v1/workflow/tasks/{task_id}/delegate:
+    $ref: '../modules/REQ-014-工作流引擎系统/openapi.yaml#/paths/~1api~1v1~1workflow~1tasks~1{task_id}~1delegate'
+
+  # 统计分析
+  /api/v1/workflow/statistics:
+    $ref: '../modules/REQ-014-工作流引擎系统/openapi.yaml#/paths/~1api~1v1~1workflow~1statistics'
 
 components:
   schemas:

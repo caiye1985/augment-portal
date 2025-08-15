@@ -1,0 +1,62 @@
+openapi: 3.0.3
+info:
+  title: 运维业务域 API 聚合
+  version: 1.0.0
+  description: 运维相关的API聚合，包括资产管理、告警管理、剧本执行、任务管理等功能
+
+paths:
+  # 资产管理 API
+  /api/v1/ops/assets:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1assets'
+  /api/v1/ops/assets/{asset_id}:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1assets~1{asset_id}'
+  /api/v1/ops/assets/sync:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1assets~1sync'
+  /api/v1/ops/assets/batch:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1assets~1batch'
+  /api/v1/ops/assets/{asset_id}/monitor-config:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1assets~1{asset_id}~1monitor-config'
+
+  # 告警管理 API
+  /api/v1/ops/alerts/events:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1alerts~1events'
+  /api/v1/ops/alerts/events/{event_id}:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1alerts~1events~1{event_id}'
+  /api/v1/ops/alerts/events/{event_id}/process:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1alerts~1events~1{event_id}~1process'
+  /api/v1/ops/alerts/batch-process:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1alerts~1batch-process'
+
+  # 运维剧本管理 API
+  /api/v1/ops/playbooks:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1playbooks'
+  /api/v1/ops/playbooks/{playbook_id}:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1playbooks~1{playbook_id}'
+  /api/v1/ops/playbooks/{playbook_id}/execute:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1playbooks~1{playbook_id}~1execute'
+  /api/v1/ops/playbooks/executions/{execution_id}:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1playbooks~1executions~1{execution_id}'
+
+  # 运维任务管理 API
+  /api/v1/ops/tasks:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1tasks'
+  /api/v1/ops/tasks/{task_id}:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1tasks~1{task_id}'
+  /api/v1/ops/tasks/{task_id}/control:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1tasks~1{task_id}~1control'
+
+  # 监控配置管理 API
+  /api/v1/ops/monitor-configs:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1monitor-configs'
+  /api/v1/ops/monitor-configs/{config_id}:
+    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1monitor-configs~1{config_id}'
+
+components:
+  schemas:
+    # 引用全局通用组件
+    ApiResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+    PagedResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/PagedResponse'
+    ErrorResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'

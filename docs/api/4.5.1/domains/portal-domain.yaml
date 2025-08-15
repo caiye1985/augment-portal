@@ -1,11 +1,55 @@
 openapi: 3.0.3
 info:
-  title: Uportal 业务域 API 聚合
+  title: Portal 业务域 API 聚合
   version: 1.0.0
+  description: 门户相关的API聚合，包括工作台仪表板、客户自助服务等功能
+
 paths:
+  # 工作台与仪表板 API
   /api/v1/dashboard/configs:
     $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1api~1v1~1dashboard~1configs'
   /api/v1/dashboard/widgets:
     $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1api~1v1~1dashboard~1widgets'
   /api/v1/dashboard/statistics/overview:
     $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1api~1v1~1dashboard~1statistics~1overview'
+
+  # 客户自助服务 API
+  /api/v1/customer-portal/config:
+    $ref: '../modules/REQ-019-客户自助服务模块/openapi.yaml#/paths/~1api~1v1~1customer-portal~1config'
+  /api/v1/customer-portal/search:
+    $ref: '../modules/REQ-019-客户自助服务模块/openapi.yaml#/paths/~1api~1v1~1customer-portal~1search'
+  /api/v1/customer-portal/search/suggestions:
+    $ref: '../modules/REQ-019-客户自助服务模块/openapi.yaml#/paths/~1api~1v1~1customer-portal~1search~1suggestions'
+  /api/v1/customer-portal/ai-chat:
+    $ref: '../modules/REQ-019-客户自助服务模块/openapi.yaml#/paths/~1api~1v1~1customer-portal~1ai-chat'
+  /api/v1/customer-portal/ai-chat/sessions:
+    $ref: '../modules/REQ-019-客户自助服务模块/openapi.yaml#/paths/~1api~1v1~1customer-portal~1ai-chat~1sessions'
+  /api/v1/customer-portal/tickets:
+    $ref: '../modules/REQ-019-客户自助服务模块/openapi.yaml#/paths/~1api~1v1~1customer-portal~1tickets'
+  /api/v1/customer-portal/tickets/{id}:
+    $ref: '../modules/REQ-019-客户自助服务模块/openapi.yaml#/paths/~1api~1v1~1customer-portal~1tickets~1{id}'
+  /api/v1/customer-portal/tickets/{id}/status:
+    $ref: '../modules/REQ-019-客户自助服务模块/openapi.yaml#/paths/~1api~1v1~1customer-portal~1tickets~1{id}~1status'
+  /api/v1/customer-portal/feedback:
+    $ref: '../modules/REQ-019-客户自助服务模块/openapi.yaml#/paths/~1api~1v1~1customer-portal~1feedback'
+  /api/v1/customer-portal/service-status:
+    $ref: '../modules/REQ-019-客户自助服务模块/openapi.yaml#/paths/~1api~1v1~1customer-portal~1service-status'
+  /api/v1/customer-portal/documents:
+    $ref: '../modules/REQ-019-客户自助服务模块/openapi.yaml#/paths/~1api~1v1~1customer-portal~1documents'
+  /api/v1/customer-portal/documents/{id}/download:
+    $ref: '../modules/REQ-019-客户自助服务模块/openapi.yaml#/paths/~1api~1v1~1customer-portal~1documents~1{id}~1download'
+  /api/v1/customer-portal/analytics/track:
+    $ref: '../modules/REQ-019-客户自助服务模块/openapi.yaml#/paths/~1api~1v1~1customer-portal~1analytics~1track'
+  /api/v1/customer-portal/faq:
+    $ref: '../modules/REQ-019-客户自助服务模块/openapi.yaml#/paths/~1api~1v1~1customer-portal~1faq'
+  /api/v1/customer-portal/faq/{id}:
+    $ref: '../modules/REQ-019-客户自助服务模块/openapi.yaml#/paths/~1api~1v1~1customer-portal~1faq~1{id}'
+
+components:
+  schemas:
+    ApiResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+    PagedResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/PagedResponse'
+    ErrorResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'

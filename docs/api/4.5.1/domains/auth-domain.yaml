@@ -31,9 +31,44 @@ paths:
   /api/v1/roles/{id}:
     $ref: '../modules/REQ-022-用户与权限管理模块/openapi.yaml#/paths/~1api~1v1~1roles~1{id}'
 
-  # 权限管理API
+  # 基础权限管理API（REQ-022）
   /api/v1/permissions:
     $ref: '../modules/REQ-022-用户与权限管理模块/openapi.yaml#/paths/~1api~1v1~1permissions'
+
+  # 资源权限管理模块API（REQ-021）
+  # 权限验证
+  /api/v1/permissions/verify:
+    $ref: '../modules/REQ-021-资源权限管理模块/openapi.yaml#/paths/~1api~1v1~1permissions~1verify'
+  /api/v1/permissions/batch-verify:
+    $ref: '../modules/REQ-021-资源权限管理模块/openapi.yaml#/paths/~1api~1v1~1permissions~1batch-verify'
+
+  # 权限策略管理
+  /api/v1/permissions/policies:
+    $ref: '../modules/REQ-021-资源权限管理模块/openapi.yaml#/paths/~1api~1v1~1permissions~1policies'
+  /api/v1/permissions/policies/{id}:
+    $ref: '../modules/REQ-021-资源权限管理模块/openapi.yaml#/paths/~1api~1v1~1permissions~1policies~1{id}'
+
+  # 权限分配管理
+  /api/v1/permissions/assignments:
+    $ref: '../modules/REQ-021-资源权限管理模块/openapi.yaml#/paths/~1api~1v1~1permissions~1assignments'
+  /api/v1/permissions/assignments/{id}:
+    $ref: '../modules/REQ-021-资源权限管理模块/openapi.yaml#/paths/~1api~1v1~1permissions~1assignments~1{id}'
+  /api/v1/permissions/batch-assign:
+    $ref: '../modules/REQ-021-资源权限管理模块/openapi.yaml#/paths/~1api~1v1~1permissions~1batch-assign'
+  /api/v1/permissions/batch-revoke:
+    $ref: '../modules/REQ-021-资源权限管理模块/openapi.yaml#/paths/~1api~1v1~1permissions~1batch-revoke'
+
+  # 权限审计
+  /api/v1/permissions/audit-logs:
+    $ref: '../modules/REQ-021-资源权限管理模块/openapi.yaml#/paths/~1api~1v1~1permissions~1audit-logs'
+  /api/v1/permissions/audit-logs/{id}:
+    $ref: '../modules/REQ-021-资源权限管理模块/openapi.yaml#/paths/~1api~1v1~1permissions~1audit-logs~1{id}'
+  /api/v1/permissions/audit-reports:
+    $ref: '../modules/REQ-021-资源权限管理模块/openapi.yaml#/paths/~1api~1v1~1permissions~1audit-reports'
+
+  # 权限统计
+  /api/v1/permissions/statistics/usage:
+    $ref: '../modules/REQ-021-资源权限管理模块/openapi.yaml#/paths/~1api~1v1~1permissions~1statistics~1usage'
 
 components:
   # 引用全局通用组件
