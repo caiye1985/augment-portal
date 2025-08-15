@@ -7,7 +7,7 @@
 1. **核心参考文档**：
    - 全局上下文：`docs/global-context.md`
    - Mock 数据规范：`docs/prd/split/4.5/globals/05-mock-data-guidelines.md`
-   - 当前模块 PRD：`docs/prd/split/4.5/modules/REQ-003.md`
+   - 当前模块 PRD：`docs/prd/split/4.5.1/modules/REQ-003.md`
    - API 初始化合并文件：`docs/api/4.5/global-api-index.yaml`
    - 技术栈规范：`docs/prd/split/4.5/appendix/03-technology-stack.md`
    - 业务流程文档：`docs/prd/split/4.5/globals/04-business-processes.md`
