@@ -1,0 +1,97 @@
+openapi: 3.0.3
+info:
+  title: 公共组件定义
+  version: 1.0.0
+  description: IT运维门户系统的公共组件定义，包括通用响应格式、基础实体等
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 请求是否成功
+        message:
+          type: string
+          description: 响应消息
+        data:
+          description: 响应数据
+        timestamp:
+          type: string
+          format: date- 'time'
+          description: 响应时间戳
+      required:
+      - 'success'
+      - 'message'
+      - 'timestamp'
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 请求是否成功
+          example: 'false'
+        message:
+          type: string
+          description: 错误消息
+        error_code:
+          type: string
+          description: 错误代码
+        timestamp:
+          type: string
+          format: date- 'time'
+          description: 响应时间戳
+      required:
+      - 'success'
+      - 'message'
+      - 'error_code'
+      - 'timestamp'
+    PagedResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+    PaginationInfo:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: 当前页码
+          minimum: 1
+        size:
+          type: integer
+          description: 每页大小
+          minimum: 1
+        total:
+          type: integer
+          description: 总记录数
+          minimum: 0
+        pages:
+          type: integer
+          description: 总页数
+          minimum: 0
+      required:
+      - 'page'
+      - 'size'
+      - 'total'
+      - 'pages'
+    BaseEntity:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 唯一标识符
+        created_at:
+          type: string
+          format: date- 'time'
+          description: 创建时间
+        updated_at:
+          type: string
+          format: date- 'time'
+          description: 更新时间
+      required:
+      - 'id'
+      - 'created_at'
+      - 'updated_at'

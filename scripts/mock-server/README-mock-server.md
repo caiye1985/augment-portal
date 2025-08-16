@@ -22,13 +22,13 @@ npm install
 
 ```bash
 # 方式1: 使用 Shell 脚本 (推荐)
-./scripts/start-mock-server.sh
+./scripts/mock-server/start-mock-server.sh
 
 # 方式2: 使用 Node.js 脚本
-node scripts/start-mock-server.js
+node scripts/mock-server/start-mock-server.js
 
 # 方式3: 使用控制脚本 (后台运行)
-./scripts/mock-server-control.sh start
+./scripts/mock-server/mock-server-control.sh start
 ```
 
 ## 📋 功能特性
@@ -48,32 +48,32 @@ node scripts/start-mock-server.js
 
 ```bash
 # 启动全局API Mock Server (默认端口3000)
-./scripts/start-mock-server.sh
+./scripts/mock-server/start-mock-server.sh
 
 # 指定端口启动
-./scripts/start-mock-server.sh -p 3001
+./scripts/mock-server/start-mock-server.sh -p 3001
 
 # 启动特定模块
-./scripts/start-mock-server.sh -m REQ-016-客户关系管理模块
+./scripts/mock-server/start-mock-server.sh -m REQ-016-客户关系管理模块
 
 # 启动特定业务域
-./scripts/start-mock-server.sh -d auth
+./scripts/mock-server/start-mock-server.sh -d auth
 
 # 启用文件监控和动态响应
-./scripts/start-mock-server.sh -w --dynamic --errors
+./scripts/mock-server/start-mock-server.sh -w --dynamic --errors
 
 # 列出所有可用模块和域
-./scripts/start-mock-server.sh -l
+./scripts/mock-server/start-mock-server.sh -l
 
 # 查看帮助
-./scripts/start-mock-server.sh --help
+./scripts/mock-server/start-mock-server.sh --help
 ```
 
 ### Node.js 脚本版本 (`start-mock-server.js`)
 
 ```bash
 # 启动全局API Mock Server
-node scripts/start-mock-server.js
+node scripts/mock-server/start-mock-server.js
 
 # 使用npm scripts
 cd scripts
@@ -87,56 +87,56 @@ npm run list
 
 ```bash
 # 启动 (后台运行)
-./scripts/mock-server-control.sh start
+./scripts/mock-server/mock-server-control.sh start
 
 # 启动特定模块 (后台运行)
-./scripts/mock-server-control.sh start -m REQ-016-客户关系管理模块
+./scripts/mock-server/mock-server-control.sh start -m REQ-016-客户关系管理模块
 
 # 查看状态
-./scripts/mock-server-control.sh status
+./scripts/mock-server/mock-server-control.sh status
 
 # 查看日志
-./scripts/mock-server-control.sh logs
+./scripts/mock-server/mock-server-control.sh logs
 
 # 停止服务器
-./scripts/mock-server-control.sh stop
+./scripts/mock-server/mock-server-control.sh stop
 
 # 重启服务器
-./scripts/mock-server-control.sh restart
+./scripts/mock-server/mock-server-control.sh restart
 
 # 清理临时文件
-./scripts/mock-server-control.sh clean
+./scripts/mock-server/mock-server-control.sh clean
 ```
 
 ### Docker 版本 (`docker-mock-server.sh`)
 
 ```bash
 # 构建Docker镜像
-./scripts/docker-mock-server.sh build
+./scripts/mock-server/docker-mock-server.sh build
 
 # 启动所有Mock Server服务
-./scripts/docker-mock-server.sh up
+./scripts/mock-server/docker-mock-server.sh up
 
 # 启动特定服务
-./scripts/docker-mock-server.sh up mock-server-global
+./scripts/mock-server/docker-mock-server.sh up mock-server-global
 
 # 查看服务状态
-./scripts/docker-mock-server.sh status
+./scripts/mock-server/docker-mock-server.sh status
 
 # 查看服务日志
-./scripts/docker-mock-server.sh logs mock-server-auth
+./scripts/mock-server/docker-mock-server.sh logs mock-server-auth
 
 # 停止所有服务
-./scripts/docker-mock-server.sh down
+./scripts/mock-server/docker-mock-server.sh down
 
 # 重启服务
-./scripts/docker-mock-server.sh restart mock-server-customer
+./scripts/mock-server/docker-mock-server.sh restart mock-server-customer
 
 # 进入容器
-./scripts/docker-mock-server.sh shell mock-server-global
+./scripts/mock-server/docker-mock-server.sh shell mock-server-global
 
 # 清理环境
-./scripts/docker-mock-server.sh clean
+./scripts/mock-server/docker-mock-server.sh clean
 ```
 
 ## 📁 API 文档结构
@@ -181,7 +181,7 @@ docs/api/4.5.1/
 ```bash
 export MOCK_SERVER_PORT=3001
 export MOCK_SERVER_HOST=localhost
-./scripts/start-mock-server.sh
+./scripts/mock-server/start-mock-server.sh
 ```
 
 ## 🔧 故障排除
@@ -194,7 +194,7 @@ export MOCK_SERVER_HOST=localhost
    lsof -i :3000
    
    # 使用其他端口
-   ./scripts/start-mock-server.sh -p 3001
+   ./scripts/mock-server/start-mock-server.sh -p 3001
    ```
 
 2. **Prism CLI 未安装**
@@ -212,7 +212,7 @@ export MOCK_SERVER_HOST=localhost
    prism validate docs/api/4.5.1/global-api-index.yaml
    
    # 查看详细错误信息
-   ./scripts/start-mock-server.sh --verbose
+   ./scripts/mock-server/start-mock-server.sh --verbose
    ```
 
 4. **权限问题**
@@ -225,7 +225,7 @@ export MOCK_SERVER_HOST=localhost
 
 ```bash
 # 实时查看日志 (控制脚本模式)
-./scripts/mock-server-control.sh logs
+./scripts/mock-server/mock-server-control.sh logs
 
 # 查看完整日志文件
 tail -f /tmp/ops-portal-mock-server.log
@@ -310,9 +310,9 @@ const API_BASE_URL = process.env.NODE_ENV === 'development'
 
 ```bash
 # 在测试脚本中启动Mock Server
-./scripts/mock-server-control.sh start -p 3001
+./scripts/mock-server/mock-server-control.sh start -p 3001
 npm run test
-./scripts/mock-server-control.sh stop
+./scripts/mock-server/mock-server-control.sh stop
 ```
 
 ### 3. CI/CD 集成
@@ -321,14 +321,14 @@ npm run test
 # GitHub Actions 示例
 - name: Start Mock Server
   run: |
-    ./scripts/mock-server-control.sh start -p 3000
+    ./scripts/mock-server/mock-server-control.sh start -p 3000
     sleep 5
 
 - name: Run Tests
   run: npm test
 
 - name: Stop Mock Server
-  run: ./scripts/mock-server-control.sh stop
+  run: ./scripts/mock-server/mock-server-control.sh stop
 ```
 
 ## 📝 开发指南

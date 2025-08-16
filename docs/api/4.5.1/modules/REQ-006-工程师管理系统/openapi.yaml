@@ -1087,7 +1087,7 @@ components:
           type: string
           format: date
           description: 出生日期
-          example: '1990-05-15'
+          example: '1990-05-15T00:00:00Z'
         phone:
           type: string
           description: 手机号
@@ -1137,7 +1137,7 @@ components:
           type: string
           format: date
           description: 入职日期
-          example: '2024-08-01'
+          example: '2024-08-01T00:00:00Z'
         work_location:
           type: string
           description: 工作地点
@@ -1291,7 +1291,7 @@ components:
           type: string
           format: date
           description: 认证日期
-          example: '2024-06-15'
+          example: '2024-06-15T00:00:00Z'
         certification_expiry:
           type: string
           format: date

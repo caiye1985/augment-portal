@@ -96,14 +96,14 @@ paths:
         schema:
           type: string
           format: date
-          example: '2024-08-01'
+          example: '2024-08-01T00:00:00Z'
       - name: billing_period_end
         in: query
         description: 计费周期结束时间
         schema:
           type: string
           format: date
-          example: '2024-08-31'
+          example: '2024-08-31T00:00:00Z'
       - name: risk_level
         in: query
         description: 风险等级
@@ -364,14 +364,14 @@ paths:
         schema:
           type: string
           format: date
-          example: '2024-08-01'
+          example: '2024-08-01T00:00:00Z'
       - name: end_date
         in: query
         description: 结束日期
         schema:
           type: string
           format: date
-          example: '2024-08-31'
+          example: '2024-08-31T00:00:00Z'
       - name: customer_ids
         in: query
         description: 客户ID列表（逗号分隔）
@@ -735,14 +735,14 @@ paths:
         schema:
           type: string
           format: date
-          example: '2024-09-01'
+          example: '2024-09-01T00:00:00Z'
       - name: end_date
         in: query
         description: 展期结束日期
         schema:
           type: string
           format: date
-          example: '2024-09-30'
+          example: '2024-09-30T00:00:00Z'
       responses:
         '200':
           description: 查询成功
@@ -918,7 +918,7 @@ paths:
         schema:
           type: string
           format: date
-          example: '2024-08-31'
+          example: '2024-08-31T00:00:00Z'
       - name: group_by
         in: query
         description: 分组方式
@@ -994,7 +994,7 @@ paths:
         schema:
           type: string
           format: date
-          example: '2024-08-31'
+          example: '2024-08-31T00:00:00Z'
       - name: forecast_months
         in: query
         description: 预测月数
@@ -1054,7 +1054,7 @@ paths:
         schema:
           type: string
           format: date
-          example: '2024-08-31'
+          example: '2024-08-31T00:00:00Z'
       - name: customer_id
         in: query
         description: 特定客户ID
@@ -1132,7 +1132,7 @@ paths:
         schema:
           type: string
           format: date
-          example: '2024-08-15'
+          example: '2024-08-15T00:00:00Z'
       responses:
         '200':
           description: 查询成功
@@ -1300,12 +1300,12 @@ components:
           type: string
           format: date
           description: 计费周期开始时间
-          example: '2024-08-01'
+          example: '2024-08-01T00:00:00Z'
         billing_period_end:
           type: string
           format: date
           description: 计费周期结束时间
-          example: '2024-08-31'
+          example: '2024-08-31T00:00:00Z'
         base_amount:
           type: number
           format: decimal
@@ -1364,7 +1364,7 @@ components:
           type: string
           format: date
           description: 到期日期
-          example: '2024-09-14'
+          example: '2024-09-14T00:00:00Z'
         paid_date:
           type: string
           format: date-time
@@ -1398,12 +1398,12 @@ components:
           type: string
           format: date
           description: 确认开始日期
-          example: '2024-08-01'
+          example: '2024-08-01T00:00:00Z'
         recognition_end_date:
           type: string
           format: date
           description: 确认结束日期
-          example: '2024-08-31'
+          example: '2024-08-31T00:00:00Z'
         recognized_amount:
           type: number
           format: decimal
@@ -1454,12 +1454,12 @@ components:
           type: string
           format: date
           description: 计费周期开始时间
-          example: '2024-08-01'
+          example: '2024-08-01T00:00:00Z'
         billing_period_end:
           type: string
           format: date
           description: 计费周期结束时间
-          example: '2024-08-31'
+          example: '2024-08-31T00:00:00Z'
         total_amount:
           type: number
           format: decimal
@@ -1483,7 +1483,7 @@ components:
           type: string
           format: date
           description: 到期日期
-          example: '2024-09-14'
+          example: '2024-09-14T00:00:00Z'
         overdue_days:
           type: integer
           description: 逾期天数
@@ -1521,12 +1521,12 @@ components:
           type: string
           format: date
           description: 计费周期开始时间
-          example: '2024-08-01'
+          example: '2024-08-01T00:00:00Z'
         billing_period_end:
           type: string
           format: date
           description: 计费周期结束时间
-          example: '2024-08-31'
+          example: '2024-08-31T00:00:00Z'
         billing_items:
           type: array
           description: 计费项目列表
@@ -1572,12 +1572,12 @@ components:
           type: string
           format: date
           description: 计费周期开始时间
-          example: '2024-08-01'
+          example: '2024-08-01T00:00:00Z'
         billing_period_end:
           type: string
           format: date
           description: 计费周期结束时间
-          example: '2024-08-31'
+          example: '2024-08-31T00:00:00Z'
         base_amount:
           type: number
           format: decimal
@@ -1617,7 +1617,7 @@ components:
           type: string
           format: date
           description: 到期日期
-          example: '2024-09-14'
+          example: '2024-09-14T00:00:00Z'
         revenue_recognition_method:
           type: integer
           description: 收入确认方式
@@ -1638,7 +1638,7 @@ components:
           type: string
           format: date
           description: 到期日期
-          example: '2024-09-20'
+          example: '2024-09-20T00:00:00Z'
         status:
           type: integer
           description: 账单状态
@@ -1938,12 +1938,12 @@ components:
           type: string
           format: date
           description: 展期开始日期
-          example: '2024-09-01'
+          example: '2024-09-01T00:00:00Z'
         extension_end_date:
           type: string
           format: date
           description: 展期结束日期
-          example: '2024-09-30'
+          example: '2024-09-30T00:00:00Z'
         extension_days:
           type: integer
           description: 展期天数
@@ -2020,17 +2020,17 @@ components:
           type: string
           format: date
           description: 实际开始日期
-          example: '2024-09-01'
+          example: '2024-09-01T00:00:00Z'
         actual_end_date:
           type: string
           format: date
           description: 实际结束日期
-          example: '2024-09-30'
+          example: '2024-09-30T00:00:00Z'
         original_contract_end_date:
           type: string
           format: date
           description: 原合同结束日期
-          example: '2024-08-31'
+          example: '2024-08-31T00:00:00Z'
         new_contract_id:
           type: integer
           description: 新合同ID
@@ -2641,7 +2641,7 @@ components:
                 type: string
                 format: date
                 description: 到期日期
-                example: '2024-09-14'
+                example: '2024-09-14T00:00:00Z'
     ExtensionListItem:
       type: object
       properties:
@@ -2714,7 +2714,7 @@ components:
                 type: string
                 format: date
                 description: 原结束日期
-                example: '2024-08-31'
+                example: '2024-08-31T00:00:00Z'
           approval_history:
             type: array
             description: 审批历史
@@ -2874,7 +2874,7 @@ components:
           type: string
           format: date
           description: 对账日期
-          example: '2024-08-15'
+          example: '2024-08-15T00:00:00Z'
         payment_channel:
           type: string
           description: 支付渠道
@@ -2900,7 +2900,7 @@ components:
           type: string
           format: date
           description: 对账日期
-          example: '2024-08-15'
+          example: '2024-08-15T00:00:00Z'
         total_records:
           type: integer
           description: 总记录数

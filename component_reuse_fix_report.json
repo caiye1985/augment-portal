@@ -1,0 +1,20 @@
+{
+  "total_fixes": 32,
+  "files_modified": 13,
+  "modified_files": [
+    "docs/api/4.5.1/modules/REQ-005-知识库管理系统/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-004-智能派单系统/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-021-资源权限管理模块/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-003-工单管理系统/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-014-工作流引擎系统/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-018-财务管理模块/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-023-数据分析与商业智能模块/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-002-工作台与仪表板/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-022-用户与权限管理模块/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-019-客户自助服务模块/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-020-移动端应用模块/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-012-系统集成模块/openapi.yaml"
+  ],
+  "common_file_created": true
+}

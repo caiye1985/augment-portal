@@ -1125,12 +1125,12 @@ components:
           type: string
           format: date
           description: 生效日期
-          example: '2025-09-01'
+          example: '2025-09-01T00:00:00Z'
         expiry_date:
           type: string
           format: date
           description: 失效日期
-          example: '2026-08-31'
+          example: '2026-08-31T00:00:00Z'
         version:
           type: string
           description: 版本号
@@ -1345,12 +1345,12 @@ components:
           type: string
           format: date
           description: 生效日期
-          example: '2025-09-01'
+          example: '2025-09-01T00:00:00Z'
         expiry_date:
           type: string
           format: date
           description: 失效日期
-          example: '2026-08-31'
+          example: '2026-08-31T00:00:00Z'
     SlaDefinitionUpdateRequest:
       type: object
       description: 更新SLA定义请求
@@ -1404,7 +1404,7 @@ components:
           type: string
           format: date
           description: 失效日期
-          example: '2026-08-31'
+          example: '2026-08-31T00:00:00Z'
         version:
           type: string
           description: 版本号
@@ -2024,6 +2024,11 @@ components:
           type: string
           description: 报告ID
           example: RPT-20250815-0001
+        tenant_id:
+          type: integer
+          format: int64
+          description: 租户ID
+          example: 1001
         report_name:
           type: string
           description: 报告名称

@@ -1,0 +1,32 @@
+{
+  "total_fixes": 353,
+  "files_modified": 26,
+  "modified_files": [
+    "docs/api/4.5.1/modules/REQ-018-财务管理模块/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-010-系统管理模块/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-005-知识库管理系统/openapi.yaml",
+    "docs/api/4.5.1/domains/engineer-domain.yaml",
+    "docs/api/4.5.1/domains/customer-domain.yaml",
+    "docs/api/4.5.1/domains/client-domain.yaml",
+    "docs/api/4.5.1/modules/REQ-006-工程师管理系统/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-001-基础架构模块/openapi.yaml",
+    "docs/api/4.5.1/domains/portal-domain.yaml",
+    "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-022-用户与权限管理模块/openapi.yaml",
+    "docs/api/4.5.1/domains/sla-domain.yaml",
+    "docs/api/4.5.1/domains/system-domain.yaml",
+    "docs/api/4.5.1/modules/REQ-019-客户自助服务模块/openapi.yaml",
+    "docs/api/4.5.1/domains/ticket-domain.yaml",
+    "docs/api/4.5.1/modules/REQ-013-智能分析与AI功能/openapi.yaml",
+    "docs/api/4.5.1/domains/experience-domain.yaml",
+    "docs/api/4.5.1/modules/REQ-004-智能派单系统/openapi.yaml",
+    "docs/api/4.5.1/domains/auth-domain.yaml",
+    "docs/api/4.5.1/domains/data-domain.yaml",
+    "docs/api/4.5.1/domains/knowledge-domain.yaml",
+    "docs/api/4.5.1/modules/REQ-015-用户体验增强系统/openapi.yaml",
+    "docs/api/4.5.1/domains/finance-domain.yaml",
+    "docs/api/4.5.1/modules/REQ-020-移动端应用模块/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-017-SLA管理模块/openapi.yaml",
+    "docs/api/4.5.1/modules/REQ-008-系统设置/openapi.yaml"
+  ]
+}

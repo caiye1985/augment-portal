@@ -20,6 +20,7 @@ class RESTfulNamingFixer:
 
         # 需要修复的单数资源名称映射到复数形式
         self.singular_to_plural = {
+            # 原有的映射
             'dashboard': 'dashboards',
             'notification': 'notifications',
             'engineer': 'engineers',
@@ -37,7 +38,27 @@ class RESTfulNamingFixer:
             'alert': 'alerts',
             'log': 'logs',
             'config': 'configs',
-            'setting': 'settings'
+            'setting': 'settings',
+            # 新增的映射（基于分析结果）
+            'finance': 'finances',
+            'client': 'clients',
+            'mobile': 'mobiles',
+            'ai': 'ais',
+            'customer-portal': 'customer-portals',
+            'sla': 'slas',
+            'dispatch': 'dispatches',
+            'system': 'systems',
+            'auth': 'auths',
+            'system-config': 'system-configs',
+            'knowledge': 'knowledges',
+            'gray-release': 'gray-releases',
+            'ml': 'mls',
+            'admin': 'admins',
+            'ux': 'uxs',
+            'internal': 'internals',
+            'performance': 'performances',
+            'audit': 'audits',
+            'health': 'healths'
         }
 
     def load_yaml_file(self, file_path: Path) -> Dict[str, Any]:

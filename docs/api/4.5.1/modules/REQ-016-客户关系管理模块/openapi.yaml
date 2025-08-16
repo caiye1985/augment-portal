@@ -2135,7 +2135,7 @@ paths:
         schema:
           type: string
           format: date
-          example: '2025-01-01'
+          example: '2025-01-01T00:00:00Z'
       - name: end_date
         in: query
         description: 结束日期
@@ -2143,7 +2143,7 @@ paths:
         schema:
           type: string
           format: date
-          example: '2025-08-15'
+          example: '2025-08-15T00:00:00Z'
       - name: page
         in: query
         description: 页码，从1开始
@@ -2369,7 +2369,7 @@ components:
           type: string
           format: date
           description: 下次续约时间
-          example: '2025-12-31'
+          example: '2025-12-31T00:00:00Z'
         created_at:
           type: string
           format: date-time
@@ -2611,7 +2611,7 @@ components:
           type: string
           format: date
           description: 下次续约时间
-          example: '2025-12-31'
+          example: '2025-12-31T00:00:00Z'
     CustomerDetailResponse:
       type: object
       description: 客户详情响应
@@ -2864,7 +2864,7 @@ components:
           type: string
           format: date
           description: 评分日期
-          example: '2025-08-15'
+          example: '2025-08-15T00:00:00Z'
         overall_score:
           type: number
           format: float
@@ -2964,7 +2964,7 @@ components:
           type: string
           format: date
           description: 评分日期
-          example: '2025-08-15'
+          example: '2025-08-15T00:00:00Z'
         overall_score:
           type: number
           format: float
@@ -3469,12 +3469,12 @@ components:
           type: string
           format: date
           description: 合同开始日期
-          example: '2025-01-01'
+          example: '2025-01-01T00:00:00Z'
         end_date:
           type: string
           format: date
           description: 合同结束日期
-          example: '2025-12-31'
+          example: '2025-12-31T00:00:00Z'
         status:
           type: integer
           description: 状态：1-草稿，2-生效，3-到期，4-终止
@@ -3513,7 +3513,7 @@ components:
           type: string
           format: date
           description: 签署日期
-          example: '2024-12-15'
+          example: '2024-12-15T00:00:00Z'
         created_by:
           type: integer
           format: int64
@@ -3568,12 +3568,12 @@ components:
           type: string
           format: date
           description: 合同开始日期
-          example: '2025-01-01'
+          example: '2025-01-01T00:00:00Z'
         end_date:
           type: string
           format: date
           description: 合同结束日期
-          example: '2025-12-31'
+          example: '2025-12-31T00:00:00Z'
         renewal_type:
           type: integer
           description: 续约类型：1-手动，2-自动
@@ -3608,7 +3608,7 @@ components:
           type: string
           format: date
           description: 签署日期
-          example: '2024-12-15'
+          example: '2024-12-15T00:00:00Z'
     CustomerContractUpdateRequest:
       type: object
       description: 更新客户合同请求
@@ -3629,7 +3629,7 @@ components:
           type: string
           format: date
           description: 合同结束日期
-          example: '2025-12-31'
+          example: '2025-12-31T00:00:00Z'
         status:
           type: integer
           description: 状态：1-草稿，2-生效，3-到期，4-终止
@@ -3677,7 +3677,7 @@ components:
           type: string
           format: date
           description: 新的合同结束日期
-          example: '2026-12-31'
+          example: '2026-12-31T00:00:00Z'
         new_amount:
           type: number
           format: float
@@ -4078,6 +4078,11 @@ components:
           format: int64
           description: 客户ID
           example: 12345
+        tenant_id:
+          type: integer
+          format: int64
+          description: 租户ID
+          example: 1001
         period:
           type: string
           description: 统计周期

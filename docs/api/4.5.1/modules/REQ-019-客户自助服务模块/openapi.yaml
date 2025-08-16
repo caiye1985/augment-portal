@@ -1166,6 +1166,11 @@ components:
           type: integer
           description: 工单ID
           example: 12345
+        tenant_id:
+          type: integer
+          format: int64
+          description: 租户ID
+          example: 1001
         ticket_no:
           type: string
           description: 工单编号

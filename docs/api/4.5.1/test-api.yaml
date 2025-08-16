@@ -1,0 +1,292 @@
+openapi: 3.0.3
+info:
+  title: IT运维门户系统 API 测试
+  description: 用于测试 API 文档质量的简化版本
+  version: 4.5.1
+  contact:
+    name: API Support
+    email: api-support@company.com
+
+servers:
+  - url: http://localhost:3001/api/v1
+    description: 本地测试服务器
+
+paths:
+  /health:
+    get:
+      summary: 健康检查
+      description: 检查 API 服务状态
+      operationId: healthCheck
+      tags:
+        - 系统管理
+      responses:
+        '200':
+          description: 服务正常
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/login:
+    post:
+      summary: 用户登录
+      description: 用户通过用户名和密码登录系统
+      operationId: userLogin
+      tags:
+        - 认证授权
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: 登录成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /tickets:
+    get:
+      summary: 获取工单列表
+      description: 分页获取工单列表
+      operationId: getTickets
+      tags:
+        - 工单管理
+      parameters:
+        - name: page
+          in: query
+          description: 页码
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: size
+          in: query
+          description: 每页数量
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 请求是否成功
+        message:
+          type: string
+          description: 响应消息
+        code:
+          type: string
+          description: 响应代码
+        timestamp:
+          type: string
+          format: date-time
+          description: 响应时间戳
+      required:
+        - success
+        - message
+        - timestamp
+
+    HealthResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [healthy, unhealthy]
+                version:
+                  type: string
+                uptime:
+                  type: integer
+
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          description: 用户名
+          minLength: 3
+          maxLength: 50
+        password:
+          type: string
+          description: 密码
+          minLength: 6
+          maxLength: 128
+        captcha:
+          type: string
+          description: 验证码
+          minLength: 4
+          maxLength: 6
+      required:
+        - username
+        - password
+
+    LoginResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: JWT 访问令牌
+                refreshToken:
+                  type: string
+                  description: 刷新令牌
+                expiresIn:
+                  type: integer
+                  description: 令牌过期时间（秒）
+                user:
+                  $ref: '#/components/schemas/UserInfo'
+
+    UserInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 用户ID
+        username:
+          type: string
+          description: 用户名
+        email:
+          type: string
+          format: email
+          description: 邮箱
+        name:
+          type: string
+          description: 真实姓名
+        avatar:
+          type: string
+          format: uri
+          description: 头像URL
+        roles:
+          type: array
+          items:
+            type: string
+          description: 用户角色列表
+
+    TicketListResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/TicketSummary'
+                pagination:
+                  $ref: '#/components/schemas/PaginationInfo'
+
+    TicketSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 工单ID
+        title:
+          type: string
+          description: 工单标题
+        status:
+          type: string
+          enum: [open, in_progress, resolved, closed]
+          description: 工单状态
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+          description: 优先级
+        createdAt:
+          type: string
+          format: date-time
+          description: 创建时间
+        assignee:
+          type: string
+          description: 分配给的工程师
+
+    PaginationInfo:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: 当前页码
+        size:
+          type: integer
+          description: 每页数量
+        total:
+          type: integer
+          description: 总记录数
+        totalPages:
+          type: integer
+          description: 总页数
+
+  responses:
+    BadRequest:
+      description: 请求参数错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+    Unauthorized:
+      description: 未授权访问
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+    InternalServerError:
+      description: 服务器内部错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: 系统管理
+    description: 系统管理和监控
+  - name: 认证授权
+    description: 用户认证和授权
+  - name: 工单管理
+    description: 工单管理功能

@@ -1,0 +1,1741 @@
+{
+  "summary": {
+    "total_errors": 0,
+    "total_warnings": 247,
+    "total_checks": 247,
+    "status": "PASS"
+  },
+  "issues": [],
+  "warnings": [
+    {
+      "category": "MOCK_DATA",
+      "severity": "WARNING",
+      "message": "时间字段应使用ISO8601 UTC格式: update_frequency = monthly",
+      "file": "docs/api/4.5.1/modules/REQ-005-知识库管理系统/openapi.yaml",
+      "location": "components.schemas.ArticleMetadata.properties.update_frequency"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "200响应建议引用全局ApiResponse: /api/v1/system-config/export",
+      "file": "docs/api/4.5.1/modules/REQ-008-系统设置/openapi.yaml",
+      "location": "/api/v1/system-config/export:get"
+    },
+    {
+      "category": "MOCK_DATA",
+      "severity": "WARNING",
+      "message": "时间字段应使用ISO8601 UTC格式: date_format = YYYY-MM-DD",
+      "file": "docs/api/4.5.1/modules/REQ-008-系统设置/openapi.yaml",
+      "location": "components.schemas.SystemSettings.properties.date_format"
+    },
+    {
+      "category": "MOCK_DATA",
+      "severity": "WARNING",
+      "message": "时间字段应使用ISO8601 UTC格式: time_format = HH:mm:ss",
+      "file": "docs/api/4.5.1/modules/REQ-008-系统设置/openapi.yaml",
+      "location": "components.schemas.SystemSettings.properties.time_format"
+    },
+    {
+      "category": "MOCK_DATA",
+      "severity": "WARNING",
+      "message": "时间字段应使用ISO8601 UTC格式: date_format = YYYY-MM-DD",
+      "file": "docs/api/4.5.1/modules/REQ-008-系统设置/openapi.yaml",
+      "location": "components.schemas.SystemSettingsUpdateRequest.properties.date_format"
+    },
+    {
+      "category": "MOCK_DATA",
+      "severity": "WARNING",
+      "message": "时间字段应使用ISO8601 UTC格式: time_format = HH:mm:ss",
+      "file": "docs/api/4.5.1/modules/REQ-008-系统设置/openapi.yaml",
+      "location": "components.schemas.SystemSettingsUpdateRequest.properties.time_format"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "200响应建议引用全局ApiResponse: /api/v1/tickets/export",
+      "file": "docs/api/4.5.1/modules/REQ-003-工单管理系统/openapi.yaml",
+      "location": "/api/v1/tickets/export:get"
+    },
+    {
+      "category": "RESTFUL",
+      "severity": "WARNING",
+      "message": "PUT方法通常应包含requestBody: /api/v1/customers/{id}/contacts/{contactId}/primary",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts/{contactId}/primary:PUT"
+    },
+    {
+      "category": "RESTFUL",
+      "severity": "WARNING",
+      "message": "POST方法通常应包含requestBody: /api/v1/customers/{id}/health-score/calculate",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/health-score/calculate:POST"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/customers",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "409响应应引用全局错误响应: /api/v1/customers",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/customers/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/customers/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "409响应应引用全局错误响应: /api/v1/customers/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}:delete"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}:delete"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/customers/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}:delete"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}:delete"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}:delete"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/search",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/search:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/search",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/search:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/search",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/search:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/batch",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/batch:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/batch",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/batch:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/batch",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/batch:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/batch",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/batch:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/batch",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/batch:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/batch",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/batch:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "200响应建议引用全局ApiResponse: /api/v1/customers/export",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/export:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/export",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/export:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/export",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/export:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/customers/export",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/export:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/export",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/export:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/contacts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/contacts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/customers/{id}/contacts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/contacts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/contacts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/contacts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/contacts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/contacts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/contacts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/contacts/{contactId}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts/{contactId}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/contacts/{contactId}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts/{contactId}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/customers/{id}/contacts/{contactId}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts/{contactId}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/contacts/{contactId}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts/{contactId}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/contacts/{contactId}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts/{contactId}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/contacts/{contactId}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts/{contactId}:delete"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/contacts/{contactId}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts/{contactId}:delete"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/customers/{id}/contacts/{contactId}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts/{contactId}:delete"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/contacts/{contactId}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts/{contactId}:delete"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/contacts/{contactId}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts/{contactId}:delete"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/contacts/{contactId}/primary",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts/{contactId}/primary:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/contacts/{contactId}/primary",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts/{contactId}/primary:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/customers/{id}/contacts/{contactId}/primary",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts/{contactId}/primary:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/contacts/{contactId}/primary",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts/{contactId}/primary:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/contacts/{contactId}/primary",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contacts/{contactId}/primary:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/health-score/calculate",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/health-score/calculate:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/health-score/calculate",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/health-score/calculate:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/health-score/calculate",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/health-score/calculate:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/health-score/calculate",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/health-score/calculate:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/health-score",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/health-score:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/health-score",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/health-score:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/health-score",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/health-score:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/health-score",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/health-score:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/health-score/trend",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/health-score/trend:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/health-score/trend",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/health-score/trend:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/health-score/trend",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/health-score/trend:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/health-score/trend",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/health-score/trend:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/success-tasks",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/success-tasks:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/success-tasks",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/success-tasks:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/success-tasks",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/success-tasks:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/success-tasks",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/success-tasks:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/success-tasks",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/success-tasks:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/success-tasks",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/success-tasks:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/success-tasks",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/success-tasks:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/contracts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contracts:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/contracts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contracts:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/contracts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contracts:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/contracts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contracts:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/contracts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contracts:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/contracts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contracts:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/contracts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contracts:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/contracts",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/contracts:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/contracts/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/contracts/{id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/contracts/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/contracts/{id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/contracts/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/contracts/{id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/contracts/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/contracts/{id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/contracts/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/contracts/{id}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/contracts/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/contracts/{id}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/contracts/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/contracts/{id}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/contracts/{id}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/contracts/{id}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/contracts/{id}/renew",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/contracts/{id}/renew:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/contracts/{id}/renew",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/contracts/{id}/renew:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/contracts/{id}/renew",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/contracts/{id}/renew:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/contracts/{id}/renew",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/contracts/{id}/renew:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/contracts/expiring",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/contracts/expiring:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/contracts/expiring",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/contracts/expiring:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/contracts/expiring",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/contracts/expiring:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/analysis/value",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/analysis/value:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/analysis/value",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/analysis/value:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/analysis/value",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/analysis/value:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/analysis/value",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/analysis/value:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/analysis/behavior",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/analysis/behavior:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/analysis/behavior",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/analysis/behavior:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/analysis/behavior",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/analysis/behavior:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/analysis/behavior",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/analysis/behavior:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/tags",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/tags:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/tags",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/tags:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/tags",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/tags:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/tags",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/tags:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/tags",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/tags:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/tags",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/tags:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/tags",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/tags:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/tags",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/tags:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/tags/{tagId}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/tags/{tagId}:delete"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/tags/{tagId}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/tags/{tagId}:delete"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/tags/{tagId}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/tags/{tagId}:delete"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/tags/{tagId}",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/tags/{tagId}:delete"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/communications",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/communications:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/communications",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/communications:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/communications",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/communications:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/communications",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/communications:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/communications",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/communications:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/communications",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/communications:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/communications",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/communications:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/communications",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/communications:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/service-records",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/service-records:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/service-records",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/service-records:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/service-records",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/service-records:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/service-records",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/service-records:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/customers/{id}/satisfaction",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/satisfaction:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/customers/{id}/satisfaction",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/satisfaction:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/customers/{id}/satisfaction",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/satisfaction:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/customers/{id}/satisfaction",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "/api/v1/customers/{id}/satisfaction:get"
+    },
+    {
+      "category": "MULTI_TENANT",
+      "severity": "WARNING",
+      "message": "业务Schema建议包含tenant_id字段: CustomerDetailResponse",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "components.schemas.CustomerDetailResponse"
+    },
+    {
+      "category": "MULTI_TENANT",
+      "severity": "WARNING",
+      "message": "业务Schema建议包含tenant_id字段: CustomerSatisfactionData",
+      "file": "docs/api/4.5.1/modules/REQ-016-客户关系管理模块/openapi.yaml",
+      "location": "components.schemas.CustomerSatisfactionData"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "409响应应引用全局错误响应: /api/v1/notifications/{notificationId}/resend",
+      "file": "docs/api/4.5.1/modules/REQ-011-通知与消息系统/openapi.yaml",
+      "location": "/api/v1/notifications/{notificationId}/resend:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "409响应应引用全局错误响应: /api/v1/notifications/templates",
+      "file": "docs/api/4.5.1/modules/REQ-011-通知与消息系统/openapi.yaml",
+      "location": "/api/v1/notifications/templates:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "409响应应引用全局错误响应: /api/v1/notifications/templates/{templateId}",
+      "file": "docs/api/4.5.1/modules/REQ-011-通知与消息系统/openapi.yaml",
+      "location": "/api/v1/notifications/templates/{templateId}:put"
+    },
+    {
+      "category": "RESTFUL",
+      "severity": "WARNING",
+      "message": "POST方法通常应包含requestBody: /api/v1/integrations/configs/{id}/test",
+      "file": "docs/api/4.5.1/modules/REQ-012-系统集成模块/openapi.yaml",
+      "location": "/api/v1/integrations/configs/{id}/test:POST"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "200响应建议引用全局ApiResponse: /api/v1/integrations/logs/export",
+      "file": "docs/api/4.5.1/modules/REQ-012-系统集成模块/openapi.yaml",
+      "location": "/api/v1/integrations/logs/export:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "200响应建议引用全局ApiResponse: /api/v1/customer-portal/documents/{id}/download",
+      "file": "docs/api/4.5.1/modules/REQ-019-客户自助服务模块/openapi.yaml",
+      "location": "/api/v1/customer-portal/documents/{id}/download:get"
+    },
+    {
+      "category": "MULTI_TENANT",
+      "severity": "WARNING",
+      "message": "业务Schema建议包含tenant_id字段: PortalTicketDetail",
+      "file": "docs/api/4.5.1/modules/REQ-019-客户自助服务模块/openapi.yaml",
+      "location": "components.schemas.PortalTicketDetail"
+    },
+    {
+      "category": "RESTFUL",
+      "severity": "WARNING",
+      "message": "DELETE方法通常不需要requestBody: /api/v1/dispatch/{id}/cancel",
+      "file": "docs/api/4.5.1/modules/REQ-004-智能派单系统/openapi.yaml",
+      "location": "/api/v1/dispatch/{id}/cancel:DELETE"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "422响应应引用全局错误响应: /api/v1/dispatch/auto",
+      "file": "docs/api/4.5.1/modules/REQ-004-智能派单系统/openapi.yaml",
+      "location": "/api/v1/dispatch/auto:post"
+    },
+    {
+      "category": "MOCK_DATA",
+      "severity": "WARNING",
+      "message": "时间字段应使用ISO8601 UTC格式: updated_by = admin",
+      "file": "docs/api/4.5.1/modules/REQ-004-智能派单系统/openapi.yaml",
+      "location": "components.schemas.AlgorithmWeights.properties.updated_by"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/theme/{tenant_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/theme/{tenant_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/theme/{tenant_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/theme/{tenant_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/client/theme/{tenant_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/theme/{tenant_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/theme/{tenant_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/theme/{tenant_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/client/auth/login",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/auth/login:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/auth/login",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/auth/login:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/auth/login",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/auth/login:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/auth/permissions",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/auth/permissions:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/auth/permissions",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/auth/permissions:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/auth/permissions",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/auth/permissions:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/workspace",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/workspace:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/workspace",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/workspace:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/workspace",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/workspace:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/dashboard/overview",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/overview:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/dashboard/overview",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/overview:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/dashboard/overview",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/overview:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/dashboard/config",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/config:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/dashboard/config",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/config:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/dashboard/config",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/config:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/client/dashboard/config",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/config:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/dashboard/config",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/config:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/dashboard/config",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/config:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/dashboard/config",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/config:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/dashboard/config/{config_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/config/{config_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/dashboard/config/{config_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/config/{config_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/client/dashboard/config/{config_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/config/{config_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/dashboard/config/{config_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/config/{config_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/client/dashboard/config/{config_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/config/{config_id}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/dashboard/config/{config_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/config/{config_id}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/dashboard/config/{config_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/config/{config_id}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/client/dashboard/config/{config_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/config/{config_id}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/dashboard/config/{config_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/dashboard/config/{config_id}:put"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/tickets",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/tickets:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/tickets",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/tickets:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/tickets",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/tickets:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/tickets/{ticket_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/tickets/{ticket_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/tickets/{ticket_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/tickets/{ticket_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/client/tickets/{ticket_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/tickets/{ticket_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/tickets/{ticket_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/tickets/{ticket_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/tickets/statistics",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/tickets/statistics:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/tickets/statistics",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/tickets/statistics:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/tickets/statistics",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/tickets/statistics:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/sla/compliance",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/sla/compliance:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/sla/compliance",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/sla/compliance:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/sla/compliance",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/sla/compliance:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/sla/violations",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/sla/violations:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/sla/violations",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/sla/violations:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/sla/violations",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/sla/violations:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/client/reports/generate",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/reports/generate:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/reports/generate",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/reports/generate:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/reports/generate",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/reports/generate:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/reports/generate",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/reports/generate:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/reports/progress/{task_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/reports/progress/{task_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/reports/progress/{task_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/reports/progress/{task_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/client/reports/progress/{task_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/reports/progress/{task_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/reports/progress/{task_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/reports/progress/{task_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/reports/history",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/reports/history:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/reports/history",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/reports/history:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/reports/history",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/reports/history:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/reports/templates",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/reports/templates:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/reports/templates",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/reports/templates:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/reports/templates",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/reports/templates:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/client/export/data",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/export/data:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/export/data",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/export/data:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/export/data",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/export/data:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/export/data",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/export/data:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/export/progress/{export_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/export/progress/{export_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/export/progress/{export_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/export/progress/{export_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/client/export/progress/{export_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/export/progress/{export_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/export/progress/{export_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/export/progress/{export_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "200响应建议引用全局ApiResponse: /api/v1/client/files/download/{file_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/files/download/{file_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/files/download/{file_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/files/download/{file_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/files/download/{file_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/files/download/{file_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "404响应应引用全局错误响应: /api/v1/client/files/download/{file_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/files/download/{file_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/files/download/{file_id}",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/files/download/{file_id}:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/subscriptions",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/subscriptions:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/subscriptions",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/subscriptions:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/subscriptions",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/subscriptions:get"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "400响应应引用全局错误响应: /api/v1/client/subscriptions",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/subscriptions:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "401响应应引用全局错误响应: /api/v1/client/subscriptions",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/subscriptions:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "403响应应引用全局错误响应: /api/v1/client/subscriptions",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/subscriptions:post"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "500响应应引用全局错误响应: /api/v1/client/subscriptions",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "/api/v1/client/subscriptions:post"
+    },
+    {
+      "category": "MULTI_TENANT",
+      "severity": "WARNING",
+      "message": "业务Schema建议包含tenant_id字段: ClientLoginResponse",
+      "file": "docs/api/4.5.1/modules/REQ-007-甲方管理与报表系统/openapi.yaml",
+      "location": "components.schemas.ClientLoginResponse"
+    },
+    {
+      "category": "RESTFUL",
+      "severity": "WARNING",
+      "message": "POST方法通常应包含requestBody: /api/v1/auth/logout",
+      "file": "docs/api/4.5.1/modules/REQ-001-基础架构模块/openapi.yaml",
+      "location": "/api/v1/auth/logout:POST"
+    },
+    {
+      "category": "RESPONSE_FORMAT",
+      "severity": "WARNING",
+      "message": "200响应建议引用全局ApiResponse: /api/v1/finance/invoices/export",
+      "file": "docs/api/4.5.1/modules/REQ-018-财务管理模块/openapi.yaml",
+      "location": "/api/v1/finance/invoices/export:get"
+    },
+    {
+      "category": "RESTFUL",
+      "severity": "WARNING",
+      "message": "POST方法通常应包含requestBody: /api/v1/workflows/definitions/{id}/publish",
+      "file": "docs/api/4.5.1/modules/REQ-014-工作流引擎系统/openapi.yaml",
+      "location": "/api/v1/workflows/definitions/{id}/publish:POST"
+    }
+  ],
+  "stats": {}
+}

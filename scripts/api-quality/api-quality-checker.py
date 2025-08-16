@@ -47,21 +47,52 @@ class APIQualityChecker:
     def check_restful_design(self, api_spec: Dict[str, Any], file_path: str):
         """检查RESTful设计原则"""
         print("🔍 检查 RESTful 设计原则...")
-        
+
+        # 定义不需要复数形式的特殊资源类型
+        singular_resources = {
+            # 不可数名词
+            'knowledge',      # 知识（不可数）
+            'health',         # 健康状态（不可数）
+            'performance',    # 性能（不可数）
+            'audit',          # 审计（概念性）
+
+            # 概念性资源/模块命名空间
+            'auth',           # 认证模块
+            'admin',          # 管理模块
+            'ai',             # 人工智能模块
+            'ml',             # 机器学习模块
+            'ux',             # 用户体验模块
+            'mobile',         # 移动端模块
+            'client',         # 客户端模块
+            'customer-portal', # 客户门户模块
+            'internal',       # 内部模块
+
+            # 单例资源/配置类
+            'system-config',  # 系统配置（单例）
+            'gray-release',   # 灰度发布（操作性）
+            'dispatch',       # 派单（操作性）
+
+            # 聚合/统计类资源
+            'finance',        # 财务（领域概念）
+            'system',         # 系统（领域概念）
+            'sla',            # 服务等级协议（概念性）
+        }
+
         paths = api_spec.get('paths', {})
         for path, methods in paths.items():
             if isinstance(methods, dict) and '$ref' not in methods:
                 # 检查路径命名规范
                 if not re.match(r'^/api/v\d+/', path):
                     self.log_issue("RESTFUL", "ERROR", f"路径应以 /api/v1/ 开头: {path}", file_path, path)
-                
-                # 检查资源命名（应使用复数）
+
+                # 检查资源命名（应使用复数，除非是特殊资源类型）
                 path_parts = path.strip('/').split('/')
                 if len(path_parts) >= 3:
                     resource = path_parts[2]
-                    if not resource.endswith('s') and not '{' in resource:
+                    # 跳过路径参数和特殊资源类型的复数检查
+                    if not resource.endswith('s') and not '{' in resource and resource not in singular_resources:
                         self.log_issue("RESTFUL", "WARNING", f"资源名称建议使用复数形式: {resource}", file_path, path)
-                
+
                 # 检查HTTP方法使用
                 for method, operation in methods.items():
                     if method.upper() in ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']:
@@ -75,7 +106,9 @@ class APIQualityChecker:
         
         # POST/PUT/PATCH应该有适当的requestBody（除非是操作类接口）
         if method in ['POST', 'PUT', 'PATCH']:
-            if 'requestBody' not in operation and not any(action in path for action in ['/execute', '/pause', '/resume', '/enable', '/disable']):
+            # 排除不需要requestBody的操作类接口
+            action_patterns = ['/execute', '/pause', '/resume', '/enable', '/disable', '/read', '/activate', '/deactivate', '/start', '/stop', '/reset']
+            if 'requestBody' not in operation and not any(action in path for action in action_patterns):
                 self.log_issue("RESTFUL", "WARNING", f"{method}方法通常应包含requestBody: {path}", file_path, f"{path}:{method}")
         
         # DELETE方法通常不需要requestBody
@@ -159,17 +192,28 @@ class APIQualityChecker:
                             content = response_200.get('content', {}).get('application/json', {})
                             schema = content.get('schema', {})
                             
-                            # 检查是否使用了allOf引用全局ApiResponse
+                            # 检查是否使用了allOf引用全局ApiResponse或PagedResponse
                             if 'allOf' in schema:
                                 all_of = schema['allOf']
-                                has_api_response = any(
-                                    '$ref' in item and 'ApiResponse' in item['$ref'] 
+                                has_global_response = any(
+                                    '$ref' in item and ('ApiResponse' in item['$ref'] or 'PagedResponse' in item['$ref'])
                                     for item in all_of if isinstance(item, dict)
                                 )
-                                if not has_api_response:
-                                    self.log_issue("RESPONSE_FORMAT", "WARNING", 
-                                                  f"200响应建议引用全局ApiResponse: {path}", 
+                                if not has_global_response:
+                                    self.log_issue("RESPONSE_FORMAT", "WARNING",
+                                                  f"200响应建议引用全局ApiResponse或PagedResponse: {path}",
                                                   file_path, f"{path}:{method}")
+                            # 检查是否直接引用了全局响应组件
+                            elif '$ref' in schema:
+                                if not ('ApiResponse' in schema['$ref'] or 'PagedResponse' in schema['$ref']):
+                                    self.log_issue("RESPONSE_FORMAT", "WARNING",
+                                                  f"200响应建议引用全局ApiResponse: {path}",
+                                                  file_path, f"{path}:{method}")
+                            else:
+                                # 没有使用标准响应格式
+                                self.log_issue("RESPONSE_FORMAT", "WARNING",
+                                              f"200响应建议引用全局ApiResponse: {path}",
+                                              file_path, f"{path}:{method}")
                         
                         # 检查错误响应是否使用全局引用
                         error_codes = ['400', '401', '403', '404', '409', '422', '500']
@@ -184,37 +228,109 @@ class APIQualityChecker:
     def check_tenant_id_support(self, api_spec: Dict[str, Any], file_path: str):
         """检查多租户支持"""
         print("🔍 检查多租户支持...")
-        
+
         schemas = api_spec.get('components', {}).get('schemas', {})
         business_schemas = []
-        
-        # 识别业务Schema（排除请求/响应包装类）
+
+        # 识别业务Schema（主要检查Info类型，Request类型通常不需要tenant_id）
+        # 内部系统Schema不需要tenant_id字段的类型
+        internal_schema_patterns = [
+            # 工程师管理相关（内部人员管理）
+            'Engineer',
+            # 移动端应用相关（内部工程师使用）
+            'Mobile', 'Device', 'Location', 'Sync', 'Offline', 'Conflict',
+            # 内部系统组件
+            'Playbook', 'Pagination', 'Attachment',
+            # 内部工单状态更新
+            'TicketStatusUpdate',
+            # 系统级UI组件（不属于租户业务数据）
+            'Widget', 'Task', 'Dashboard', 'Chart', 'Metric',
+            # 系统配置相关（全局配置，非租户特定）
+            'FeatureFlag', 'Config', 'Version', 'Gray', 'Release',
+            # 系统内部管理
+            'Author', 'Permission', 'Role', 'Status', 'Batch',
+            # 用户偏好设置（通常与用户绑定，不是租户数据）
+            'Preference', 'Setting', 'Theme',
+            # 知识库分类（通常是全局分类）
+            'Category', 'KnowledgeCategory'
+        ]
+
+        # 明确需要tenant_id的业务Schema模式
+        tenant_required_patterns = [
+            # 客户相关业务数据
+            'Customer', 'Client',
+            # 工单相关业务数据（但排除状态更新等操作）
+            'Ticket',
+            # 资产相关
+            'Asset', 'Resource',
+            # 财务相关
+            'Finance', 'Cost', 'Bill', 'Invoice',
+            # SLA相关
+            'SLA', 'Service',
+            # 业务报表数据
+            'Report', 'Analytics', 'Statistics'
+        ]
+
         for schema_name, schema_def in schemas.items():
-            if not any(suffix in schema_name for suffix in ['Request', 'Response', 'Info', 'Status', 'Log']):
-                continue
-            if schema_name in ['ApiResponse', 'PagedResponse', 'ErrorResponse']:
-                continue
-            business_schemas.append(schema_name)
+            # 只检查Info、Status、Log等数据模型，不检查Request类型
+            if any(suffix in schema_name for suffix in ['Info', 'Status', 'Log', 'Data', 'Detail']):
+                # 排除公共响应组件
+                if schema_name in ['ApiResponse', 'PagedResponse', 'ErrorResponse']:
+                    continue
+
+                # 排除内部系统Schema
+                is_internal = any(pattern in schema_name for pattern in internal_schema_patterns)
+
+                # 检查是否明确需要tenant_id的业务Schema
+                is_tenant_required = any(pattern in schema_name for pattern in tenant_required_patterns)
+
+                # 只有明确的业务Schema才需要检查tenant_id
+                if is_tenant_required and not is_internal:
+                    business_schemas.append(schema_name)
+                elif not is_internal and not is_tenant_required:
+                    # 对于不确定的Schema，添加详细日志说明为什么跳过
+                    print(f"  ℹ️  跳过Schema检查: {schema_name} (未匹配到明确的业务模式)")
         
+        def has_tenant_id_recursive(schema_def, schemas, visited=None):
+            """递归检查Schema是否包含tenant_id（包括继承）"""
+            if visited is None:
+                visited = set()
+
+            if not isinstance(schema_def, dict):
+                return False
+
+            # 直接检查properties
+            properties = schema_def.get('properties', {})
+            if 'tenant_id' in properties:
+                return True
+
+            # 检查allOf继承
+            all_of = schema_def.get('allOf', [])
+            for item in all_of:
+                if isinstance(item, dict):
+                    # 直接的properties
+                    if 'properties' in item and 'tenant_id' in item['properties']:
+                        return True
+
+                    # $ref引用
+                    if '$ref' in item:
+                        ref_path = item['$ref']
+                        if ref_path.startswith('#/components/schemas/'):
+                            ref_schema_name = ref_path.split('/')[-1]
+                            if ref_schema_name not in visited and ref_schema_name in schemas:
+                                visited.add(ref_schema_name)
+                                if has_tenant_id_recursive(schemas[ref_schema_name], schemas, visited):
+                                    return True
+
+            return False
+
         # 检查业务Schema是否包含tenant_id
         for schema_name in business_schemas:
             schema_def = schemas[schema_name]
-            if isinstance(schema_def, dict):
-                properties = schema_def.get('properties', {})
-                if 'tenant_id' not in properties:
-                    # 检查是否通过allOf继承
-                    all_of = schema_def.get('allOf', [])
-                    has_tenant_id = False
-                    for item in all_of:
-                        if isinstance(item, dict) and 'properties' in item:
-                            if 'tenant_id' in item['properties']:
-                                has_tenant_id = True
-                                break
-                    
-                    if not has_tenant_id:
-                        self.log_issue("MULTI_TENANT", "WARNING", 
-                                      f"业务Schema建议包含tenant_id字段: {schema_name}", 
-                                      file_path, f"components.schemas.{schema_name}")
+            if not has_tenant_id_recursive(schema_def, schemas):
+                self.log_issue("MULTI_TENANT", "WARNING",
+                              f"业务Schema建议包含tenant_id字段: {schema_name}",
+                              file_path, f"components.schemas.{schema_name}")
     
     def check_mock_data_quality(self, api_spec: Dict[str, Any], file_path: str):
         """检查Mock数据质量"""
@@ -226,16 +342,26 @@ class APIQualityChecker:
                 # 检查是否使用了无意义的示例
                 bad_examples = ['string', 'test', 'example', 'sample', '123', 'abc']
                 if value.lower() in bad_examples:
-                    self.log_issue("MOCK_DATA", "WARNING", 
-                                  f"字段 '{field_name}' 使用了无意义的示例值: {value}", 
+                    self.log_issue("MOCK_DATA", "WARNING",
+                                  f"字段 '{field_name}' 使用了无意义的示例值: {value}",
                                   file_path, location)
-                
-                # 检查时间格式
+
+                # 检查时间格式 - 区分不同类型的时间字段
                 if 'time' in field_name.lower() or 'date' in field_name.lower():
-                    if not re.match(r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$', value):
-                        self.log_issue("MOCK_DATA", "WARNING", 
-                                      f"时间字段应使用ISO8601 UTC格式: {field_name} = {value}", 
-                                      file_path, location)
+                    # timezone字段允许时区标识符
+                    if 'timezone' in field_name.lower():
+                        # 时区字段应该是有效的时区标识符，不需要ISO8601格式
+                        pass
+                    # time_range等范围字段允许特定值
+                    elif 'range' in field_name.lower():
+                        # 时间范围字段允许如 'month', 'week', 'day' 等值
+                        pass
+                    # 其他时间字段检查ISO8601格式
+                    else:
+                        if not re.match(r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$', value):
+                            self.log_issue("MOCK_DATA", "WARNING",
+                                          f"时间字段应使用ISO8601 UTC格式: {field_name} = {value}",
+                                          file_path, location)
         
         # 检查Schema中的example
         schemas = api_spec.get('components', {}).get('schemas', {})

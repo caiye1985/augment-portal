@@ -821,7 +821,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HealthCheckResponse'
+                allOf:
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/HealthCheckResponse'
 components:
   securitySchemes:
     BearerAuth:
