@@ -2,49 +2,66 @@ openapi: 3.0.3
 info:
   title: IT运维门户系统 - 通知与消息系统 API
   version: 1.0.0
-  description: |
-    通知与消息系统为IT运维门户系统提供全面的消息通知服务，作为系统各模块间的消息中枢。
+  description: '通知与消息系统为IT运维门户系统提供全面的消息通知服务，作为系统各模块间的消息中枢。
+
 
     **核心功能**：
+
     - 多渠道消息发送（站内消息、邮件、短信、微信、钉钉、Push、Webhook等）
+
     - 消息模板管理（多语言、多格式、变量替换）
+
     - 智能通知规则引擎（用户偏好、免打扰时间、频率控制）
+
     - 消息队列管理（优先级调度、重试机制）
+
     - 统计分析报表（发送统计、到达率分析、效果评估）
 
+
     **技术特性**：
+
     - 事件驱动架构，支持跨模块集成
+
     - 多租户数据隔离，保障数据安全
+
     - 智能通知规则，基于用户偏好和业务规则
+
     - 全链路可追溯，完整的消息发送状态跟踪
 
+    '
 tags:
-  - name: notifications
-    description: 消息通知管理 - 消息发送、查询、状态管理
-  - name: templates
-    description: 消息模板管理 - 模板CRUD、预览、测试
-  - name: channels
-    description: 通知渠道管理 - 渠道配置、健康检查、故障切换
-  - name: settings
-    description: 用户设置管理 - 通知偏好、免打扰时间、频率控制
-  - name: analytics
-    description: 统计分析 - 发送统计、渠道分析、用户行为分析
-  - name: events
-    description: 事件管理 - 事件发布、订阅管理、Webhook回调
-
+- name: notifications
+  description: 消息通知管理 - 消息发送、查询、状态管理
+- name: templates
+  description: 消息模板管理 - 模板CRUD、预览、测试
+- name: channels
+  description: 通知渠道管理 - 渠道配置、健康检查、故障切换
+- name: settings
+  description: 用户设置管理 - 通知偏好、免打扰时间、频率控制
+- name: analytics
+  description: 统计分析 - 发送统计、渠道分析、用户行为分析
+- name: events
+  description: 事件管理 - 事件发布、订阅管理、Webhook回调
 paths:
   /api/v1/notifications/send:
     post:
-      tags: [notifications]
+      tags:
+      - notifications
       summary: 发送单条消息
-      description: |
-        发送单条通知消息，支持多种渠道和优先级。
+      description: '发送单条通知消息，支持多种渠道和优先级。
+
 
         **业务规则**：
+
         - 支持定时发送和立即发送
+
         - 自动应用用户通知偏好设置
+
         - 支持模板变量替换
+
         - 自动处理免打扰时间和频率限制
+
+        '
       operationId: notifications_send
       requestBody:
         required: true
@@ -59,37 +76,42 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/SendNotificationResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/SendNotificationResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '429':
           description: 请求频率超限
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ErrorResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ErrorResponse
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/notifications/batch-send:
     post:
-      tags: [notifications]
+      tags:
+      - notifications
       summary: 批量发送消息
-      description: |
-        批量发送多条通知消息，支持不同接收者和内容。
+      description: '批量发送多条通知消息，支持不同接收者和内容。
+
 
         **性能特性**：
+
         - 支持最多1000条消息批量发送
+
         - 异步处理，立即返回批次ID
+
         - 支持批次状态查询和进度跟踪
+
+        '
       operationId: notifications_batch_send
       requestBody:
         required: true
@@ -104,104 +126,110 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BatchSendNotificationResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BatchSendNotificationResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/notifications:
     get:
-      tags: [notifications]
+      tags:
+      - notifications
       summary: 获取消息列表
-      description: |
-        分页查询消息列表，支持多维度筛选和排序。
+      description: '分页查询消息列表，支持多维度筛选和排序。
+
 
         **查询特性**：
+
         - 支持按状态、优先级、时间范围筛选
+
         - 支持全文搜索消息标题和内容
+
         - 支持多字段排序
+
         - 租户数据自动隔离
+
+        '
       operationId: notifications_list
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: sort
-          in: query
-          description: 排序字段和方向
-          schema:
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: sort
+        in: query
+        description: 排序字段和方向
+        schema:
+          type: string
+          default: created_at,desc
+          example: created_at,desc
+      - name: status
+        in: query
+        description: 消息状态筛选
+        schema:
+          type: array
+          items: &id001
             type: string
-            default: "created_at,desc"
-            example: "created_at,desc"
-        - name: status
-          in: query
-          description: 消息状态筛选
-          schema:
+      - name: priority
+        in: query
+        description: 优先级筛选
+        schema:
+          type: array
+          items:
             type: string
-            enum: [pending, processing, sent, failed, cancelled]
-            example: "sent"
-        - name: priority
-          in: query
-          description: 优先级筛选
-          schema:
-            type: string
-            enum: [urgent, high, normal, low]
-            example: "high"
-        - name: user_id
-          in: query
-          description: 接收用户ID筛选
-          schema:
-            type: integer
-            example: 1001
-        - name: event_type
-          in: query
-          description: 事件类型筛选
-          schema:
-            type: string
-            example: "ticket_status_change"
-        - name: date_from
-          in: query
-          description: 开始日期
-          schema:
-            type: string
-            format: date-time
-            example: "2025-08-14T00:00:00Z"
-        - name: date_to
-          in: query
-          description: 结束日期
-          schema:
-            type: string
-            format: date-time
-            example: "2025-08-15T23:59:59Z"
-        - name: search
-          in: query
-          description: 搜索关键词（标题和内容）
-          schema:
-            type: string
-            example: "工单状态变更"
+      - name: user_id
+        in: query
+        description: 接收用户ID筛选
+        schema:
+          type: integer
+          example: 1001
+      - name: event_type
+        in: query
+        description: 事件类型筛选
+        schema:
+          type: string
+          example: ticket_status_change
+      - name: date_from
+        in: query
+        description: 开始日期
+        schema:
+          type: string
+          format: date-time
+          example: '2025-08-14T00:00:00Z'
+      - name: date_to
+        in: query
+        description: 结束日期
+        schema:
+          type: string
+          format: date-time
+          example: '2025-08-15T23:59:59Z'
+      - name: search
+        in: query
+        description: 搜索关键词（标题和内容）
+        schema:
+          type: string
+          example: 工单状态变更
       responses:
         '200':
           description: 查询成功
@@ -209,45 +237,50 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/NotificationSummary'
+                            $ref: '#/components/schemas/NotificationSummary'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/notifications/{notificationId}:
     get:
-      tags: [notifications]
+      tags:
+      - notifications
       summary: 获取消息详情
-      description: |
-        获取指定消息的详细信息，包括发送状态、日志记录等。
+      description: '获取指定消息的详细信息，包括发送状态、日志记录等。
+
 
         **权限控制**：
+
         - 用户只能查看自己的消息
+
         - 管理员可以查看租户内所有消息
+
         - 系统服务可以查看相关消息
+
+        '
       operationId: notifications_get
       parameters:
-        - name: notificationId
-          in: path
-          required: true
-          description: 消息ID
-          schema:
-            type: integer
-            example: 789
+      - name: notificationId
+        in: path
+        required: true
+        description: 消息ID
+        schema:
+          type: integer
+          example: 789
       responses:
         '200':
           description: 查询成功
@@ -255,67 +288,77 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/NotificationDetail'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/NotificationDetail'
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/notifications/{notificationId}/read:
     patch:
-      tags: [notifications]
+      tags:
+      - notifications
       summary: 标记消息为已读
-      description: |
-        将指定消息标记为已读状态，记录阅读时间。
+      description: '将指定消息标记为已读状态，记录阅读时间。
+
 
         **业务规则**：
+
         - 只有未读消息可以标记为已读
+
         - 自动记录阅读时间戳
+
         - 支持批量标记已读操作
+
+        '
       operationId: notifications_mark_read
       parameters:
-        - name: notificationId
-          in: path
-          required: true
-          description: 消息ID
-          schema:
-            type: integer
-            example: 789
+      - name: notificationId
+        in: path
+        required: true
+        description: 消息ID
+        schema:
+          type: integer
+          example: 789
       responses:
         '200':
           description: 标记成功
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/notifications/batch-read:
     patch:
-      tags: [notifications]
+      tags:
+      - notifications
       summary: 批量标记已读
-      description: |
-        批量将多条消息标记为已读状态。
+      description: '批量将多条消息标记为已读状态。
+
 
         **性能特性**：
+
         - 支持最多100条消息批量标记
+
         - 原子操作，全部成功或全部失败
+
         - 自动过滤已读消息和无权限消息
+
+        '
       operationId: notifications_batch_mark_read
       requestBody:
         required: true
@@ -324,7 +367,7 @@ paths:
             schema:
               type: object
               required:
-                - notification_ids
+              - notification_ids
               properties:
                 notification_ids:
                   type: array
@@ -332,7 +375,10 @@ paths:
                   maxItems: 100
                   items:
                     type: integer
-                  example: [789, 790, 791]
+                  example:
+                  - 789
+                  - 790
+                  - 791
       responses:
         '200':
           description: 批量标记成功
@@ -340,55 +386,60 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          success_count:
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        success_count:
+                          type: integer
+                          description: 成功标记数量
+                          example: 3
+                        failed_count:
+                          type: integer
+                          description: 失败数量
+                          example: 0
+                        failed_ids:
+                          type: array
+                          description: 失败的消息ID列表
+                          items:
                             type: integer
-                            description: 成功标记数量
-                            example: 3
-                          failed_count:
-                            type: integer
-                            description: 失败数量
-                            example: 0
-                          failed_ids:
-                            type: array
-                            description: 失败的消息ID列表
-                            items:
-                              type: integer
-                            example: []
+                          example: []
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/notifications/{notificationId}/resend:
     post:
-      tags: [notifications]
+      tags:
+      - notifications
       summary: 重新发送失败消息
-      description: |
-        重新发送失败的消息，可以指定特定渠道。
+      description: '重新发送失败的消息，可以指定特定渠道。
+
 
         **业务规则**：
+
         - 只有失败状态的消息可以重新发送
+
         - 可以指定特定渠道重新发送
+
         - 重置重试计数器
+
+        '
       operationId: notifications_resend
       parameters:
-        - name: notificationId
-          in: path
-          required: true
-          description: 消息ID
-          schema:
-            type: integer
-            example: 789
+      - name: notificationId
+        in: path
+        required: true
+        description: 消息ID
+        schema:
+          type: integer
+          example: 789
       requestBody:
         required: false
         content:
@@ -401,8 +452,17 @@ paths:
                   description: 指定重新发送的渠道（为空则使用原渠道）
                   items:
                     type: string
-                    enum: [in_app, email, sms, wechat, dingtalk, webhook, push]
-                  example: ["email", "sms"]
+                    enum:
+                    - in_app
+                    - email
+                    - sms
+                    - wechat
+                    - dingtalk
+                    - webhook
+                    - push
+                  example:
+                  - email
+                  - sms
       responses:
         '200':
           description: 重新发送成功
@@ -410,82 +470,87 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/SendNotificationResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/SendNotificationResponse'
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
           description: 消息状态不允许重新发送
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ErrorResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ErrorResponse
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/notifications/templates:
     get:
-      tags: [templates]
+      tags:
+      - templates
       summary: 获取模板列表
-      description: |
-        分页查询消息模板列表，支持按类型、状态筛选。
+      description: '分页查询消息模板列表，支持按类型、状态筛选。
+
 
         **查询特性**：
+
         - 支持按模板类型、状态、分类筛选
+
         - 支持模板名称和代码搜索
+
         - 租户数据自动隔离
+
         - 包含全局模板和租户模板
+
+        '
       operationId: templates_list
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: template_type
-          in: query
-          description: 模板类型筛选
-          schema:
-            type: string
-            example: "ticket_notification"
-        - name: category
-          in: query
-          description: 模板分类筛选
-          schema:
-            type: string
-            example: "ticket"
-        - name: status
-          in: query
-          description: 模板状态筛选
-          schema:
-            type: string
-            enum: [active, inactive, draft]
-            example: "active"
-        - name: search
-          in: query
-          description: 搜索关键词（模板名称和代码）
-          schema:
-            type: string
-            example: "工单状态变更"
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: template_type
+        in: query
+        description: 模板类型筛选
+        schema:
+          type: string
+          example: ticket_notification
+      - name: category
+        in: query
+        description: 模板分类筛选
+        schema:
+          type: string
+          example: ticket
+      - name: status
+        in: query
+        description: 模板状态筛选
+        schema:
+          type: array
+          items: *id001
+      - name: search
+        in: query
+        description: 搜索关键词（模板名称和代码）
+        schema:
+          type: string
+          example: 工单状态变更
       responses:
         '200':
           description: 查询成功
@@ -493,36 +558,42 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/MessageTemplateSummary'
+                            $ref: '#/components/schemas/MessageTemplateSummary'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     post:
-      tags: [templates]
+      tags:
+      - templates
       summary: 创建消息模板
-      description: |
-        创建新的消息模板，支持多种内容格式和变量定义。
+      description: '创建新的消息模板，支持多种内容格式和变量定义。
+
 
         **业务规则**：
+
         - 模板代码在租户内必须唯一
+
         - 支持变量定义和JSON Schema验证
+
         - 支持多种内容格式（text/html/markdown）
+
         - 自动验证模板语法
+
+        '
       operationId: templates_create
       requestBody:
         required: true
@@ -537,45 +608,49 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/MessageTemplateDetail'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/MessageTemplateDetail'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '409':
           description: 模板代码已存在
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ErrorResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ErrorResponse
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/notifications/templates/{templateId}:
     get:
-      tags: [templates]
+      tags:
+      - templates
       summary: 获取模板详情
-      description: |
-        获取指定模板的详细信息，包括变量定义和使用统计。
+      description: '获取指定模板的详细信息，包括变量定义和使用统计。
+
 
         **权限控制**：
+
         - 用户可以查看全局模板和所属租户模板
+
         - 管理员可以查看租户内所有模板
+
+        '
       operationId: templates_get
       parameters:
-        - name: templateId
-          in: path
-          required: true
-          description: 模板ID
-          schema:
-            type: integer
-            example: 456
+      - name: templateId
+        in: path
+        required: true
+        description: 模板ID
+        schema:
+          type: integer
+          example: 456
       responses:
         '200':
           description: 查询成功
@@ -583,39 +658,44 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/MessageTemplateDetail'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/MessageTemplateDetail'
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     put:
-      tags: [templates]
+      tags:
+      - templates
       summary: 更新模板
-      description: |
-        更新指定模板的信息，支持版本控制。
+      description: '更新指定模板的信息，支持版本控制。
+
 
         **业务规则**：
+
         - 只能更新租户自有模板
+
         - 更新后自动增加版本号
+
         - 正在使用的模板需要谨慎更新
+
+        '
       operationId: templates_update
       parameters:
-        - name: templateId
-          in: path
-          required: true
-          description: 模板ID
-          schema:
-            type: integer
-            example: 456
+      - name: templateId
+        in: path
+        required: true
+        description: 模板ID
+        schema:
+          type: integer
+          example: 456
       requestBody:
         required: true
         content:
@@ -629,47 +709,51 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/MessageTemplateDetail'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/MessageTemplateDetail'
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '409':
           description: 模板代码冲突
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ErrorResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ErrorResponse
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/users/{userId}/notification-settings:
     get:
-      tags: [settings]
+      tags:
+      - settings
       summary: 获取用户通知设置
-      description: |
-        获取指定用户的通知设置，包括渠道偏好、免打扰时间等。
+      description: '获取指定用户的通知设置，包括渠道偏好、免打扰时间等。
+
 
         **权限控制**：
+
         - 用户只能查看自己的设置
+
         - 管理员可以查看租户内用户设置
+
+        '
       operationId: user_settings_get
       parameters:
-        - name: userId
-          in: path
-          required: true
-          description: 用户ID
-          schema:
-            type: integer
-            example: 1001
+      - name: userId
+        in: path
+        required: true
+        description: 用户ID
+        schema:
+          type: integer
+          example: 1001
       responses:
         '200':
           description: 查询成功
@@ -677,41 +761,46 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/UserNotificationSetting'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/UserNotificationSetting'
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     put:
-      tags: [settings]
+      tags:
+      - settings
       summary: 更新用户通知设置
-      description: |
-        更新用户的通知设置，支持批量更新多个通知类型的设置。
+      description: '更新用户的通知设置，支持批量更新多个通知类型的设置。
+
 
         **业务规则**：
+
         - 设置立即生效
+
         - 支持部分更新
+
         - 自动验证设置的有效性
+
+        '
       operationId: user_settings_update
       parameters:
-        - name: userId
-          in: path
-          required: true
-          description: 用户ID
-          schema:
-            type: integer
-            example: 1001
+      - name: userId
+        in: path
+        required: true
+        description: 用户ID
+        schema:
+          type: integer
+          example: 1001
       requestBody:
         required: true
         content:
@@ -719,7 +808,7 @@ paths:
             schema:
               type: object
               required:
-                - settings
+              - settings
               properties:
                 settings:
                   type: array
@@ -733,69 +822,87 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/UserNotificationSetting'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/UserNotificationSetting'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/notifications/statistics:
     get:
-      tags: [analytics]
+      tags:
+      - analytics
       summary: 获取发送统计
-      description: |
-        获取消息发送的统计数据，支持多维度分析。
+      description: '获取消息发送的统计数据，支持多维度分析。
+
 
         **统计维度**：
+
         - 按时间段统计发送量和成功率
+
         - 按渠道统计发送效果
+
         - 按优先级统计处理情况
+
         - 按用户统计接收情况
+
+        '
       operationId: notifications_statistics
       parameters:
-        - name: date_from
-          in: query
-          required: true
-          description: 开始日期
-          schema:
-            type: string
-            format: date
-            example: "2025-08-01"
-        - name: date_to
-          in: query
-          required: true
-          description: 结束日期
-          schema:
-            type: string
-            format: date
-            example: "2025-08-15"
-        - name: group_by
-          in: query
-          description: 分组维度
-          schema:
-            type: string
-            enum: [day, hour, channel, priority, event_type]
-            default: day
-            example: "day"
-        - name: channel_type
-          in: query
-          description: 渠道类型筛选
-          schema:
-            type: string
-            enum: [in_app, email, sms, wechat, dingtalk, webhook, push]
-            example: "email"
+      - name: date_from
+        in: query
+        required: true
+        description: 开始日期
+        schema:
+          type: string
+          format: date
+          example: '2025-08-01'
+      - name: date_to
+        in: query
+        required: true
+        description: 结束日期
+        schema:
+          type: string
+          format: date
+          example: '2025-08-15'
+      - name: group_by
+        in: query
+        description: 分组维度
+        schema:
+          type: string
+          enum:
+          - day
+          - hour
+          - channel
+          - priority
+          - event_type
+          default: day
+          example: day
+      - name: channel_type
+        in: query
+        description: 渠道类型筛选
+        schema:
+          type: string
+          enum:
+          - in_app
+          - email
+          - sms
+          - wechat
+          - dingtalk
+          - webhook
+          - push
+          example: email
       responses:
         '200':
           description: 查询成功
@@ -803,32 +910,38 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/NotificationStatistics'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/NotificationStatistics'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/notifications/events:
     post:
-      tags: [events]
+      tags:
+      - events
       summary: 发布事件通知
-      description: |
-        接收业务事件并触发相应的通知发送。
+      description: '接收业务事件并触发相应的通知发送。
+
 
         **事件处理**：
+
         - 支持标准事件格式
+
         - 自动匹配通知配置
+
         - 异步处理，立即返回
+
         - 支持事件去重
+
+        '
       operationId: events_publish
       requestBody:
         required: true
@@ -843,40 +956,41 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          event_id:
-                            type: string
-                            description: 事件ID
-                            example: "evt_20250815_001"
-                          status:
-                            type: string
-                            description: 处理状态
-                            enum: [accepted, processing]
-                            example: "accepted"
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        event_id:
+                          type: string
+                          description: 事件ID
+                          example: evt_20250815_001
+                        status:
+                          type: string
+                          description: 处理状态
+                          enum:
+                          - accepted
+                          - processing
+                          example: accepted
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
 components:
   schemas:
     SendNotificationRequest:
       type: object
       required:
-        - recipients
-        - event_type
-        - notification_type
-        - title
-        - content
+      - recipients
+      - event_type
+      - notification_type
+      - title
+      - content
       properties:
         recipients:
           type: array
@@ -884,37 +998,46 @@ components:
           items:
             $ref: '#/components/schemas/NotificationRecipient'
           example:
-            - user_id: 1001
-              channels: ["in_app", "email"]
+          - user_id: 1001
+            channels:
+            - in_app
+            - email
         event_type:
           type: string
           description: 事件类型
-          example: "ticket_status_change"
+          example: ticket_status_change
         notification_type:
           type: string
           description: 通知类型
-          example: "ticket_notification"
+          example: ticket_notification
         title:
           type: string
           description: 消息标题
           maxLength: 255
-          example: "工单状态变更通知"
+          example: 工单状态变更通知
         content:
           type: string
           description: 消息内容
-          example: "您的工单 #TCK-20250814-0001 状态已变更为已完成"
+          example: '您的工单 #TCK-20250814-0001 状态已变更为已完成'
         content_format:
           type: string
           description: 内容格式
-          enum: [text, html, markdown]
+          enum:
+          - text
+          - html
+          - markdown
           default: text
-          example: "text"
+          example: text
         priority:
           type: string
           description: 优先级
-          enum: [urgent, high, normal, low]
+          enum:
+          - urgent
+          - high
+          - normal
+          - low
           default: normal
-          example: "normal"
+          example: normal
         template_id:
           type: integer
           description: 使用的模板ID
@@ -923,30 +1046,29 @@ components:
           type: object
           description: 模板变量值
           example:
-            ticket_id: "TCK-20250814-0001"
-            status: "已完成"
-            customer_name: "张三"
+            ticket_id: TCK-20250814-0001
+            status: 已完成
+            customer_name: 张三
         scheduled_time:
           type: string
           format: date-time
           description: 计划发送时间（为空则立即发送）
-          example: "2025-08-15T14:30:00Z"
+          example: '2025-08-15T14:30:00Z'
         expire_time:
           type: string
           format: date-time
           description: 过期时间
-          example: "2025-08-16T14:30:00Z"
+          example: '2025-08-16T14:30:00Z'
         metadata:
           type: object
           description: 扩展元数据
           example:
-            source_module: "ticket"
-            source_id: "12345"
-
+            source_module: ticket
+            source_id: '12345'
     NotificationRecipient:
       type: object
       required:
-        - user_id
+      - user_id
       properties:
         user_id:
           type: integer
@@ -957,9 +1079,17 @@ components:
           description: 指定发送渠道（为空则使用用户偏好设置）
           items:
             type: string
-            enum: [in_app, email, sms, wechat, dingtalk, webhook, push]
-          example: ["in_app", "email"]
-
+            enum:
+            - in_app
+            - email
+            - sms
+            - wechat
+            - dingtalk
+            - webhook
+            - push
+          example:
+          - in_app
+          - email
     SendNotificationResponse:
       type: object
       properties:
@@ -970,13 +1100,18 @@ components:
         status:
           type: string
           description: 消息状态
-          enum: [pending, processing, sent, failed, cancelled]
-          example: "pending"
+          enum:
+          - pending
+          - processing
+          - sent
+          - failed
+          - cancelled
+          example: pending
         estimated_send_time:
           type: string
           format: date-time
           description: 预计发送时间
-          example: "2025-08-15T14:30:00Z"
+          example: '2025-08-15T14:30:00Z'
         recipients:
           type: array
           description: 接收者处理结果
@@ -990,16 +1125,21 @@ components:
                 type: array
                 items:
                   type: string
-                example: ["in_app", "email"]
+                example:
+                - in_app
+                - email
               status:
                 type: string
-                enum: [pending, processing, sent, failed]
-                example: "pending"
-
+                enum:
+                - pending
+                - processing
+                - sent
+                - failed
+                example: pending
     BatchSendNotificationRequest:
       type: object
       required:
-        - notifications
+      - notifications
       properties:
         notifications:
           type: array
@@ -1010,15 +1150,14 @@ components:
         batch_id:
           type: string
           description: 批次ID（可选，系统自动生成）
-          example: "batch_20250815_001"
-
+          example: batch_20250815_001
     BatchSendNotificationResponse:
       type: object
       properties:
         batch_id:
           type: string
           description: 批次ID
-          example: "batch_20250815_001"
+          example: batch_20250815_001
         total_count:
           type: integer
           description: 总消息数
@@ -1034,14 +1173,17 @@ components:
         status:
           type: string
           description: 批次状态
-          enum: [pending, processing, completed, failed]
-          example: "pending"
+          enum:
+          - pending
+          - processing
+          - completed
+          - failed
+          example: pending
         estimated_completion_time:
           type: string
           format: date-time
           description: 预计完成时间
-          example: "2025-08-15T15:00:00Z"
-
+          example: '2025-08-15T15:00:00Z'
     NotificationSummary:
       type: object
       properties:
@@ -1052,110 +1194,122 @@ components:
         title:
           type: string
           description: 消息标题
-          example: "工单状态变更通知"
+          example: 工单状态变更通知
         content:
           type: string
           description: 消息内容（截取前100字符）
-          example: "您的工单 #TCK-20250814-0001 状态已变更为已完成"
+          example: '您的工单 #TCK-20250814-0001 状态已变更为已完成'
         priority:
           type: string
           description: 优先级
-          enum: [urgent, high, normal, low]
-          example: "normal"
+          enum:
+          - urgent
+          - high
+          - normal
+          - low
+          example: normal
         status:
           type: string
           description: 消息状态
-          enum: [pending, processing, sent, failed, cancelled]
-          example: "sent"
+          enum:
+          - pending
+          - processing
+          - sent
+          - failed
+          - cancelled
+          example: sent
         channels:
           type: array
           description: 发送渠道
           items:
             type: string
-          example: ["in_app", "email"]
+          example:
+          - in_app
+          - email
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-15T10:30:00Z"
+          example: '2025-08-15T10:30:00Z'
         sent_time:
           type: string
           format: date-time
           description: 发送时间
-          example: "2025-08-15T10:31:00Z"
+          example: '2025-08-15T10:31:00Z'
         read_time:
           type: string
           format: date-time
           description: 阅读时间
-          example: "2025-08-15T11:00:00Z"
-
+          example: '2025-08-15T11:00:00Z'
     NotificationDetail:
       allOf:
-        - $ref: '#/components/schemas/NotificationSummary'
-        - type: object
-          properties:
-            user_id:
-              type: integer
-              description: 接收用户ID
-              example: 1001
-            event_type:
-              type: string
-              description: 事件类型
-              example: "ticket_status_change"
-            notification_type:
-              type: string
-              description: 通知类型
-              example: "ticket_notification"
-            content_format:
-              type: string
-              description: 内容格式
-              enum: [text, html, markdown]
-              example: "text"
-            template_id:
-              type: integer
-              description: 使用的模板ID
-              example: 456
-            template_variables:
-              type: object
-              description: 模板变量值
-              example:
-                ticket_id: "TCK-20250814-0001"
-                status: "已完成"
-                customer_name: "张三"
-            scheduled_time:
-              type: string
-              format: date-time
-              description: 计划发送时间
-              example: "2025-08-15T14:30:00Z"
-            expire_time:
-              type: string
-              format: date-time
-              description: 过期时间
-              example: "2025-08-16T14:30:00Z"
-            retry_count:
-              type: integer
-              description: 重试次数
-              example: 0
-            max_retry_count:
-              type: integer
-              description: 最大重试次数
-              example: 3
-            error_message:
-              type: string
-              description: 错误信息
-              example: null
-            metadata:
-              type: object
-              description: 扩展元数据
-              example:
-                source_module: "ticket"
-                source_id: "12345"
-            updated_at:
-              type: string
-              format: date-time
-              description: 更新时间
-              example: "2025-08-15T10:31:00Z"
-
+      - $ref: '#/components/schemas/NotificationSummary'
+      - type: object
+        properties:
+          user_id:
+            type: integer
+            description: 接收用户ID
+            example: 1001
+          event_type:
+            type: string
+            description: 事件类型
+            example: ticket_status_change
+          notification_type:
+            type: string
+            description: 通知类型
+            example: ticket_notification
+          content_format:
+            type: string
+            description: 内容格式
+            enum:
+            - text
+            - html
+            - markdown
+            example: text
+          template_id:
+            type: integer
+            description: 使用的模板ID
+            example: 456
+          template_variables:
+            type: object
+            description: 模板变量值
+            example:
+              ticket_id: TCK-20250814-0001
+              status: 已完成
+              customer_name: 张三
+          scheduled_time:
+            type: string
+            format: date-time
+            description: 计划发送时间
+            example: '2025-08-15T14:30:00Z'
+          expire_time:
+            type: string
+            format: date-time
+            description: 过期时间
+            example: '2025-08-16T14:30:00Z'
+          retry_count:
+            type: integer
+            description: 重试次数
+            example: 0
+          max_retry_count:
+            type: integer
+            description: 最大重试次数
+            example: 3
+          error_message:
+            type: string
+            description: 错误信息
+            example: null
+          metadata:
+            type: object
+            description: 扩展元数据
+            example:
+              source_module: ticket
+              source_id: '12345'
+          updated_at:
+            type: string
+            format: date-time
+            description: 更新时间
+            example: '2025-08-15T10:31:00Z'
     MessageTemplateSummary:
       type: object
       properties:
@@ -1166,39 +1320,48 @@ components:
         template_code:
           type: string
           description: 模板代码
-          example: "ticket_status_change"
+          example: ticket_status_change
         template_name:
           type: string
           description: 模板名称
-          example: "工单状态变更通知模板"
+          example: 工单状态变更通知模板
         template_type:
           type: string
           description: 模板类型
-          example: "ticket_notification"
+          example: ticket_notification
         category:
           type: string
           description: 模板分类
-          example: "ticket"
+          example: ticket
         channels:
           type: array
           description: 适用渠道列表
           items:
             type: string
-          example: ["in_app", "email", "sms"]
+          example:
+          - in_app
+          - email
+          - sms
         content_format:
           type: string
           description: 内容格式
-          enum: [text, html, markdown]
-          example: "text"
+          enum:
+          - text
+          - html
+          - markdown
+          example: text
         status:
           type: string
           description: 模板状态
-          enum: [active, inactive, draft]
-          example: "active"
+          enum:
+          - active
+          - inactive
+          - draft
+          example: active
         version:
           type: string
           description: 模板版本
-          example: "1.0"
+          example: '1.0'
         usage_count:
           type: integer
           description: 使用次数统计
@@ -1207,169 +1370,197 @@ components:
           type: string
           format: date-time
           description: 最后使用时间
-          example: "2025-08-15T10:30:00Z"
+          example: '2025-08-15T10:30:00Z'
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-01T09:00:00Z"
-
+          example: '2025-08-01T09:00:00Z'
     MessageTemplateDetail:
       allOf:
-        - $ref: '#/components/schemas/MessageTemplateSummary'
-        - type: object
-          properties:
-            subject_template:
-              type: string
-              description: 主题模板
-              example: "工单 #{ticket_id} 状态变更通知"
-            content_template:
-              type: string
-              description: 内容模板
-              example: "尊敬的 {customer_name}，您的工单 #{ticket_id} 状态已变更为 {status}。"
-            variables:
-              type: object
-              description: 变量定义
-              example:
-                ticket_id:
-                  type: "string"
-                  required: true
-                  description: "工单ID"
-                customer_name:
-                  type: "string"
-                  required: true
-                  description: "客户姓名"
-                status:
-                  type: "string"
-                  required: true
-                  description: "工单状态"
-            variable_schema:
-              type: object
-              description: 变量JSON Schema验证规则
-              example:
-                type: "object"
-                properties:
-                  ticket_id:
-                    type: "string"
-                    pattern: "^[0-9]+$"
-                  customer_name:
-                    type: "string"
-                    minLength: 1
-                  status:
-                    type: "string"
-                    enum: ["待处理", "处理中", "已完成", "已关闭"]
-                required: ["ticket_id", "customer_name", "status"]
-            tags:
-              type: array
-              description: 标签列表
-              items:
+      - $ref: '#/components/schemas/MessageTemplateSummary'
+      - type: object
+        properties:
+          subject_template:
+            type: string
+            description: 主题模板
+            example: '工单 #{ticket_id} 状态变更通知'
+          content_template:
+            type: string
+            description: 内容模板
+            example: '尊敬的 {customer_name}，您的工单 #{ticket_id} 状态已变更为 {status}。'
+          variables:
+            type: object
+            description: 变量定义
+            example:
+              ticket_id:
                 type: string
-              example: ["工单", "状态变更"]
-            created_by:
-              type: integer
-              description: 创建人ID
-              example: 1001
-            updated_by:
-              type: integer
-              description: 更新人ID
-              example: 1001
-            updated_at:
+                required: true
+                description: 工单ID
+              customer_name:
+                type: string
+                required: true
+                description: 客户姓名
+              status:
+                type: string
+                required: true
+                description: 工单状态
+          variable_schema:
+            type: object
+            description: 变量JSON Schema验证规则
+            example:
+              type: object
+              properties:
+                ticket_id:
+                  type: string
+                  pattern: ^[0-9]+$
+                customer_name:
+                  type: string
+                  minLength: 1
+                status:
+                  type: string
+                  enum:
+                  - 待处理
+                  - 处理中
+                  - 已完成
+                  - 已关闭
+              required:
+              - ticket_id
+              - customer_name
+              - status
+          tags:
+            type: array
+            description: 标签列表
+            items:
               type: string
-              format: date-time
-              description: 更新时间
-              example: "2025-08-15T10:30:00Z"
-
+            example:
+            - 工单
+            - 状态变更
+          created_by:
+            type: integer
+            description: 创建人ID
+            example: 1001
+          updated_by:
+            type: integer
+            description: 更新人ID
+            example: 1001
+          updated_at:
+            type: string
+            format: date-time
+            description: 更新时间
+            example: '2025-08-15T10:30:00Z'
     CreateMessageTemplateRequest:
       type: object
       required:
-        - template_code
-        - template_name
-        - template_type
-        - category
-        - channels
-        - subject_template
-        - content_template
+      - template_code
+      - template_name
+      - template_type
+      - category
+      - channels
+      - subject_template
+      - content_template
       properties:
         template_code:
           type: string
           description: 模板代码（租户内唯一）
-          pattern: "^[a-z0-9_]+$"
+          pattern: ^[a-z0-9_]+$
           maxLength: 50
-          example: "ticket_status_change"
+          example: ticket_status_change
         template_name:
           type: string
           description: 模板名称
           maxLength: 100
-          example: "工单状态变更通知模板"
+          example: 工单状态变更通知模板
         template_type:
           type: string
           description: 模板类型
-          example: "ticket_notification"
+          example: ticket_notification
         category:
           type: string
           description: 模板分类
-          example: "ticket"
+          example: ticket
         channels:
           type: array
           description: 适用渠道列表
           items:
             type: string
-            enum: [in_app, email, sms, wechat, dingtalk, webhook, push]
-          example: ["in_app", "email", "sms"]
+            enum:
+            - in_app
+            - email
+            - sms
+            - wechat
+            - dingtalk
+            - webhook
+            - push
+          example:
+          - in_app
+          - email
+          - sms
         subject_template:
           type: string
           description: 主题模板
           maxLength: 255
-          example: "工单 #{ticket_id} 状态变更通知"
+          example: '工单 #{ticket_id} 状态变更通知'
         content_template:
           type: string
           description: 内容模板
-          example: "尊敬的 {customer_name}，您的工单 #{ticket_id} 状态已变更为 {status}。"
+          example: '尊敬的 {customer_name}，您的工单 #{ticket_id} 状态已变更为 {status}。'
         content_format:
           type: string
           description: 内容格式
-          enum: [text, html, markdown]
+          enum:
+          - text
+          - html
+          - markdown
           default: text
-          example: "text"
+          example: text
         variables:
           type: object
           description: 变量定义
           example:
             ticket_id:
-              type: "string"
+              type: string
               required: true
-              description: "工单ID"
+              description: 工单ID
             customer_name:
-              type: "string"
+              type: string
               required: true
-              description: "客户姓名"
+              description: 客户姓名
             status:
-              type: "string"
+              type: string
               required: true
-              description: "工单状态"
+              description: 工单状态
         variable_schema:
           type: object
           description: 变量JSON Schema验证规则
           example:
-            type: "object"
+            type: object
             properties:
               ticket_id:
-                type: "string"
-                pattern: "^[0-9]+$"
+                type: string
+                pattern: ^[0-9]+$
               customer_name:
-                type: "string"
+                type: string
                 minLength: 1
               status:
-                type: "string"
-                enum: ["待处理", "处理中", "已完成", "已关闭"]
-            required: ["ticket_id", "customer_name", "status"]
+                type: string
+                enum:
+                - 待处理
+                - 处理中
+                - 已完成
+                - 已关闭
+            required:
+            - ticket_id
+            - customer_name
+            - status
         tags:
           type: array
           description: 标签列表
           items:
             type: string
-          example: ["工单", "状态变更"]
-
+          example:
+          - 工单
+          - 状态变更
     UpdateMessageTemplateRequest:
       type: object
       properties:
@@ -1377,28 +1568,41 @@ components:
           type: string
           description: 模板名称
           maxLength: 100
-          example: "工单状态变更通知模板"
+          example: 工单状态变更通知模板
         channels:
           type: array
           description: 适用渠道列表
           items:
             type: string
-            enum: [in_app, email, sms, wechat, dingtalk, webhook, push]
-          example: ["in_app", "email", "sms"]
+            enum:
+            - in_app
+            - email
+            - sms
+            - wechat
+            - dingtalk
+            - webhook
+            - push
+          example:
+          - in_app
+          - email
+          - sms
         subject_template:
           type: string
           description: 主题模板
           maxLength: 255
-          example: "工单 #{ticket_id} 状态变更通知"
+          example: '工单 #{ticket_id} 状态变更通知'
         content_template:
           type: string
           description: 内容模板
-          example: "尊敬的 {customer_name}，您的工单 #{ticket_id} 状态已变更为 {status}。"
+          example: '尊敬的 {customer_name}，您的工单 #{ticket_id} 状态已变更为 {status}。'
         content_format:
           type: string
           description: 内容格式
-          enum: [text, html, markdown]
-          example: "text"
+          enum:
+          - text
+          - html
+          - markdown
+          example: text
         variables:
           type: object
           description: 变量定义
@@ -1408,15 +1612,19 @@ components:
         status:
           type: string
           description: 模板状态
-          enum: [active, inactive, draft]
-          example: "active"
+          enum:
+          - active
+          - inactive
+          - draft
+          example: active
         tags:
           type: array
           description: 标签列表
           items:
             type: string
-          example: ["工单", "状态变更"]
-
+          example:
+          - 工单
+          - 状态变更
     UserNotificationSetting:
       type: object
       properties:
@@ -1431,11 +1639,11 @@ components:
         notification_type:
           type: string
           description: 通知类型
-          example: "ticket_notification"
+          example: ticket_notification
         event_type:
           type: string
           description: 事件类型
-          example: "ticket_status_change"
+          example: ticket_status_change
         channel_preferences:
           type: object
           description: 渠道偏好配置
@@ -1446,16 +1654,20 @@ components:
             email:
               enabled: true
               priority: 2
-              address: "user@example.com"
+              address: user@example.com
             sms:
               enabled: false
               priority: 3
-              phone: "+86138****8888"
+              phone: +86138****8888
         priority_threshold:
           type: string
           description: 优先级阈值（低于此级别的消息不发送）
-          enum: [urgent, high, normal, low]
-          example: "normal"
+          enum:
+          - urgent
+          - high
+          - normal
+          - low
+          example: normal
         frequency_limit:
           type: integer
           description: 频率限制（每小时最大消息数）
@@ -1466,20 +1678,20 @@ components:
           type: string
           format: time
           description: 免打扰开始时间
-          example: "22:00"
+          example: '22:00'
         do_not_disturb_end:
           type: string
           format: time
           description: 免打扰结束时间
-          example: "08:00"
+          example: 08:00
         timezone:
           type: string
           description: 时区设置
-          example: "Asia/Shanghai"
+          example: Asia/Shanghai
         language:
           type: string
           description: 语言偏好
-          example: "zh-CN"
+          example: zh-CN
         is_enabled:
           type: boolean
           description: 是否启用此设置
@@ -1488,27 +1700,26 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-01T09:00:00Z"
+          example: '2025-08-01T09:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-15T10:30:00Z"
-
+          example: '2025-08-15T10:30:00Z'
     UpdateUserNotificationSettingRequest:
       type: object
       required:
-        - notification_type
-        - event_type
+      - notification_type
+      - event_type
       properties:
         notification_type:
           type: string
           description: 通知类型
-          example: "ticket_notification"
+          example: ticket_notification
         event_type:
           type: string
           description: 事件类型
-          example: "ticket_status_change"
+          example: ticket_status_change
         channel_preferences:
           type: object
           description: 渠道偏好配置
@@ -1519,12 +1730,16 @@ components:
             email:
               enabled: true
               priority: 2
-              address: "user@example.com"
+              address: user@example.com
         priority_threshold:
           type: string
           description: 优先级阈值
-          enum: [urgent, high, normal, low]
-          example: "normal"
+          enum:
+          - urgent
+          - high
+          - normal
+          - low
+          example: normal
         frequency_limit:
           type: integer
           description: 频率限制（每小时最大消息数）
@@ -1535,25 +1750,24 @@ components:
           type: string
           format: time
           description: 免打扰开始时间
-          example: "22:00"
+          example: '22:00'
         do_not_disturb_end:
           type: string
           format: time
           description: 免打扰结束时间
-          example: "08:00"
+          example: 08:00
         timezone:
           type: string
           description: 时区设置
-          example: "Asia/Shanghai"
+          example: Asia/Shanghai
         language:
           type: string
           description: 语言偏好
-          example: "zh-CN"
+          example: zh-CN
         is_enabled:
           type: boolean
           description: 是否启用此设置
           example: true
-
     NotificationStatistics:
       type: object
       properties:
@@ -1593,7 +1807,7 @@ components:
                 type: string
                 format: date-time
                 description: 时间点
-                example: "2025-08-15T10:00:00Z"
+                example: '2025-08-15T10:00:00Z'
               sent_count:
                 type: integer
                 description: 发送数量
@@ -1615,7 +1829,7 @@ components:
               channel_type:
                 type: string
                 description: 渠道类型
-                example: "email"
+                example: email
               sent_count:
                 type: integer
                 description: 发送数量
@@ -1633,34 +1847,33 @@ components:
                 type: integer
                 description: 平均投递时间（秒）
                 example: 15
-
     NotificationEventRequest:
       type: object
       required:
-        - event_id
-        - event_type
-        - event_time
-        - source
-        - tenant_id
-        - event_data
+      - event_id
+      - event_type
+      - event_time
+      - source
+      - tenant_id
+      - event_data
       properties:
         event_id:
           type: string
           description: 事件唯一标识
-          example: "evt_20250815_001"
+          example: evt_20250815_001
         event_type:
           type: string
           description: 事件类型
-          example: "ticket.status.changed"
+          example: ticket.status.changed
         event_time:
           type: string
           format: date-time
           description: 事件发生时间
-          example: "2025-08-15T10:30:00Z"
+          example: '2025-08-15T10:30:00Z'
         source:
           type: string
           description: 事件来源系统
-          example: "ticket-service"
+          example: ticket-service
         tenant_id:
           type: integer
           description: 租户ID
@@ -1669,9 +1882,9 @@ components:
           type: object
           description: 事件数据
           example:
-            ticket_id: "TCK-20250814-0001"
-            old_status: "处理中"
-            new_status: "已完成"
+            ticket_id: TCK-20250814-0001
+            old_status: 处理中
+            new_status: 已完成
             operator_id: 2001
             customer_id: 1001
         notification_config:
@@ -1681,21 +1894,29 @@ components:
             template_code:
               type: string
               description: 指定模板代码
-              example: "ticket_status_change"
+              example: ticket_status_change
             priority:
               type: string
               description: 通知优先级
-              enum: [urgent, high, normal, low]
-              example: "normal"
+              enum:
+              - urgent
+              - high
+              - normal
+              - low
+              example: normal
             channels:
               type: array
               description: 指定发送渠道
               items:
                 type: string
-              example: ["in_app", "email"]
+              example:
+              - in_app
+              - email
             recipients:
               type: array
               description: 指定接收者（覆盖默认规则）
               items:
                 type: integer
-              example: [1001, 2001]
+              example:
+              - 1001
+              - 2001

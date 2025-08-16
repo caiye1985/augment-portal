@@ -5,7 +5,7 @@ set -e
 # 用于生成所有模块的 PRD 文档，包括前后端模块和移动端模块
 
 # 导入版本工具
-source "$(dirname "$0")/version_utils.sh"
+source "$(dirname "$0")/../utils/version_utils.sh"
 
 # 检测版本并设置路径
 VERSION=$(detect_prd_version)
@@ -38,7 +38,7 @@ FAILED_MODULES=0
 count_modules() {
     local total=0
     for phase in P0 P1 P2; do
-        local list_file="$SCRIPT_DIR/module_list_${phase}.txt"
+        local list_file="$SCRIPT_DIR/utils/module_list_${phase}.txt"
         if [[ -f "$list_file" ]]; then
             local count
             count=$(wc -l < "$list_file" | tr -d ' ')
@@ -58,7 +58,7 @@ generate_module_prd() {
     # 检查是否为移动端模块
     if [[ "$module_id" == "REQ-020" ]]; then
         log_info "检测到移动端模块，使用移动端专用模板"
-        if bash "$SCRIPT_DIR/gen_iter_prompt.sh" prd-mobile "$phase"; then
+        if bash "$SCRIPT_DIR/prd/gen_iter_prompt.sh" prd-mobile "$phase"; then
             log_info "移动端模块 $module_id PRD 生成成功"
             return 0
         else
@@ -67,7 +67,7 @@ generate_module_prd() {
         fi
     else
         # 普通模块使用通用 PRD 模板
-        if bash "$SCRIPT_DIR/gen_iter_prompt.sh" prd "$phase"; then
+        if bash "$SCRIPT_DIR/prd/gen_iter_prompt.sh" prd "$phase"; then
             log_info "模块 $module_id PRD 生成成功"
             return 0
         else
@@ -83,7 +83,7 @@ generate_quality_report() {
     
     log_info "开始生成阶段 $phase 的质量检查报告..."
     
-    if bash "$SCRIPT_DIR/gen_iter_prompt.sh" prd-quality "$phase"; then
+    if bash "$SCRIPT_DIR/prd/gen_iter_prompt.sh" prd-quality "$phase"; then
         log_info "阶段 $phase 质量检查报告生成成功"
         return 0
     else
@@ -95,7 +95,7 @@ generate_quality_report() {
 # 处理单个阶段
 process_phase() {
     local phase="$1"
-    local list_file="$SCRIPT_DIR/module_list_${phase}.txt"
+    local list_file="$SCRIPT_DIR/utils/module_list_${phase}.txt"
     
     if [[ ! -f "$list_file" ]]; then
         log_warn "模块列表文件不存在: $list_file，跳过阶段 $phase"
@@ -170,7 +170,7 @@ EOF
 
     # 添加各阶段详情
     for phase in P0 P1 P2; do
-        local list_file="$SCRIPT_DIR/module_list_${phase}.txt"
+        local list_file="$SCRIPT_DIR/utils/module_list_${phase}.txt"
         if [[ -f "$list_file" ]]; then
             echo "" >> "$summary_file"
             echo "### 阶段 $phase" >> "$summary_file"
@@ -198,7 +198,7 @@ main() {
     log_info "总共需要处理 $TOTAL_MODULES 个模块"
     
     # 检查模块列表文件
-    if [[ ! -f "$SCRIPT_DIR/module_list_P0.txt" ]]; then
+    if [[ ! -f "$SCRIPT_DIR/utils/module_list_P0.txt" ]]; then
         log_info "模块列表文件不存在，正在生成..."
         bash "$SCRIPT_DIR/gen_module_list.sh"
     fi

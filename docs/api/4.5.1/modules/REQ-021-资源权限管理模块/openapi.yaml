@@ -3,30 +3,28 @@ info:
   title: 资源权限管理模块 API
   version: 1.0.0
   description: REQ-021 资源权限管理模块 API 规范，提供权限验证、策略管理、权限分配、审计监控等功能
-
 tags:
-  - name: permission-verify
-    description: 权限验证相关接口
-  - name: permission-policy
-    description: 权限策略管理接口
-  - name: permission-assignment
-    description: 权限分配管理接口
-  - name: permission-resource
-    description: 资源管理接口
-  - name: permission-audit
-    description: 权限审计接口
-  - name: permission-statistics
-    description: 权限统计接口
-  - name: permission-template
-    description: 权限模板接口
-  - name: permission-conflict
-    description: 权限冲突检测接口
-
+- name: permission-verify
+  description: 权限验证相关接口
+- name: permission-policy
+  description: 权限策略管理接口
+- name: permission-assignment
+  description: 权限分配管理接口
+- name: permission-resource
+  description: 资源管理接口
+- name: permission-audit
+  description: 权限审计接口
+- name: permission-statistics
+  description: 权限统计接口
+- name: permission-template
+  description: 权限模板接口
+- name: permission-conflict
+  description: 权限冲突检测接口
 paths:
   /api/v1/permissions/verify:
     post:
       tags:
-        - permission-verify
+      - permission-verify
       summary: 权限验证
       description: 验证用户对特定资源的操作权限
       operationId: permission_verify
@@ -43,22 +41,21 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PermissionVerifyResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PermissionVerifyResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/permissions/batch-verify:
     post:
       tags:
-        - permission-verify
+      - permission-verify
       summary: 批量权限验证
       description: 批量验证多个资源的权限
       operationId: permission_batch_verify
@@ -75,62 +72,64 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BatchPermissionVerifyResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BatchPermissionVerifyResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/permissions/policies:
     get:
       tags:
-        - permission-policy
+      - permission-policy
       summary: 查询权限策略列表
       description: 分页查询权限策略列表，支持条件筛选
       operationId: permission_policy_list
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: policy_type
-          in: query
-          description: 策略类型
-          schema:
-            type: string
-            enum: [RBAC, ABAC, PBAC]
-            example: "RBAC"
-        - name: enabled
-          in: query
-          description: 是否启用
-          schema:
-            type: boolean
-            example: true
-        - name: keyword
-          in: query
-          description: 关键词搜索（策略名称）
-          schema:
-            type: string
-            example: "工程师基础权限"
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: policy_type
+        in: query
+        description: 策略类型
+        schema:
+          type: string
+          enum:
+          - RBAC
+          - ABAC
+          - PBAC
+          example: RBAC
+      - name: enabled
+        in: query
+        description: 是否启用
+        schema:
+          type: boolean
+          example: true
+      - name: keyword
+        in: query
+        description: 关键词搜索（策略名称）
+        schema:
+          type: string
+          example: 工程师基础权限
       responses:
         '200':
           description: 查询成功
@@ -138,26 +137,25 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/PermissionPolicy'
+                            $ref: '#/components/schemas/PermissionPolicy'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     post:
       tags:
-        - permission-policy
+      - permission-policy
       summary: 创建权限策略
       description: 创建新的权限策略
       operationId: permission_policy_create
@@ -174,37 +172,36 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PermissionPolicy'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PermissionPolicy'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/permissions/policies/{id}:
     get:
       tags:
-        - permission-policy
+      - permission-policy
       summary: 查询权限策略详情
       description: 根据ID查询权限策略详情
       operationId: permission_policy_get
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 权限策略ID
-          schema:
-            type: integer
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 权限策略ID
+        schema:
+          type: integer
+          example: 1001
       responses:
         '200':
           description: 查询成功
@@ -212,34 +209,33 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PermissionPolicy'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PermissionPolicy'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     put:
       tags:
-        - permission-policy
+      - permission-policy
       summary: 更新权限策略
       description: 根据ID更新权限策略
       operationId: permission_policy_update
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 权限策略ID
-          schema:
-            type: integer
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 权限策略ID
+        schema:
+          type: integer
+          example: 1001
       requestBody:
         required: true
         content:
@@ -253,109 +249,110 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PermissionPolicy'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PermissionPolicy'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     delete:
       tags:
-        - permission-policy
+      - permission-policy
       summary: 删除权限策略
       description: 根据ID删除权限策略
       operationId: permission_policy_delete
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 权限策略ID
-          schema:
-            type: integer
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 权限策略ID
+        schema:
+          type: integer
+          example: 1001
       responses:
         '200':
           description: 删除成功
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/permissions/assignments:
     get:
       tags:
-        - permission-assignment
+      - permission-assignment
       summary: 查询权限分配列表
       description: 分页查询权限分配列表，支持条件筛选
       operationId: permission_assignment_list
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: subject_type
-          in: query
-          description: 主体类型
-          schema:
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: subject_type
+        in: query
+        description: 主体类型
+        schema:
+          type: string
+          enum:
+          - user
+          - role
+          - group
+          example: user
+      - name: subject_id
+        in: query
+        description: 主体ID
+        schema:
+          type: integer
+          example: 1001
+      - name: policy_id
+        in: query
+        description: 权限策略ID
+        schema:
+          type: integer
+          example: 1001
+      - name: status
+        in: query
+        description: 状态
+        schema:
+          type: array
+          items:
             type: string
-            enum: [user, role, group]
-            example: "user"
-        - name: subject_id
-          in: query
-          description: 主体ID
-          schema:
-            type: integer
-            example: 1001
-        - name: policy_id
-          in: query
-          description: 权限策略ID
-          schema:
-            type: integer
-            example: 1001
-        - name: status
-          in: query
-          description: 状态
-          schema:
-            type: integer
-            enum: [1, 2, 3]
-            example: 1
       responses:
         '200':
           description: 查询成功
@@ -363,26 +360,25 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/PermissionAssignment'
+                            $ref: '#/components/schemas/PermissionAssignment'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     post:
       tags:
-        - permission-assignment
+      - permission-assignment
       summary: 创建权限分配
       description: 创建新的权限分配
       operationId: permission_assignment_create
@@ -399,37 +395,36 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PermissionAssignment'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PermissionAssignment'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/permissions/assignments/{id}:
     get:
       tags:
-        - permission-assignment
+      - permission-assignment
       summary: 查询权限分配详情
       description: 根据ID查询权限分配详情
       operationId: permission_assignment_get
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 权限分配ID
-          schema:
-            type: integer
-            example: 2001
+      - name: id
+        in: path
+        required: true
+        description: 权限分配ID
+        schema:
+          type: integer
+          example: 2001
       responses:
         '200':
           description: 查询成功
@@ -437,58 +432,56 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PermissionAssignment'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PermissionAssignment'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     delete:
       tags:
-        - permission-assignment
+      - permission-assignment
       summary: 删除权限分配
       description: 根据ID删除权限分配
       operationId: permission_assignment_delete
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 权限分配ID
-          schema:
-            type: integer
-            example: 2001
+      - name: id
+        in: path
+        required: true
+        description: 权限分配ID
+        schema:
+          type: integer
+          example: 2001
       responses:
         '200':
           description: 删除成功
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/permissions/batch-assign:
     post:
       tags:
-        - permission-assignment
+      - permission-assignment
       summary: 批量权限分配
       description: 批量分配权限给多个主体
       operationId: permission_batch_assign
@@ -505,24 +498,23 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BatchOperationResult'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BatchOperationResult'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/permissions/batch-revoke:
     post:
       tags:
-        - permission-assignment
+      - permission-assignment
       summary: 批量权限回收
       description: 批量回收权限
       operationId: permission_batch_revoke
@@ -539,84 +531,85 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BatchOperationResult'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BatchOperationResult'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/permissions/audit-logs:
     get:
       tags:
-        - permission-audit
+      - permission-audit
       summary: 查询权限审计日志
       description: 分页查询权限审计日志，支持条件筛选
       operationId: permission_audit_logs_list
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: user_id
-          in: query
-          description: 用户ID
-          schema:
-            type: integer
-            example: 1001
-        - name: resource_code
-          in: query
-          description: 资源编码
-          schema:
-            type: string
-            example: "ticket_management"
-        - name: action
-          in: query
-          description: 操作类型
-          schema:
-            type: string
-            example: "read"
-        - name: permission_result
-          in: query
-          description: 权限验证结果
-          schema:
-            type: integer
-            enum: [1, 2]
-            example: 1
-        - name: start_time
-          in: query
-          description: 开始时间
-          schema:
-            type: string
-            format: date-time
-            example: "2024-08-14T00:00:00Z"
-        - name: end_time
-          in: query
-          description: 结束时间
-          schema:
-            type: string
-            format: date-time
-            example: "2024-08-15T23:59:59Z"
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: user_id
+        in: query
+        description: 用户ID
+        schema:
+          type: integer
+          example: 1001
+      - name: resource_code
+        in: query
+        description: 资源编码
+        schema:
+          type: string
+          example: ticket_management
+      - name: action
+        in: query
+        description: 操作类型
+        schema:
+          type: string
+          example: read
+      - name: permission_result
+        in: query
+        description: 权限验证结果
+        schema:
+          type: integer
+          enum:
+          - 1
+          - 2
+          example: 1
+      - name: start_time
+        in: query
+        description: 开始时间
+        schema:
+          type: string
+          format: date-time
+          example: '2024-08-14T00:00:00Z'
+      - name: end_time
+        in: query
+        description: 结束时间
+        schema:
+          type: string
+          format: date-time
+          example: '2024-08-15T23:59:59Z'
       responses:
         '200':
           description: 查询成功
@@ -624,38 +617,37 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/PermissionAuditLog'
+                            $ref: '#/components/schemas/PermissionAuditLog'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/permissions/audit-logs/{id}:
     get:
       tags:
-        - permission-audit
+      - permission-audit
       summary: 查询审计日志详情
       description: 根据ID查询权限审计日志详情
       operationId: permission_audit_log_get
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 审计日志ID
-          schema:
-            type: integer
-            example: 10001
+      - name: id
+        in: path
+        required: true
+        description: 审计日志ID
+        schema:
+          type: integer
+          example: 10001
       responses:
         '200':
           description: 查询成功
@@ -663,58 +655,64 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PermissionAuditLog'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PermissionAuditLog'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/permissions/audit-reports:
     get:
       tags:
-        - permission-audit
+      - permission-audit
       summary: 生成权限审计报告
       description: 生成权限审计报告，支持多种报告类型
       operationId: permission_audit_reports_generate
       parameters:
-        - name: report_type
-          in: query
-          required: true
-          description: 报告类型
-          schema:
-            type: string
-            enum: [daily, weekly, monthly, custom]
-            example: "monthly"
-        - name: start_date
-          in: query
-          description: 开始日期（report_type为custom时必填）
-          schema:
-            type: string
-            format: date
-            example: "2024-08-01"
-        - name: end_date
-          in: query
-          description: 结束日期（report_type为custom时必填）
-          schema:
-            type: string
-            format: date
-            example: "2024-08-31"
-        - name: format
-          in: query
-          description: 报告格式
-          schema:
-            type: string
-            enum: [json, excel, pdf]
-            default: json
-            example: "json"
+      - name: report_type
+        in: query
+        required: true
+        description: 报告类型
+        schema:
+          type: string
+          enum:
+          - daily
+          - weekly
+          - monthly
+          - custom
+          example: monthly
+      - name: start_date
+        in: query
+        description: 开始日期（report_type为custom时必填）
+        schema:
+          type: string
+          format: date
+          example: '2024-08-01'
+      - name: end_date
+        in: query
+        description: 结束日期（report_type为custom时必填）
+        schema:
+          type: string
+          format: date
+          example: '2024-08-31'
+      - name: format
+        in: query
+        description: 报告格式
+        schema:
+          type: string
+          enum:
+          - json
+          - excel
+          - pdf
+          default: json
+          example: json
       responses:
         '200':
           description: 报告生成成功
@@ -722,42 +720,42 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PermissionAuditReport'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PermissionAuditReport'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/permissions/statistics/usage:
     get:
       tags:
-        - permission-statistics
+      - permission-statistics
       summary: 权限使用统计
       description: 获取权限使用情况统计数据
       operationId: permission_statistics_usage
       parameters:
-        - name: time_range
-          in: query
-          description: 时间范围
-          schema:
-            type: string
-            enum: [today, week, month, quarter, year]
-            default: month
-            example: "month"
-        - name: group_by
-          in: query
-          description: 分组维度
-          schema:
-            type: string
-            enum: [user, resource, action, policy]
-            default: user
-            example: "user"
+      - name: time_range
+        in: query
+        description: 时间范围
+        schema:
+          type: string
+      - name: group_by
+        in: query
+        description: 分组维度
+        schema:
+          type: string
+          enum:
+          - user
+          - resource
+          - action
+          - policy
+          default: user
+          example: user
       responses:
         '200':
           description: 统计成功
@@ -765,32 +763,31 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PermissionUsageStatistics'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PermissionUsageStatistics'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
 components:
   schemas:
     PermissionVerifyRequest:
       type: object
       required:
-        - subject
-        - resource
-        - action
+      - subject
+      - resource
+      - action
       properties:
         subject:
           type: object
           description: 权限主体信息
           required:
-            - user_id
+          - user_id
           properties:
             user_id:
               type: integer
@@ -801,50 +798,61 @@ components:
               description: 用户角色列表
               items:
                 type: string
-              example: ["engineer", "senior_engineer"]
+              example:
+              - engineer
+              - senior_engineer
             department:
               type: string
               description: 部门
-              example: "ops_team"
+              example: ops_team
             attributes:
               type: object
               description: 用户属性
               example:
-                security_level: "L2"
-                location: "beijing"
-                work_time: "09:00-18:00"
+                security_level: L2
+                location: beijing
+                work_time: 09:00-18:00
         resource:
           type: object
           description: 资源信息
           required:
-            - resource_code
-            - resource_type
+          - resource_code
+          - resource_type
           properties:
             resource_code:
               type: string
               description: 资源编码
-              example: "ticket_management"
+              example: ticket_management
             resource_type:
               type: string
               description: 资源类型
-              enum: [module, api, data, file]
-              example: "module"
+              enum:
+              - module
+              - api
+              - data
+              - file
+              example: module
             resource_id:
               type: string
               description: 资源实例ID
-              example: "TK-20240814-0001"
+              example: TK-20240814-0001
             attributes:
               type: object
               description: 资源属性
               example:
-                data_classification: "internal"
+                data_classification: internal
                 customer_id: 12345
-                priority: "high"
+                priority: high
         action:
           type: string
           description: 操作类型
-          enum: [read, write, delete, execute, approve]
-          example: "read"
+          enum:
+          - read
+          - write
+          - delete
+          - execute
+          - approve
+          example: read
         context:
           type: object
           description: 上下文信息
@@ -852,17 +860,16 @@ components:
             request_ip:
               type: string
               description: 请求IP地址
-              example: "192.168.1.100"
+              example: 192.168.1.100
             request_time:
               type: string
               format: date-time
               description: 请求时间
-              example: "2024-08-15T10:00:00Z"
+              example: '2024-08-15T10:00:00Z'
             session_id:
               type: string
               description: 会话ID
-              example: "sess_abc123"
-
+              example: sess_abc123
     PermissionVerifyResponse:
       type: object
       properties:
@@ -873,8 +880,11 @@ components:
         decision:
           type: string
           description: 决策结果
-          enum: [permit, deny, indeterminate]
-          example: "permit"
+          enum:
+          - permit
+          - deny
+          - indeterminate
+          example: permit
         matched_policies:
           type: array
           description: 匹配的权限策略
@@ -888,17 +898,22 @@ components:
               policy_name:
                 type: string
                 description: 策略名称
-                example: "工程师基础权限"
+                example: 工程师基础权限
               policy_type:
                 type: string
                 description: 策略类型
-                enum: [RBAC, ABAC, PBAC]
-                example: "RBAC"
+                enum:
+                - RBAC
+                - ABAC
+                - PBAC
+                example: RBAC
               effect:
                 type: string
                 description: 策略效果
-                enum: [allow, deny]
-                example: "allow"
+                enum:
+                - allow
+                - deny
+                example: allow
               priority:
                 type: integer
                 description: 策略优先级
@@ -910,7 +925,7 @@ components:
             time_limit:
               type: string
               description: 时间限制
-              example: "09:00-18:00"
+              example: 09:00-18:00
             ip_restriction:
               type: boolean
               description: IP限制
@@ -926,19 +941,18 @@ components:
         trace_id:
           type: string
           description: 链路追踪ID
-          example: "trace_abc123def456"
-
+          example: trace_abc123def456
     BatchPermissionVerifyRequest:
       type: object
       required:
-        - subject
-        - requests
+      - subject
+      - requests
       properties:
         subject:
           type: object
           description: 权限主体信息
           required:
-            - user_id
+          - user_id
           properties:
             user_id:
               type: integer
@@ -949,46 +963,56 @@ components:
               description: 用户角色列表
               items:
                 type: string
-              example: ["engineer", "senior_engineer"]
+              example:
+              - engineer
+              - senior_engineer
             department:
               type: string
               description: 部门
-              example: "ops_team"
+              example: ops_team
         requests:
           type: array
           description: 批量权限验证请求列表
           items:
             type: object
             required:
-              - resource
-              - action
+            - resource
+            - action
             properties:
               resource:
                 type: object
                 description: 资源信息
                 required:
-                  - resource_code
-                  - resource_type
+                - resource_code
+                - resource_type
                 properties:
                   resource_code:
                     type: string
                     description: 资源编码
-                    example: "ticket_management"
+                    example: ticket_management
                   resource_type:
                     type: string
                     description: 资源类型
-                    enum: [module, api, data, file]
-                    example: "module"
+                    enum:
+                    - module
+                    - api
+                    - data
+                    - file
+                    example: module
                   resource_id:
                     type: string
                     description: 资源实例ID
-                    example: "TK-20240814-0001"
+                    example: TK-20240814-0001
               action:
                 type: string
                 description: 操作类型
-                enum: [read, write, delete, execute, approve]
-                example: "read"
-
+                enum:
+                - read
+                - write
+                - delete
+                - execute
+                - approve
+                example: read
     BatchPermissionVerifyResponse:
       type: object
       properties:
@@ -1001,11 +1025,11 @@ components:
               resource_code:
                 type: string
                 description: 资源编码
-                example: "ticket_management"
+                example: ticket_management
               action:
                 type: string
                 description: 操作类型
-                example: "read"
+                example: read
               allowed:
                 type: boolean
                 description: 是否允许访问
@@ -1013,8 +1037,11 @@ components:
               decision:
                 type: string
                 description: 决策结果
-                enum: [permit, deny, indeterminate]
-                example: "permit"
+                enum:
+                - permit
+                - deny
+                - indeterminate
+                example: permit
               matched_policies:
                 type: array
                 description: 匹配的权限策略
@@ -1026,12 +1053,11 @@ components:
                       example: 1001
                     policy_name:
                       type: string
-                      example: "工程师基础权限"
+                      example: 工程师基础权限
         trace_id:
           type: string
           description: 链路追踪ID
-          example: "trace_abc123def456"
-
+          example: trace_abc123def456
     PermissionPolicy:
       type: object
       properties:
@@ -1046,35 +1072,40 @@ components:
         policy_name:
           type: string
           description: 策略名称
-          example: "工程师基础权限"
+          example: 工程师基础权限
         policy_type:
           type: string
           description: 策略类型
-          enum: [RBAC, ABAC, PBAC]
-          example: "RBAC"
+          enum:
+          - RBAC
+          - ABAC
+          - PBAC
+          example: RBAC
         resource_pattern:
           type: string
           description: 资源匹配模式
-          example: "ticket_management.*"
+          example: ticket_management.*
         subject_pattern:
           type: string
           description: 主体匹配模式
-          example: "role:engineer"
+          example: role:engineer
         action_pattern:
           type: string
           description: 操作匹配模式
-          example: "read,write"
+          example: read,write
         conditions:
           type: object
           description: 条件表达式
           example:
-            time_range: "09:00-18:00"
-            location: "beijing"
-            security_level: ">=L2"
+            time_range: 09:00-18:00
+            location: beijing
+            security_level: '>=L2'
         effect:
           type: integer
           description: 效果：1-允许，2-拒绝
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           example: 1
         priority:
           type: integer
@@ -1096,59 +1127,63 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-01T09:00:00Z"
+          example: '2024-08-01T09:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-15T14:30:00Z"
-
+          example: '2024-08-15T14:30:00Z'
     PermissionPolicyCreateRequest:
       type: object
       required:
-        - policy_name
-        - policy_type
-        - resource_pattern
-        - subject_pattern
-        - action_pattern
-        - effect
+      - policy_name
+      - policy_type
+      - resource_pattern
+      - subject_pattern
+      - action_pattern
+      - effect
       properties:
         policy_name:
           type: string
           description: 策略名称
           maxLength: 100
-          example: "工程师基础权限"
+          example: 工程师基础权限
         policy_type:
           type: string
           description: 策略类型
-          enum: [RBAC, ABAC, PBAC]
-          example: "RBAC"
+          enum:
+          - RBAC
+          - ABAC
+          - PBAC
+          example: RBAC
         resource_pattern:
           type: string
           description: 资源匹配模式
           maxLength: 500
-          example: "ticket_management.*"
+          example: ticket_management.*
         subject_pattern:
           type: string
           description: 主体匹配模式
           maxLength: 500
-          example: "role:engineer"
+          example: role:engineer
         action_pattern:
           type: string
           description: 操作匹配模式
           maxLength: 200
-          example: "read,write"
+          example: read,write
         conditions:
           type: object
           description: 条件表达式
           example:
-            time_range: "09:00-18:00"
-            location: "beijing"
-            security_level: ">=L2"
+            time_range: 09:00-18:00
+            location: beijing
+            security_level: '>=L2'
         effect:
           type: integer
           description: 效果：1-允许，2-拒绝
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           example: 1
         priority:
           type: integer
@@ -1162,7 +1197,6 @@ components:
           description: 是否启用
           default: true
           example: true
-
     PermissionPolicyUpdateRequest:
       type: object
       properties:
@@ -1170,38 +1204,43 @@ components:
           type: string
           description: 策略名称
           maxLength: 100
-          example: "工程师基础权限"
+          example: 工程师基础权限
         policy_type:
           type: string
           description: 策略类型
-          enum: [RBAC, ABAC, PBAC]
-          example: "RBAC"
+          enum:
+          - RBAC
+          - ABAC
+          - PBAC
+          example: RBAC
         resource_pattern:
           type: string
           description: 资源匹配模式
           maxLength: 500
-          example: "ticket_management.*"
+          example: ticket_management.*
         subject_pattern:
           type: string
           description: 主体匹配模式
           maxLength: 500
-          example: "role:engineer"
+          example: role:engineer
         action_pattern:
           type: string
           description: 操作匹配模式
           maxLength: 200
-          example: "read,write"
+          example: read,write
         conditions:
           type: object
           description: 条件表达式
           example:
-            time_range: "09:00-18:00"
-            location: "beijing"
-            security_level: ">=L2"
+            time_range: 09:00-18:00
+            location: beijing
+            security_level: '>=L2'
         effect:
           type: integer
           description: 效果：1-允许，2-拒绝
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           example: 1
         priority:
           type: integer
@@ -1213,7 +1252,6 @@ components:
           type: boolean
           description: 是否启用
           example: true
-
     PermissionAssignment:
       type: object
       properties:
@@ -1232,12 +1270,15 @@ components:
         policy_name:
           type: string
           description: 权限策略名称
-          example: "工程师基础权限"
+          example: 工程师基础权限
         subject_type:
           type: string
           description: 主体类型
-          enum: [user, role, group]
-          example: "user"
+          enum:
+          - user
+          - role
+          - group
+          example: user
         subject_id:
           type: integer
           description: 主体ID
@@ -1245,7 +1286,7 @@ components:
         subject_name:
           type: string
           description: 主体名称
-          example: "张三"
+          example: 张三
         resource_id:
           type: integer
           description: 资源ID
@@ -1253,33 +1294,38 @@ components:
         resource_pattern:
           type: string
           description: 资源匹配模式
-          example: "ticket_management.*"
+          example: ticket_management.*
         actions:
           type: array
           description: 允许的操作列表
           items:
             type: string
-          example: ["read", "write"]
+          example:
+          - read
+          - write
         conditions:
           type: object
           description: 附加条件
           example:
-            time_limit: "09:00-18:00"
+            time_limit: 09:00-18:00
             ip_restriction: false
         valid_from:
           type: string
           format: date-time
           description: 生效时间
-          example: "2024-08-15T00:00:00Z"
+          example: '2024-08-15T00:00:00Z'
         valid_to:
           type: string
           format: date-time
           description: 失效时间
-          example: "2024-12-31T23:59:59Z"
+          example: '2024-12-31T23:59:59Z'
         status:
           type: integer
           description: 状态：1-生效，2-暂停，3-过期
-          enum: [1, 2, 3]
+          enum:
+          - 1
+          - 2
+          - 3
           example: 1
         created_by:
           type: integer
@@ -1293,19 +1339,18 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-15T09:00:00Z"
+          example: '2024-08-15T09:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-15T14:30:00Z"
-
+          example: '2024-08-15T14:30:00Z'
     PermissionAssignmentCreateRequest:
       type: object
       required:
-        - policy_id
-        - subject_type
-        - subject_id
+      - policy_id
+      - subject_type
+      - subject_id
       properties:
         policy_id:
           type: integer
@@ -1314,8 +1359,11 @@ components:
         subject_type:
           type: string
           description: 主体类型
-          enum: [user, role, group]
-          example: "user"
+          enum:
+          - user
+          - role
+          - group
+          example: user
         subject_id:
           type: integer
           description: 主体ID
@@ -1328,35 +1376,41 @@ components:
           type: string
           description: 资源匹配模式
           maxLength: 500
-          example: "ticket_management.*"
+          example: ticket_management.*
         actions:
           type: array
           description: 允许的操作列表
           items:
             type: string
-            enum: [read, write, delete, execute, approve]
-          example: ["read", "write"]
+            enum:
+            - read
+            - write
+            - delete
+            - execute
+            - approve
+          example:
+          - read
+          - write
         conditions:
           type: object
           description: 附加条件
           example:
-            time_limit: "09:00-18:00"
+            time_limit: 09:00-18:00
             ip_restriction: false
         valid_from:
           type: string
           format: date-time
           description: 生效时间
-          example: "2024-08-15T00:00:00Z"
+          example: '2024-08-15T00:00:00Z'
         valid_to:
           type: string
           format: date-time
           description: 失效时间
-          example: "2024-12-31T23:59:59Z"
-
+          example: '2024-12-31T23:59:59Z'
     BatchPermissionAssignRequest:
       type: object
       required:
-        - assignments
+      - assignments
       properties:
         assignments:
           type: array
@@ -1364,9 +1418,9 @@ components:
           items:
             type: object
             required:
-              - policy_id
-              - subject_type
-              - subject_id
+            - policy_id
+            - subject_type
+            - subject_id
             properties:
               policy_id:
                 type: integer
@@ -1375,8 +1429,11 @@ components:
               subject_type:
                 type: string
                 description: 主体类型
-                enum: [user, role, group]
-                example: "user"
+                enum:
+                - user
+                - role
+                - group
+                example: user
               subject_id:
                 type: integer
                 description: 主体ID
@@ -1390,36 +1447,44 @@ components:
                 description: 允许的操作列表
                 items:
                   type: string
-                  enum: [read, write, delete, execute, approve]
-                example: ["read", "write"]
+                  enum:
+                  - read
+                  - write
+                  - delete
+                  - execute
+                  - approve
+                example:
+                - read
+                - write
               valid_from:
                 type: string
                 format: date-time
                 description: 生效时间
-                example: "2024-08-15T00:00:00Z"
+                example: '2024-08-15T00:00:00Z'
               valid_to:
                 type: string
                 format: date-time
                 description: 失效时间
-                example: "2024-12-31T23:59:59Z"
-
+                example: '2024-12-31T23:59:59Z'
     BatchPermissionRevokeRequest:
       type: object
       required:
-        - assignment_ids
+      - assignment_ids
       properties:
         assignment_ids:
           type: array
           description: 权限分配ID列表
           items:
             type: integer
-          example: [2001, 2002, 2003]
+          example:
+          - 2001
+          - 2002
+          - 2003
         reason:
           type: string
           description: 回收原因
           maxLength: 500
-          example: "用户离职，回收所有权限"
-
+          example: 用户离职，回收所有权限
     BatchOperationResult:
       type: object
       properties:
@@ -1448,7 +1513,7 @@ components:
               message:
                 type: string
                 description: 处理消息
-                example: "权限分配成功"
+                example: 权限分配成功
         failed_items:
           type: array
           description: 失败项列表
@@ -1462,12 +1527,11 @@ components:
               error_code:
                 type: string
                 description: 错误码
-                example: "PERMISSION_CONFLICT"
+                example: PERMISSION_CONFLICT
               error_message:
                 type: string
                 description: 错误消息
-                example: "权限策略冲突"
-
+                example: 权限策略冲突
     PermissionAuditLog:
       type: object
       properties:
@@ -1482,7 +1546,7 @@ components:
         trace_id:
           type: string
           description: 链路追踪ID
-          example: "trace_abc123def456"
+          example: trace_abc123def456
         user_id:
           type: integer
           description: 用户ID
@@ -1490,23 +1554,25 @@ components:
         user_name:
           type: string
           description: 用户名
-          example: "张三"
+          example: 张三
         resource_code:
           type: string
           description: 资源编码
-          example: "ticket_management"
+          example: ticket_management
         resource_type:
           type: string
           description: 资源类型
-          example: "module"
+          example: module
         action:
           type: string
           description: 操作类型
-          example: "read"
+          example: read
         permission_result:
           type: integer
           description: 权限验证结果：1-允许，2-拒绝
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           example: 1
         matched_policies:
           type: array
@@ -1519,23 +1585,23 @@ components:
                 example: 1001
               policy_name:
                 type: string
-                example: "工程师基础权限"
+                example: 工程师基础权限
               effect:
                 type: string
-                example: "allow"
+                example: allow
         request_ip:
           type: string
           description: 请求IP地址
-          example: "192.168.1.100"
+          example: 192.168.1.100
         user_agent:
           type: string
           description: 用户代理
-          example: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+          example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
         request_time:
           type: string
           format: date-time
           description: 请求时间
-          example: "2024-08-15T10:00:00Z"
+          example: '2024-08-15T10:00:00Z'
         response_time:
           type: integer
           description: 响应时间(ms)
@@ -1543,29 +1609,32 @@ components:
         error_code:
           type: string
           description: 错误码
-          example: "PERMISSION_DENIED"
+          example: PERMISSION_DENIED
         error_message:
           type: string
           description: 错误信息
-          example: "用户无权访问该资源"
+          example: 用户无权访问该资源
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-15T10:00:00Z"
-
+          example: '2024-08-15T10:00:00Z'
     PermissionAuditReport:
       type: object
       properties:
         report_id:
           type: string
           description: 报告ID
-          example: "RPT-20240815-001"
+          example: RPT-20240815-001
         report_type:
           type: string
           description: 报告类型
-          enum: [daily, weekly, monthly, custom]
-          example: "monthly"
+          enum:
+          - daily
+          - weekly
+          - monthly
+          - custom
+          example: monthly
         period:
           type: object
           description: 报告周期
@@ -1573,11 +1642,11 @@ components:
             start_date:
               type: string
               format: date
-              example: "2024-08-01"
+              example: '2024-08-01'
             end_date:
               type: string
               format: date
-              example: "2024-08-31"
+              example: '2024-08-31'
         summary:
           type: object
           description: 汇总信息
@@ -1613,7 +1682,7 @@ components:
                 example: 1001
               user_name:
                 type: string
-                example: "张三"
+                example: 张三
               request_count:
                 type: integer
                 example: 1500
@@ -1625,7 +1694,7 @@ components:
             properties:
               resource_code:
                 type: string
-                example: "ticket_management"
+                example: ticket_management
               request_count:
                 type: integer
                 example: 8500
@@ -1637,34 +1706,33 @@ components:
             properties:
               event_type:
                 type: string
-                example: "PERMISSION_DENIED"
+                example: PERMISSION_DENIED
               count:
                 type: integer
                 example: 25
               description:
                 type: string
-                example: "权限拒绝事件"
+                example: 权限拒绝事件
         generated_at:
           type: string
           format: date-time
           description: 报告生成时间
-          example: "2024-08-15T14:30:00Z"
+          example: '2024-08-15T14:30:00Z'
         download_url:
           type: string
           description: 下载链接（非JSON格式时）
-          example: "https://cdn.example.com/reports/RPT-20240815-001.pdf"
-
+          example: https://cdn.example.com/reports/RPT-20240815-001.pdf
     PermissionUsageStatistics:
       type: object
       properties:
         time_range:
           type: string
           description: 时间范围
-          example: "month"
+          example: month
         group_by:
           type: string
           description: 分组维度
-          example: "user"
+          example: user
         total_count:
           type: integer
           description: 总计数
@@ -1678,11 +1746,11 @@ components:
               group_key:
                 type: string
                 description: 分组键
-                example: "张三"
+                example: 张三
               group_value:
                 type: string
                 description: 分组值
-                example: "1001"
+                example: '1001'
               request_count:
                 type: integer
                 description: 请求次数
@@ -1712,7 +1780,7 @@ components:
               date:
                 type: string
                 format: date
-                example: "2024-08-15"
+                example: '2024-08-15'
               request_count:
                 type: integer
                 example: 4200

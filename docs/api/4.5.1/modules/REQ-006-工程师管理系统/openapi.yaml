@@ -3,98 +3,100 @@ info:
   title: IT运维门户系统 API
   version: 1.0.0
   description: REQ-006 工程师管理系统 API 规范文档
-
 tags:
-  - name: engineer-profile
-    description: 工程师档案管理
-  - name: engineer-skills
-    description: 技能体系管理
-  - name: engineer-schedule
-    description: 智能排班调度
-  - name: engineer-status
-    description: 实时状态跟踪
-  - name: engineer-performance
-    description: 绩效评估管理
-  - name: engineer-training
-    description: 培训管理
-  - name: engineer-attendance
-    description: 考勤管理
-  - name: engineer-analytics
-    description: 数据统计分析
-  - name: engineer-batch
-    description: 批量数据管理
-
+- name: engineer-profile
+  description: 工程师档案管理
+- name: engineer-skills
+  description: 技能体系管理
+- name: engineer-schedule
+  description: 智能排班调度
+- name: engineer-status
+  description: 实时状态跟踪
+- name: engineer-performance
+  description: 绩效评估管理
+- name: engineer-training
+  description: 培训管理
+- name: engineer-attendance
+  description: 考勤管理
+- name: engineer-analytics
+  description: 数据统计分析
+- name: engineer-batch
+  description: 批量数据管理
 paths:
   /api/v1/engineers:
     get:
       tags:
-        - engineer-profile
+      - engineer-profile
       summary: 查询工程师列表
       description: 支持多条件组合查询和分页显示
       operationId: engineer_list
       parameters:
-        - name: department_id
-          in: query
-          description: 部门ID
-          schema:
-            type: integer
-            example: 101
-        - name: status
-          in: query
-          description: 工程师状态
-          schema:
-            type: integer
-            enum: [1, 2, 3, 4]
-            example: 1
-        - name: skill_code
-          in: query
-          description: 技能代码
-          schema:
+      - name: department_id
+        in: query
+        description: 部门ID
+        schema:
+          type: integer
+          example: 101
+      - name: status
+        in: query
+        description: 工程师状态
+        schema:
+          type: array
+          items: &id001
             type: string
-            example: "linux"
-        - name: level
-          in: query
-          description: 工程师级别
-          schema:
-            type: integer
-            enum: [1, 2, 3, 4, 5]
-            example: 3
-        - name: online_status
-          in: query
-          description: 在线状态
-          schema:
+      - name: skill_code
+        in: query
+        description: 技能代码
+        schema:
+          type: string
+          example: linux
+      - name: level
+        in: query
+        description: 工程师级别
+        schema:
+          type: array
+          items:
             type: string
-            enum: ["online", "offline", "busy", "away"]
-            example: "online"
-        - name: keyword
-          in: query
-          description: 关键词搜索（姓名、工号、邮箱）
-          schema:
-            type: string
-            example: "张三"
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页数量
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: sort
-          in: query
-          description: 排序字段
-          schema:
-            type: string
-            example: "level,desc"
+      - name: online_status
+        in: query
+        description: 在线状态
+        schema:
+          type: string
+          enum:
+          - online
+          - offline
+          - busy
+          - away
+          example: online
+      - name: keyword
+        in: query
+        description: 关键词搜索（姓名、工号、邮箱）
+        schema:
+          type: string
+          example: 张三
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页数量
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: sort
+        in: query
+        description: 排序字段
+        schema:
+          type: string
+          example: level,desc
       responses:
         '200':
           description: 查询成功
@@ -104,32 +106,32 @@ paths:
                 $ref: '#/components/schemas/PagedResponse'
               example:
                 code: 200
-                message: "查询成功"
+                message: 查询成功
                 data:
                   total: 45
                   page: 1
                   size: 20
                   pages: 3
                   items:
-                    - engineer_id: 1001
-                      employee_no: "ENG001"
-                      real_name: "张三"
-                      department_name: "运维部"
-                      position: "高级运维工程师"
-                      level: 3
-                      phone: "138****8000"
-                      email: "zhangsan@company.com"
-                      status: 1
-                      current_workload: 3
-                      online_status: "online"
-                      last_active_time: "2025-08-14T14:25:00Z"
-                      skills:
-                        - skill_code: "linux"
-                          skill_name: "Linux系统管理"
-                          skill_level: 3
-                          certification_status: 2
-                timestamp: "2025-08-14T14:30:00Z"
-                request_id: "req_123456790"
+                  - engineer_id: 1001
+                    employee_no: ENG001
+                    real_name: 张三
+                    department_name: 运维部
+                    position: 高级运维工程师
+                    level: 3
+                    phone: 138****8000
+                    email: zhangsan@company.com
+                    status: 1
+                    current_workload: 3
+                    online_status: online
+                    last_active_time: '2025-08-14T14:25:00Z'
+                    skills:
+                    - skill_code: linux
+                      skill_name: Linux系统管理
+                      skill_level: 3
+                      certification_status: 2
+                timestamp: '2025-08-14T14:30:00Z'
+                request_id: req_123456790
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -138,10 +140,9 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
     post:
       tags:
-        - engineer-profile
+      - engineer-profile
       summary: 创建工程师档案
       description: 创建新的工程师档案，包含基本信息和技能信息
       operationId: engineer_create
@@ -152,26 +153,26 @@ paths:
             schema:
               $ref: '#/components/schemas/EngineerCreateRequest'
             example:
-              employee_no: "ENG001"
-              real_name: "张三"
+              employee_no: ENG001
+              real_name: 张三
               gender: 1
-              birth_date: "1990-05-15"
-              phone: "13800138000"
-              email: "zhangsan@company.com"
+              birth_date: '1990-05-15'
+              phone: '13800138000'
+              email: zhangsan@company.com
               department_id: 101
-              position: "运维工程师"
+              position: 运维工程师
               level: 2
-              hire_date: "2024-08-01"
-              work_location: "北京总部"
+              hire_date: '2024-08-01'
+              work_location: 北京总部
               skills:
-                - skill_code: "linux"
-                  skill_level: 3
-                  experience_years: 3.5
-                  certification_status: 2
-                - skill_code: "docker"
-                  skill_level: 2
-                  experience_years: 2.0
-                  certification_status: 1
+              - skill_code: linux
+                skill_level: 3
+                experience_years: 3.5
+                certification_status: 2
+              - skill_code: docker
+                skill_level: 2
+                experience_years: 2.0
+                certification_status: 1
       responses:
         '200':
           description: 创建成功
@@ -181,15 +182,15 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
               example:
                 code: 200
-                message: "创建成功"
+                message: 创建成功
                 data:
                   engineer_id: 1001
-                  employee_no: "ENG001"
-                  real_name: "张三"
+                  employee_no: ENG001
+                  real_name: 张三
                   status: 1
-                  created_at: "2025-08-14T14:30:00Z"
-                timestamp: "2025-08-14T14:30:00Z"
-                request_id: "req_123456789"
+                  created_at: '2025-08-14T14:30:00Z'
+                timestamp: '2025-08-14T14:30:00Z'
+                request_id: req_123456789
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -200,22 +201,21 @@ paths:
           $ref: '#/components/responses/Conflict'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
   /api/v1/engineers/{id}:
     get:
       tags:
-        - engineer-profile
+      - engineer-profile
       summary: 获取工程师详情
       description: 根据工程师ID获取详细信息
       operationId: engineer_detail
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工程师ID
-          schema:
-            type: integer
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 工程师ID
+        schema:
+          type: integer
+          example: 1001
       responses:
         '200':
           description: 查询成功
@@ -225,32 +225,32 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
               example:
                 code: 200
-                message: "查询成功"
+                message: 查询成功
                 data:
                   engineer_id: 1001
-                  employee_no: "ENG001"
-                  real_name: "张三"
+                  employee_no: ENG001
+                  real_name: 张三
                   gender: 1
-                  birth_date: "1990-05-15"
-                  phone: "138****8000"
-                  email: "zhangsan@company.com"
+                  birth_date: '1990-05-15'
+                  phone: 138****8000
+                  email: zhangsan@company.com
                   department_id: 101
-                  department_name: "运维部"
-                  position: "高级运维工程师"
+                  department_name: 运维部
+                  position: 高级运维工程师
                   level: 3
-                  hire_date: "2022-08-01"
+                  hire_date: '2022-08-01'
                   status: 1
-                  work_location: "北京总部"
+                  work_location: 北京总部
                   current_workload: 3
-                  online_status: "online"
-                  last_active_time: "2025-08-14T14:25:00Z"
+                  online_status: online
+                  last_active_time: '2025-08-14T14:25:00Z'
                   latitude: 39.9042
                   longitude: 116.4074
-                  location_updated_at: "2025-08-14T14:20:00Z"
-                  created_at: "2022-08-01T09:00:00Z"
-                  updated_at: "2025-08-14T14:30:00Z"
-                timestamp: "2025-08-14T14:30:00Z"
-                request_id: "req_123456791"
+                  location_updated_at: '2025-08-14T14:20:00Z'
+                  created_at: '2022-08-01T09:00:00Z'
+                  updated_at: '2025-08-14T14:30:00Z'
+                timestamp: '2025-08-14T14:30:00Z'
+                request_id: req_123456791
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -261,21 +261,20 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
     put:
       tags:
-        - engineer-profile
+      - engineer-profile
       summary: 更新工程师档案
       description: 更新工程师基本信息
       operationId: engineer_update
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工程师ID
-          schema:
-            type: integer
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 工程师ID
+        schema:
+          type: integer
+          example: 1001
       requestBody:
         required: true
         content:
@@ -283,13 +282,13 @@ paths:
             schema:
               $ref: '#/components/schemas/EngineerUpdateRequest'
             example:
-              real_name: "张三"
-              phone: "13800138000"
-              email: "zhangsan@company.com"
+              real_name: 张三
+              phone: '13800138000'
+              email: zhangsan@company.com
               department_id: 101
-              position: "高级运维工程师"
+              position: 高级运维工程师
               level: 3
-              work_location: "北京总部"
+              work_location: 北京总部
       responses:
         '200':
           description: 更新成功
@@ -299,12 +298,12 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
               example:
                 code: 200
-                message: "更新成功"
+                message: 更新成功
                 data:
                   engineer_id: 1001
-                  updated_at: "2025-08-14T14:30:00Z"
-                timestamp: "2025-08-14T14:30:00Z"
-                request_id: "req_123456792"
+                  updated_at: '2025-08-14T14:30:00Z'
+                timestamp: '2025-08-14T14:30:00Z'
+                request_id: req_123456792
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -315,21 +314,20 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
     delete:
       tags:
-        - engineer-profile
+      - engineer-profile
       summary: 删除工程师档案
       description: 软删除工程师档案（仅限管理员）
       operationId: engineer_delete
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工程师ID
-          schema:
-            type: integer
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 工程师ID
+        schema:
+          type: integer
+          example: 1001
       responses:
         '200':
           description: 删除成功
@@ -339,12 +337,12 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
               example:
                 code: 200
-                message: "删除成功"
+                message: 删除成功
                 data:
                   engineer_id: 1001
-                  deleted_at: "2025-08-14T14:30:00Z"
-                timestamp: "2025-08-14T14:30:00Z"
-                request_id: "req_123456793"
+                  deleted_at: '2025-08-14T14:30:00Z'
+                timestamp: '2025-08-14T14:30:00Z'
+                request_id: req_123456793
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -355,22 +353,21 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
   /api/v1/engineers/{id}/status:
     put:
       tags:
-        - engineer-status
+      - engineer-status
       summary: 更新工程师状态
       description: 更新工程师在线状态、位置信息等
       operationId: engineer_status_update
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工程师ID
-          schema:
-            type: integer
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 工程师ID
+        schema:
+          type: integer
+          example: 1001
       requestBody:
         required: true
         content:
@@ -378,12 +375,12 @@ paths:
             schema:
               $ref: '#/components/schemas/EngineerStatusUpdateRequest'
             example:
-              online_status: "online"
+              online_status: online
               location:
                 latitude: 39.9042
                 longitude: 116.4074
-                address: "北京市朝阳区"
-              work_status: "available"
+                address: 北京市朝阳区
+              work_status: available
       responses:
         '200':
           description: 状态更新成功
@@ -393,17 +390,17 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
               example:
                 code: 200
-                message: "状态更新成功"
+                message: 状态更新成功
                 data:
                   engineer_id: 1001
-                  online_status: "online"
+                  online_status: online
                   location:
                     latitude: 39.9042
                     longitude: 116.4074
-                    address: "北京市朝阳区"
-                  updated_at: "2025-08-14T14:30:00Z"
-                timestamp: "2025-08-14T14:30:00Z"
-                request_id: "req_123456794"
+                    address: 北京市朝阳区
+                  updated_at: '2025-08-14T14:30:00Z'
+                timestamp: '2025-08-14T14:30:00Z'
+                request_id: req_123456794
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -414,22 +411,21 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
   /api/v1/engineers/{id}/skills:
     get:
       tags:
-        - engineer-skills
+      - engineer-skills
       summary: 获取工程师技能列表
       description: 获取指定工程师的所有技能信息
       operationId: engineer_skills_list
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工程师ID
-          schema:
-            type: integer
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 工程师ID
+        schema:
+          type: integer
+          example: 1001
       responses:
         '200':
           description: 查询成功
@@ -439,25 +435,25 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
               example:
                 code: 200
-                message: "查询成功"
+                message: 查询成功
                 data:
                   engineer_id: 1001
                   skills:
-                    - skill_id: 2001
-                      skill_code: "linux"
-                      skill_name: "Linux系统管理"
-                      skill_level: 3
-                      experience_years: 3.5
-                      certification_status: 2
-                      certification_date: "2024-06-15"
-                      certification_expiry: "2026-06-15"
-                      certification_authority: "Red Hat"
-                      proficiency_score: 85.5
-                      last_used_date: "2025-08-14"
-                      created_at: "2022-08-01T09:00:00Z"
-                      updated_at: "2025-08-14T14:30:00Z"
-                timestamp: "2025-08-14T14:30:00Z"
-                request_id: "req_123456795"
+                  - skill_id: 2001
+                    skill_code: linux
+                    skill_name: Linux系统管理
+                    skill_level: 3
+                    experience_years: 3.5
+                    certification_status: 2
+                    certification_date: '2024-06-15'
+                    certification_expiry: '2026-06-15'
+                    certification_authority: Red Hat
+                    proficiency_score: 85.5
+                    last_used_date: '2025-08-14'
+                    created_at: '2022-08-01T09:00:00Z'
+                    updated_at: '2025-08-14T14:30:00Z'
+                timestamp: '2025-08-14T14:30:00Z'
+                request_id: req_123456795
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -468,21 +464,20 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
     put:
       tags:
-        - engineer-skills
+      - engineer-skills
       summary: 批量更新工程师技能
       description: 批量更新工程师的技能信息
       operationId: engineer_skills_update
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工程师ID
-          schema:
-            type: integer
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 工程师ID
+        schema:
+          type: integer
+          example: 1001
       requestBody:
         required: true
         content:
@@ -491,13 +486,13 @@ paths:
               $ref: '#/components/schemas/EngineerSkillsUpdateRequest'
             example:
               skills:
-                - skill_code: "kubernetes"
-                  skill_level: 3
-                  experience_years: 2.5
-                  certification_status: 2
-                  certification_date: "2024-06-15"
-                  certification_expiry: "2026-06-15"
-                  proficiency_score: 85.5
+              - skill_code: kubernetes
+                skill_level: 3
+                experience_years: 2.5
+                certification_status: 2
+                certification_date: '2024-06-15'
+                certification_expiry: '2026-06-15'
+                proficiency_score: 85.5
       responses:
         '200':
           description: 技能更新成功
@@ -507,7 +502,7 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
               example:
                 code: 200
-                message: "技能更新成功"
+                message: 技能更新成功
                 data:
                   engineer_id: 1001
                   updated_skills: 1
@@ -515,8 +510,8 @@ paths:
                     total_skills: 5
                     certified_skills: 3
                     avg_skill_level: 2.8
-                timestamp: "2025-08-14T14:30:00Z"
-                request_id: "req_123456796"
+                timestamp: '2025-08-14T14:30:00Z'
+                request_id: req_123456796
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -527,57 +522,61 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
   /api/v1/engineers/skills/match:
     get:
       tags:
-        - engineer-skills
+      - engineer-skills
       summary: 查询技能匹配工程师
       description: 根据技能要求查询匹配的工程师列表
       operationId: engineer_skills_match
       parameters:
-        - name: skill_codes
-          in: query
-          required: true
-          description: 技能代码列表（逗号分隔）
-          schema:
-            type: string
-            example: "linux,docker,kubernetes"
-        - name: min_level
-          in: query
-          description: 最低技能等级
-          schema:
-            type: integer
-            enum: [1, 2, 3, 4, 5]
-            default: 1
-            example: 2
-        - name: certification_required
-          in: query
-          description: 是否需要认证
-          schema:
-            type: boolean
-            default: false
-            example: true
-        - name: available_only
-          in: query
-          description: 仅查询可用工程师
-          schema:
-            type: boolean
-            default: false
-            example: true
-        - name: location
-          in: query
-          description: 地理位置（经纬度，逗号分隔）
-          schema:
-            type: string
-            example: "39.9042,116.4074"
-        - name: max_distance
-          in: query
-          description: 最大距离（公里）
-          schema:
-            type: number
-            default: 50
-            example: 20
+      - name: skill_codes
+        in: query
+        required: true
+        description: 技能代码列表（逗号分隔）
+        schema:
+          type: string
+          example: linux,docker,kubernetes
+      - name: min_level
+        in: query
+        description: 最低技能等级
+        schema:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          default: 1
+          example: 2
+      - name: certification_required
+        in: query
+        description: 是否需要认证
+        schema:
+          type: boolean
+          default: false
+          example: true
+      - name: available_only
+        in: query
+        description: 仅查询可用工程师
+        schema:
+          type: boolean
+          default: false
+          example: true
+      - name: location
+        in: query
+        description: 地理位置（经纬度，逗号分隔）
+        schema:
+          type: string
+          example: 39.9042,116.4074
+      - name: max_distance
+        in: query
+        description: 最大距离（公里）
+        schema:
+          type: number
+          default: 50
+          example: 20
       responses:
         '200':
           description: 查询成功
@@ -587,22 +586,22 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
               example:
                 code: 200
-                message: "查询成功"
+                message: 查询成功
                 data:
                   matched_engineers:
-                    - engineer_id: 1001
-                      real_name: "张三"
-                      match_score: 95.5
-                      matched_skills:
-                        - skill_code: "linux"
-                          skill_level: 3
-                          certification_status: 2
-                      current_workload: 3
-                      online_status: "online"
-                      distance: 5.2
+                  - engineer_id: 1001
+                    real_name: 张三
+                    match_score: 95.5
+                    matched_skills:
+                    - skill_code: linux
+                      skill_level: 3
+                      certification_status: 2
+                    current_workload: 3
+                    online_status: online
+                    distance: 5.2
                   total_matched: 15
-                timestamp: "2025-08-14T14:30:00Z"
-                request_id: "req_123456797"
+                timestamp: '2025-08-14T14:30:00Z'
+                request_id: req_123456797
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -611,50 +610,53 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
   /api/v1/schedules:
     get:
       tags:
-        - engineer-schedule
+      - engineer-schedule
       summary: 查询排班计划
       description: 查询指定时间范围内的排班计划
       operationId: schedule_list
       parameters:
-        - name: start_date
-          in: query
-          required: true
-          description: 开始日期
-          schema:
-            type: string
-            format: date
-            example: "2025-08-15"
-        - name: end_date
-          in: query
-          required: true
-          description: 结束日期
-          schema:
-            type: string
-            format: date
-            example: "2025-08-21"
-        - name: engineer_id
-          in: query
-          description: 工程师ID
-          schema:
-            type: integer
-            example: 1001
-        - name: department_id
-          in: query
-          description: 部门ID
-          schema:
-            type: integer
-            example: 101
-        - name: shift_type
-          in: query
-          description: 班次类型
-          schema:
-            type: string
-            enum: ["day", "night", "standby", "oncall"]
-            example: "day"
+      - name: start_date
+        in: query
+        required: true
+        description: 开始日期
+        schema:
+          type: string
+          format: date
+          example: '2025-08-15'
+      - name: end_date
+        in: query
+        required: true
+        description: 结束日期
+        schema:
+          type: string
+          format: date
+          example: '2025-08-21'
+      - name: engineer_id
+        in: query
+        description: 工程师ID
+        schema:
+          type: integer
+          example: 1001
+      - name: department_id
+        in: query
+        description: 部门ID
+        schema:
+          type: integer
+          example: 101
+      - name: shift_type
+        in: query
+        description: 班次类型
+        schema:
+          type: string
+          enum:
+          - day
+          - night
+          - standby
+          - oncall
+          example: day
       responses:
         '200':
           description: 查询成功
@@ -664,28 +666,31 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
               example:
                 code: 200
-                message: "查询成功"
+                message: 查询成功
                 data:
                   schedules:
-                    - schedule_id: 3001
-                      engineer_id: 1001
-                      engineer_name: "张三"
-                      schedule_date: "2025-08-15"
-                      shift_type: "day"
-                      start_time: "09:00"
-                      end_time: "17:00"
-                      work_location: "北京总部"
-                      priority_level: 2
-                      required_skills: ["linux", "docker", "kubernetes"]
-                      status: 2
-                      conflict_status: 0
-                      auto_assigned: true
-                      assignment_reason: "技能匹配度95%，工作负载适中"
-                      created_at: "2025-08-14T14:30:00Z"
-                      updated_at: "2025-08-14T14:30:00Z"
+                  - schedule_id: 3001
+                    engineer_id: 1001
+                    engineer_name: 张三
+                    schedule_date: '2025-08-15'
+                    shift_type: day
+                    start_time: 09:00
+                    end_time: '17:00'
+                    work_location: 北京总部
+                    priority_level: 2
+                    required_skills:
+                    - linux
+                    - docker
+                    - kubernetes
+                    status: 2
+                    conflict_status: 0
+                    auto_assigned: true
+                    assignment_reason: 技能匹配度95%，工作负载适中
+                    created_at: '2025-08-14T14:30:00Z'
+                    updated_at: '2025-08-14T14:30:00Z'
                   total: 25
-                timestamp: "2025-08-14T14:30:00Z"
-                request_id: "req_123456798"
+                timestamp: '2025-08-14T14:30:00Z'
+                request_id: req_123456798
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -694,10 +699,9 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
     post:
       tags:
-        - engineer-schedule
+      - engineer-schedule
       summary: 生成智能排班
       description: 基于多规则算法生成智能排班计划
       operationId: schedule_generate
@@ -709,8 +713,8 @@ paths:
               $ref: '#/components/schemas/ScheduleGenerateRequest'
             example:
               period:
-                start_date: "2025-09-01"
-                end_date: "2025-09-30"
+                start_date: '2025-09-01'
+                end_date: '2025-09-30'
               rules:
                 sla_priority: true
                 skill_matching: true
@@ -721,7 +725,9 @@ paths:
                 max_consecutive_days: 5
                 min_rest_hours: 12
                 max_weekly_hours: 40
-              department_ids: [101, 102]
+              department_ids:
+              - 101
+              - 102
       responses:
         '200':
           description: 排班生成成功
@@ -731,21 +737,21 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
               example:
                 code: 200
-                message: "排班生成成功"
+                message: 排班生成成功
                 data:
-                  schedule_id: "SCH-202409-001"
-                  period: "2024-09"
+                  schedule_id: SCH-202409-001
+                  period: 2024-09
                   total_schedules: 450
                   conflicts_detected: 2
                   coverage_rate: 98.5
-                  generated_at: "2025-08-14T14:30:00Z"
+                  generated_at: '2025-08-14T14:30:00Z'
                   conflicts:
-                    - engineer_id: 1001
-                      date: "2025-09-15"
-                      conflict_type: "skill_shortage"
-                      description: "缺少数据库专家"
-                timestamp: "2025-08-14T14:30:00Z"
-                request_id: "req_123456799"
+                  - engineer_id: 1001
+                    date: '2025-09-15'
+                    conflict_type: skill_shortage
+                    description: 缺少数据库专家
+                timestamp: '2025-08-14T14:30:00Z'
+                request_id: req_123456799
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -754,58 +760,60 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
   /api/v1/performance/evaluations:
     get:
       tags:
-        - engineer-performance
+      - engineer-performance
       summary: 查询绩效评估列表
       description: 查询绩效评估记录
       operationId: performance_evaluation_list
       parameters:
-        - name: engineer_id
-          in: query
-          description: 工程师ID
-          schema:
-            type: integer
-            example: 1001
-        - name: evaluation_period
-          in: query
-          description: 评估周期
-          schema:
-            type: string
-            example: "2024Q3"
-        - name: evaluation_type
-          in: query
-          description: 评估类型
-          schema:
-            type: integer
-            enum: [1, 2, 3, 4]
-            example: 2
-        - name: status
-          in: query
-          description: 评估状态
-          schema:
-            type: integer
-            enum: [1, 2, 3, 4]
-            example: 3
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页数量
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
+      - name: engineer_id
+        in: query
+        description: 工程师ID
+        schema:
+          type: integer
+          example: 1001
+      - name: evaluation_period
+        in: query
+        description: 评估周期
+        schema:
+          type: string
+          example: 2024Q3
+      - name: evaluation_type
+        in: query
+        description: 评估类型
+        schema:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          example: 2
+      - name: status
+        in: query
+        description: 评估状态
+        schema:
+          type: array
+          items: *id001
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页数量
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
       responses:
         '200':
           description: 查询成功
@@ -815,26 +823,26 @@ paths:
                 $ref: '#/components/schemas/PagedResponse'
               example:
                 code: 200
-                message: "查询成功"
+                message: 查询成功
                 data:
                   total: 12
                   page: 1
                   size: 20
                   pages: 1
                   items:
-                    - evaluation_id: 4001
-                      engineer_id: 1001
-                      engineer_name: "张三"
-                      evaluation_period: "2024Q3"
-                      evaluation_type: 2
-                      final_score: 91.8
-                      performance_level: "优秀"
-                      ranking_percentile: 85.0
-                      status: 3
-                      created_at: "2024-10-01T09:00:00Z"
-                      updated_at: "2024-10-15T17:00:00Z"
-                timestamp: "2025-08-14T14:30:00Z"
-                request_id: "req_123456800"
+                  - evaluation_id: 4001
+                    engineer_id: 1001
+                    engineer_name: 张三
+                    evaluation_period: 2024Q3
+                    evaluation_type: 2
+                    final_score: 91.8
+                    performance_level: 优秀
+                    ranking_percentile: 85.0
+                    status: 3
+                    created_at: '2024-10-01T09:00:00Z'
+                    updated_at: '2024-10-15T17:00:00Z'
+                timestamp: '2025-08-14T14:30:00Z'
+                request_id: req_123456800
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -843,11 +851,10 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
   /api/v1/engineers/batch:
     post:
       tags:
-        - engineer-batch
+      - engineer-batch
       summary: 批量导入工程师
       description: 通过Excel/CSV文件批量导入工程师数据
       operationId: engineer_batch_import
@@ -864,8 +871,10 @@ paths:
                   description: Excel或CSV文件
                 template_type:
                   type: string
-                  enum: ["basic", "full"]
-                  default: "basic"
+                  enum:
+                  - basic
+                  - full
+                  default: basic
                   description: 模板类型
                 validate_only:
                   type: boolean
@@ -880,25 +889,25 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
               example:
                 code: 200
-                message: "批量导入成功"
+                message: 批量导入成功
                 data:
                   total_records: 100
                   success_count: 95
                   failed_count: 5
-                  import_id: "IMP-20250814-001"
+                  import_id: IMP-20250814-001
                   success_records:
-                    - index: 1
-                      engineer_id: 1001
-                      employee_no: "ENG001"
-                      status: "success"
+                  - index: 1
+                    engineer_id: 1001
+                    employee_no: ENG001
+                    status: success
                   failed_records:
-                    - index: 10
-                      error_code: 40002
-                      error_message: "工号已存在"
-                      data:
-                        employee_no: "ENG010"
-                timestamp: "2025-08-14T14:30:00Z"
-                request_id: "req_123456801"
+                  - index: 10
+                    error_code: 40002
+                    error_message: 工号已存在
+                    data:
+                      employee_no: ENG010
+                timestamp: '2025-08-14T14:30:00Z'
+                request_id: req_123456801
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -907,11 +916,10 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
   /api/v1/engineers/export:
     post:
       tags:
-        - engineer-batch
+      - engineer-batch
       summary: 导出工程师数据
       description: 导出工程师数据为Excel文件
       operationId: engineer_export
@@ -922,18 +930,25 @@ paths:
             schema:
               $ref: '#/components/schemas/EngineerExportRequest'
             example:
-              format: "excel"
+              format: excel
               filters:
-                department_ids: [101, 102]
-                status: [1, 4]
-                level: [2, 3, 4]
+                department_ids:
+                - 101
+                - 102
+                status:
+                - 1
+                - 4
+                level:
+                - 2
+                - 3
+                - 4
               fields:
-                - "employee_no"
-                - "real_name"
-                - "department_name"
-                - "position"
-                - "level"
-                - "skills"
+              - employee_no
+              - real_name
+              - department_name
+              - position
+              - level
+              - skills
               include_skills: true
               include_performance: false
       responses:
@@ -945,16 +960,16 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
               example:
                 code: 200
-                message: "导出成功"
+                message: 导出成功
                 data:
-                  export_id: "EXP-20250814-001"
-                  file_url: "https://cdn.example.com/exports/engineers_20250814.xlsx"
+                  export_id: EXP-20250814-001
+                  file_url: https://cdn.example.com/exports/engineers_20250814.xlsx
                   file_size: 2048576
                   record_count: 150
-                  generated_at: "2025-08-14T14:30:00Z"
-                  expires_at: "2025-08-21T14:30:00Z"
-                timestamp: "2025-08-14T14:30:00Z"
-                request_id: "req_123456802"
+                  generated_at: '2025-08-14T14:30:00Z'
+                  expires_at: '2025-08-21T14:30:00Z'
+                timestamp: '2025-08-14T14:30:00Z'
+                request_id: req_123456802
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -963,29 +978,32 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
   /api/v1/engineers/analytics/summary:
     get:
       tags:
-        - engineer-analytics
+      - engineer-analytics
       summary: 工程师数据统计概览
       description: 获取工程师数据的统计概览信息
       operationId: engineer_analytics_summary
       parameters:
-        - name: department_id
-          in: query
-          description: 部门ID
-          schema:
-            type: integer
-            example: 101
-        - name: date_range
-          in: query
-          description: 统计时间范围
-          schema:
-            type: string
-            enum: ["7d", "30d", "90d", "1y"]
-            default: "30d"
-            example: "30d"
+      - name: department_id
+        in: query
+        description: 部门ID
+        schema:
+          type: integer
+          example: 101
+      - name: date_range
+        in: query
+        description: 统计时间范围
+        schema:
+          type: string
+          enum:
+          - 7d
+          - 30d
+          - 90d
+          - 1y
+          default: 30d
+          example: 30d
       responses:
         '200':
           description: 查询成功
@@ -995,7 +1013,7 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
               example:
                 code: 200
-                message: "查询成功"
+                message: 查询成功
                 data:
                   total_engineers: 150
                   active_engineers: 142
@@ -1007,14 +1025,14 @@ paths:
                     level_4: 23
                     level_5: 5
                   skill_distribution:
-                    - skill_code: "linux"
-                      skill_name: "Linux系统管理"
-                      engineer_count: 120
-                      avg_level: 2.8
-                    - skill_code: "docker"
-                      skill_name: "Docker容器"
-                      engineer_count: 95
-                      avg_level: 2.5
+                  - skill_code: linux
+                    skill_name: Linux系统管理
+                    engineer_count: 120
+                    avg_level: 2.8
+                  - skill_code: docker
+                    skill_name: Docker容器
+                    engineer_count: 95
+                    avg_level: 2.5
                   workload_distribution:
                     low: 45
                     medium: 78
@@ -1026,8 +1044,8 @@ paths:
                     good_count: 89
                     average_count: 18
                     poor_count: 0
-                timestamp: "2025-08-14T14:30:00Z"
-                request_id: "req_123456803"
+                timestamp: '2025-08-14T14:30:00Z'
+                request_id: req_123456803
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1036,65 +1054,66 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
 components:
   schemas:
     EngineerCreateRequest:
       type: object
       required:
-        - employee_no
-        - real_name
-        - department_id
-        - position
-        - level
-        - hire_date
+      - employee_no
+      - real_name
+      - department_id
+      - position
+      - level
+      - hire_date
       properties:
         employee_no:
           type: string
           description: 工号
           maxLength: 50
-          example: "ENG001"
+          example: ENG001
         real_name:
           type: string
           description: 真实姓名
           maxLength: 50
-          example: "张三"
+          example: 张三
         gender:
           type: integer
           description: 性别：1-男，2-女
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           example: 1
         birth_date:
           type: string
           format: date
           description: 出生日期
-          example: "1990-05-15"
+          example: '1990-05-15'
         phone:
           type: string
           description: 手机号
           maxLength: 20
-          example: "13800138000"
+          example: '13800138000'
         email:
           type: string
           format: email
           description: 邮箱
           maxLength: 100
-          example: "zhangsan@company.com"
+          example: zhangsan@company.com
         address:
           type: string
           description: 联系地址
           maxLength: 500
-          example: "北京市朝阳区示例大厦"
+          example: 北京市朝阳区示例大厦
         emergency_contact:
           type: string
           description: 紧急联系人
           maxLength: 50
-          example: "李四"
+          example: 李四
         emergency_phone:
           type: string
           description: 紧急联系电话
           maxLength: 20
-          example: "13900139000"
+          example: '13900139000'
         department_id:
           type: integer
           description: 部门ID
@@ -1103,28 +1122,32 @@ components:
           type: string
           description: 职位
           maxLength: 100
-          example: "运维工程师"
+          example: 运维工程师
         level:
           type: integer
           description: 级别：1-初级，2-中级，3-高级，4-专家，5-架构师
-          enum: [1, 2, 3, 4, 5]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
           example: 2
         hire_date:
           type: string
           format: date
           description: 入职日期
-          example: "2024-08-01"
+          example: '2024-08-01'
         work_location:
           type: string
           description: 工作地点
           maxLength: 200
-          example: "北京总部"
+          example: 北京总部
         skills:
           type: array
           description: 技能列表
           items:
             $ref: '#/components/schemas/EngineerSkillInput'
-
     EngineerUpdateRequest:
       type: object
       properties:
@@ -1132,33 +1155,33 @@ components:
           type: string
           description: 真实姓名
           maxLength: 50
-          example: "张三"
+          example: 张三
         phone:
           type: string
           description: 手机号
           maxLength: 20
-          example: "13800138000"
+          example: '13800138000'
         email:
           type: string
           format: email
           description: 邮箱
           maxLength: 100
-          example: "zhangsan@company.com"
+          example: zhangsan@company.com
         address:
           type: string
           description: 联系地址
           maxLength: 500
-          example: "北京市朝阳区示例大厦"
+          example: 北京市朝阳区示例大厦
         emergency_contact:
           type: string
           description: 紧急联系人
           maxLength: 50
-          example: "李四"
+          example: 李四
         emergency_phone:
           type: string
           description: 紧急联系电话
           maxLength: 20
-          example: "13900139000"
+          example: '13900139000'
         department_id:
           type: integer
           description: 部门ID
@@ -1167,26 +1190,34 @@ components:
           type: string
           description: 职位
           maxLength: 100
-          example: "高级运维工程师"
+          example: 高级运维工程师
         level:
           type: integer
           description: 级别：1-初级，2-中级，3-高级，4-专家，5-架构师
-          enum: [1, 2, 3, 4, 5]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
           example: 3
         work_location:
           type: string
           description: 工作地点
           maxLength: 200
-          example: "北京总部"
-
+          example: 北京总部
     EngineerStatusUpdateRequest:
       type: object
       properties:
         online_status:
           type: string
           description: 在线状态
-          enum: ["online", "offline", "busy", "away"]
-          example: "online"
+          enum:
+          - online
+          - offline
+          - busy
+          - away
+          example: online
         location:
           type: object
           description: 位置信息
@@ -1209,28 +1240,36 @@ components:
               type: string
               description: 地址描述
               maxLength: 200
-              example: "北京市朝阳区"
+              example: 北京市朝阳区
         work_status:
           type: string
           description: 工作状态
-          enum: ["available", "busy", "break", "offline"]
-          example: "available"
-
+          enum:
+          - available
+          - busy
+          - break
+          - offline
+          example: available
     EngineerSkillInput:
       type: object
       required:
-        - skill_code
-        - skill_level
+      - skill_code
+      - skill_level
       properties:
         skill_code:
           type: string
           description: 技能代码
           maxLength: 50
-          example: "linux"
+          example: linux
         skill_level:
           type: integer
           description: 技能等级：1-初级，2-中级，3-高级，4-专家，5-大师
-          enum: [1, 2, 3, 4, 5]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
           example: 3
         experience_years:
           type: number
@@ -1242,23 +1281,27 @@ components:
         certification_status:
           type: integer
           description: 认证状态：0-无认证，1-认证中，2-已认证，3-已过期
-          enum: [0, 1, 2, 3]
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
           example: 2
         certification_date:
           type: string
           format: date
           description: 认证日期
-          example: "2024-06-15"
+          example: '2024-06-15'
         certification_expiry:
           type: string
           format: date
           description: 认证过期日期
-          example: "2026-06-15"
+          example: '2026-06-15'
         certification_authority:
           type: string
           description: 认证机构
           maxLength: 100
-          example: "Red Hat"
+          example: Red Hat
         proficiency_score:
           type: number
           format: float
@@ -1266,40 +1309,38 @@ components:
           minimum: 0
           maximum: 100
           example: 85.5
-
     EngineerSkillsUpdateRequest:
       type: object
       required:
-        - skills
+      - skills
       properties:
         skills:
           type: array
           description: 技能列表
           items:
             $ref: '#/components/schemas/EngineerSkillInput'
-
     ScheduleGenerateRequest:
       type: object
       required:
-        - period
+      - period
       properties:
         period:
           type: object
           description: 排班周期
           required:
-            - start_date
-            - end_date
+          - start_date
+          - end_date
           properties:
             start_date:
               type: string
               format: date
               description: 开始日期
-              example: "2025-09-01"
+              example: '2025-09-01'
             end_date:
               type: string
               format: date
               description: 结束日期
-              example: "2025-09-30"
+              example: '2025-09-30'
         rules:
           type: object
           description: 排班规则
@@ -1359,18 +1400,22 @@ components:
           description: 部门ID列表
           items:
             type: integer
-          example: [101, 102]
-
+          example:
+          - 101
+          - 102
     EngineerExportRequest:
       type: object
       required:
-        - format
+      - format
       properties:
         format:
           type: string
           description: 导出格式
-          enum: ["excel", "csv", "pdf"]
-          example: "excel"
+          enum:
+          - excel
+          - csv
+          - pdf
+          example: excel
         filters:
           type: object
           description: 过滤条件
@@ -1380,34 +1425,67 @@ components:
               description: 部门ID列表
               items:
                 type: integer
-              example: [101, 102]
+              example:
+              - 101
+              - 102
             status:
               type: array
               description: 工程师状态列表
               items:
                 type: integer
-                enum: [1, 2, 3, 4]
-              example: [1, 4]
+                enum:
+                - 1
+                - 2
+                - 3
+                - 4
+              example:
+              - 1
+              - 4
             level:
               type: array
               description: 级别列表
               items:
                 type: integer
-                enum: [1, 2, 3, 4, 5]
-              example: [2, 3, 4]
+                enum:
+                - 1
+                - 2
+                - 3
+                - 4
+                - 5
+              example:
+              - 2
+              - 3
+              - 4
             skill_codes:
               type: array
               description: 技能代码列表
               items:
                 type: string
-              example: ["linux", "docker"]
+              example:
+              - linux
+              - docker
         fields:
           type: array
           description: 导出字段列表
           items:
             type: string
-            enum: ["employee_no", "real_name", "department_name", "position", "level", "phone", "email", "skills", "performance"]
-          example: ["employee_no", "real_name", "department_name", "position", "level", "skills"]
+            enum:
+            - employee_no
+            - real_name
+            - department_name
+            - position
+            - level
+            - phone
+            - email
+            - skills
+            - performance
+          example:
+          - employee_no
+          - real_name
+          - department_name
+          - position
+          - level
+          - skills
         include_skills:
           type: boolean
           description: 是否包含技能信息
@@ -1418,8 +1496,6 @@ components:
           description: 是否包含绩效信息
           default: false
           example: false
-
-    # 全局通用schemas
     ApiResponse:
       type: object
       properties:
@@ -1430,7 +1506,7 @@ components:
         message:
           type: string
           description: 响应消息
-          example: "操作成功"
+          example: 操作成功
         data:
           type: object
           description: 响应数据
@@ -1438,12 +1514,11 @@ components:
           type: string
           format: date-time
           description: 响应时间戳
-          example: "2025-08-14T14:30:00Z"
+          example: '2025-08-14T14:30:00Z'
         request_id:
           type: string
           description: 请求ID
-          example: "req_123456789"
-
+          example: req_123456789
     PagedResponse:
       type: object
       properties:
@@ -1454,7 +1529,7 @@ components:
         message:
           type: string
           description: 响应消息
-          example: "查询成功"
+          example: 查询成功
         data:
           type: object
           properties:
@@ -1483,12 +1558,11 @@ components:
           type: string
           format: date-time
           description: 响应时间戳
-          example: "2025-08-14T14:30:00Z"
+          example: '2025-08-14T14:30:00Z'
         request_id:
           type: string
           description: 请求ID
-          example: "req_123456789"
-
+          example: req_123456789
     ErrorResponse:
       type: object
       properties:
@@ -1499,7 +1573,7 @@ components:
         message:
           type: string
           description: 错误消息
-          example: "参数验证失败"
+          example: 参数验证失败
         data:
           type: object
           nullable: true
@@ -1511,29 +1585,28 @@ components:
             error_code:
               type: string
               description: 业务错误码
-              example: "ENGINEER_NOT_FOUND"
+              example: ENGINEER_NOT_FOUND
             field:
               type: string
               description: 错误字段
-              example: "engineer_id"
+              example: engineer_id
             value:
               type: string
               description: 错误值
-              example: "999999"
+              example: '999999'
             suggestion:
               type: string
               description: 修复建议
-              example: "请检查工程师ID是否正确"
+              example: 请检查工程师ID是否正确
         timestamp:
           type: string
           format: date-time
           description: 响应时间戳
-          example: "2025-08-14T14:30:00Z"
+          example: '2025-08-14T14:30:00Z'
         request_id:
           type: string
           description: 请求ID
-          example: "req_123456789"
-
+          example: req_123456789
   responses:
     BadRequest:
       description: 请求参数错误
@@ -1543,16 +1616,15 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
           example:
             code: 400
-            message: "请求参数错误"
+            message: 请求参数错误
             data: null
             error_details:
-              error_code: "INVALID_PARAMETER"
-              field: "employee_no"
-              value: ""
-              suggestion: "工号不能为空"
-            timestamp: "2025-08-14T14:30:00Z"
-            request_id: "req_123456789"
-
+              error_code: INVALID_PARAMETER
+              field: employee_no
+              value: ''
+              suggestion: 工号不能为空
+            timestamp: '2025-08-14T14:30:00Z'
+            request_id: req_123456789
     Unauthorized:
       description: 未授权访问
       content:
@@ -1561,14 +1633,13 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
           example:
             code: 401
-            message: "未授权访问"
+            message: 未授权访问
             data: null
             error_details:
-              error_code: "UNAUTHORIZED"
-              suggestion: "请先登录系统"
-            timestamp: "2025-08-14T14:30:00Z"
-            request_id: "req_123456789"
-
+              error_code: UNAUTHORIZED
+              suggestion: 请先登录系统
+            timestamp: '2025-08-14T14:30:00Z'
+            request_id: req_123456789
     Forbidden:
       description: 权限不足
       content:
@@ -1577,14 +1648,13 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
           example:
             code: 403
-            message: "权限不足"
+            message: 权限不足
             data: null
             error_details:
-              error_code: "FORBIDDEN"
-              suggestion: "您没有执行此操作的权限"
-            timestamp: "2025-08-14T14:30:00Z"
-            request_id: "req_123456789"
-
+              error_code: FORBIDDEN
+              suggestion: 您没有执行此操作的权限
+            timestamp: '2025-08-14T14:30:00Z'
+            request_id: req_123456789
     NotFound:
       description: 资源不存在
       content:
@@ -1593,16 +1663,15 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
           example:
             code: 404
-            message: "资源不存在"
+            message: 资源不存在
             data: null
             error_details:
-              error_code: "ENGINEER_NOT_FOUND"
-              field: "engineer_id"
-              value: "999999"
-              suggestion: "请检查工程师ID是否正确"
-            timestamp: "2025-08-14T14:30:00Z"
-            request_id: "req_123456789"
-
+              error_code: ENGINEER_NOT_FOUND
+              field: engineer_id
+              value: '999999'
+              suggestion: 请检查工程师ID是否正确
+            timestamp: '2025-08-14T14:30:00Z'
+            request_id: req_123456789
     Conflict:
       description: 资源冲突
       content:
@@ -1611,16 +1680,15 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
           example:
             code: 409
-            message: "资源冲突"
+            message: 资源冲突
             data: null
             error_details:
-              error_code: "EMPLOYEE_NO_EXISTS"
-              field: "employee_no"
-              value: "ENG001"
-              suggestion: "工号已存在，请使用其他工号"
-            timestamp: "2025-08-14T14:30:00Z"
-            request_id: "req_123456789"
-
+              error_code: EMPLOYEE_NO_EXISTS
+              field: employee_no
+              value: ENG001
+              suggestion: 工号已存在，请使用其他工号
+            timestamp: '2025-08-14T14:30:00Z'
+            request_id: req_123456789
     InternalServerError:
       description: 服务器内部错误
       content:
@@ -1629,10 +1697,10 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
           example:
             code: 500
-            message: "服务器内部错误"
+            message: 服务器内部错误
             data: null
             error_details:
-              error_code: "INTERNAL_ERROR"
-              suggestion: "请稍后重试或联系系统管理员"
-            timestamp: "2025-08-14T14:30:00Z"
-            request_id: "req_123456789"
+              error_code: INTERNAL_ERROR
+              suggestion: 请稍后重试或联系系统管理员
+            timestamp: '2025-08-14T14:30:00Z'
+            request_id: req_123456789

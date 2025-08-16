@@ -3,69 +3,69 @@ info:
   title: IT运维门户系统 API
   version: 1.0.0
   description: REQ-012 系统集成模块 API 规范
-
 tags:
-  - name: integration-config
-    description: 集成配置管理
-  - name: integration-sync
-    description: 数据同步
-  - name: integration-monitor
-    description: 监控查询
-  - name: integration-template
-    description: 配置模板
-  - name: integration-alert
-    description: 告警处理
-  - name: integration-export
-    description: 导出功能
-
+- name: integration-config
+  description: 集成配置管理
+- name: integration-sync
+  description: 数据同步
+- name: integration-monitor
+  description: 监控查询
+- name: integration-template
+  description: 配置模板
+- name: integration-alert
+  description: 告警处理
+- name: integration-export
+  description: 导出功能
 paths:
   /api/v1/integrations/configs:
     get:
       tags:
-        - integration-config
+      - integration-config
       summary: 查询集成配置列表
       description: 分页查询集成配置列表，支持多条件筛选
       operationId: integration_get_config_list
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: integration_type
-          in: query
-          description: 集成类型筛选
-          schema:
-            $ref: '#/components/schemas/IntegrationType'
-        - name: status
-          in: query
-          description: 配置状态筛选
-          schema:
-            $ref: '#/components/schemas/ConfigStatus'
-        - name: source_system
-          in: query
-          description: 源系统筛选
-          schema:
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: integration_type
+        in: query
+        description: 集成类型筛选
+        schema:
+          $ref: '#/components/schemas/IntegrationType'
+      - name: status
+        in: query
+        description: 配置状态筛选
+        schema:
+          type: array
+          items: &id001
             type: string
-            example: "prometheus"
-        - name: keyword
-          in: query
-          description: 关键词搜索（配置名称、编码）
-          schema:
-            type: string
-            example: "监控"
+      - name: source_system
+        in: query
+        description: 源系统筛选
+        schema:
+          type: string
+          example: prometheus
+      - name: keyword
+        in: query
+        description: 关键词搜索（配置名称、编码）
+        schema:
+          type: string
+          example: 监控
       responses:
         '200':
           description: 查询成功
@@ -73,28 +73,27 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/IntegrationConfig'
+                            $ref: '#/components/schemas/IntegrationConfig'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     post:
       tags:
-        - integration-config
+      - integration-config
       summary: 创建集成配置
       description: 创建新的集成配置
       operationId: integration_create_config
@@ -111,38 +110,37 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/IntegrationConfig'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/IntegrationConfig'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/integrations/configs/{id}:
     get:
       tags:
-        - integration-config
+      - integration-config
       summary: 获取集成配置详情
       description: 根据ID获取集成配置的详细信息
       operationId: integration_get_config_detail
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 集成配置ID
-          schema:
-            type: integer
-            format: int64
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 集成配置ID
+        schema:
+          type: integer
+          format: int64
+          example: 1001
       responses:
         '200':
           description: 查询成功
@@ -150,37 +148,36 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/IntegrationConfig'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/IntegrationConfig'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     put:
       tags:
-        - integration-config
+      - integration-config
       summary: 更新集成配置
       description: 全量更新集成配置信息
       operationId: integration_update_config
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 集成配置ID
-          schema:
-            type: integer
-            format: int64
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 集成配置ID
+        schema:
+          type: integer
+          format: int64
+          example: 1001
       requestBody:
         required: true
         content:
@@ -194,73 +191,71 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/IntegrationConfig'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/IntegrationConfig'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     delete:
       tags:
-        - integration-config
+      - integration-config
       summary: 删除集成配置
       description: 软删除集成配置（设置deleted_at字段）
       operationId: integration_delete_config
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 集成配置ID
-          schema:
-            type: integer
-            format: int64
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 集成配置ID
+        schema:
+          type: integer
+          format: int64
+          example: 1001
       responses:
         '200':
           description: 删除成功
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/integrations/configs/{id}/test:
     post:
       tags:
-        - integration-config
+      - integration-config
       summary: 测试集成配置连接
       description: 测试集成配置的连接有效性和数据格式
       operationId: integration_test_config_connection
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 集成配置ID
-          schema:
-            type: integer
-            format: int64
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 集成配置ID
+        schema:
+          type: integer
+          format: int64
+          example: 1001
       responses:
         '200':
           description: 测试成功
@@ -268,60 +263,58 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ConnectionTestResult'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ConnectionTestResult'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/integrations/configs/{id}/activate:
     post:
       tags:
-        - integration-config
+      - integration-config
       summary: 激活集成配置
       description: 将集成配置状态设置为激活
       operationId: integration_activate_config
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 集成配置ID
-          schema:
-            type: integer
-            format: int64
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 集成配置ID
+        schema:
+          type: integer
+          format: int64
+          example: 1001
       responses:
         '200':
           description: 激活成功
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/integrations/configs/batch:
     post:
       tags:
-        - integration-config
+      - integration-config
       summary: 批量操作集成配置
       description: 支持批量创建、更新、删除、状态变更等操作
       operationId: integration_batch_config_operation
@@ -338,36 +331,35 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BatchOperationResult'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BatchOperationResult'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/integrations/{id}/sync:
     post:
       tags:
-        - integration-sync
+      - integration-sync
       summary: 触发数据同步
       description: 手动触发指定集成配置的数据同步任务
       operationId: integration_trigger_sync
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 集成配置ID
-          schema:
-            type: integer
-            format: int64
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 集成配置ID
+        schema:
+          type: integer
+          format: int64
+          example: 1001
       requestBody:
         required: false
         content:
@@ -381,38 +373,37 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/SyncTask'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/SyncTask'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/integrations/{id}/sync/status:
     get:
       tags:
-        - integration-sync
+      - integration-sync
       summary: 查询同步状态
       description: 查询指定集成配置的当前同步状态
       operationId: integration_get_sync_status
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 集成配置ID
-          schema:
-            type: integer
-            format: int64
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 集成配置ID
+        schema:
+          type: integer
+          format: int64
+          example: 1001
       responses:
         '200':
           description: 查询成功
@@ -420,94 +411,93 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/SyncStatus'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/SyncStatus'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/integrations/{id}/sync/stop:
     post:
       tags:
-        - integration-sync
+      - integration-sync
       summary: 停止同步任务
       description: 停止正在运行的同步任务
       operationId: integration_stop_sync
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 集成配置ID
-          schema:
-            type: integer
-            format: int64
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 集成配置ID
+        schema:
+          type: integer
+          format: int64
+          example: 1001
       responses:
         '200':
           description: 停止成功
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/integrations/{id}/sync/history:
     get:
       tags:
-        - integration-sync
+      - integration-sync
       summary: 同步历史记录
       description: 查询指定集成配置的同步历史记录
       operationId: integration_get_sync_history
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 集成配置ID
-          schema:
-            type: integer
-            format: int64
-            example: 1001
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: status
-          in: query
-          description: 同步状态筛选
-          schema:
-            $ref: '#/components/schemas/SyncTaskStatus'
+      - name: id
+        in: path
+        required: true
+        description: 集成配置ID
+        schema:
+          type: integer
+          format: int64
+          example: 1001
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: status
+        in: query
+        description: 同步状态筛选
+        schema:
+          type: array
+          items: *id001
       responses:
         '200':
           description: 查询成功
@@ -515,43 +505,42 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/IntegrationLog'
+                            $ref: '#/components/schemas/IntegrationLog'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/integrations/{id}/status:
     get:
       tags:
-        - integration-monitor
+      - integration-monitor
       summary: 集成状态查询
       description: 查询指定集成配置的整体状态信息
       operationId: integration_get_status
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 集成配置ID
-          schema:
-            type: integer
-            format: int64
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 集成配置ID
+        schema:
+          type: integer
+          format: int64
+          example: 1001
       responses:
         '200':
           description: 查询成功
@@ -559,57 +548,56 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/IntegrationStatus'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/IntegrationStatus'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/integrations/{id}/metrics:
     get:
       tags:
-        - integration-monitor
+      - integration-monitor
       summary: 性能指标查询
       description: 查询指定集成配置的性能监控指标
       operationId: integration_get_metrics
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 集成配置ID
-          schema:
-            type: integer
-            format: int64
-            example: 1001
-        - name: metric_type
-          in: query
-          description: 指标类型筛选
-          schema:
-            $ref: '#/components/schemas/MetricType'
-        - name: start_time
-          in: query
-          description: 开始时间
-          schema:
-            type: string
-            format: date-time
-            example: "2025-08-14T00:00:00Z"
-        - name: end_time
-          in: query
-          description: 结束时间
-          schema:
-            type: string
-            format: date-time
-            example: "2025-08-15T00:00:00Z"
+      - name: id
+        in: path
+        required: true
+        description: 集成配置ID
+        schema:
+          type: integer
+          format: int64
+          example: 1001
+      - name: metric_type
+        in: query
+        description: 指标类型筛选
+        schema:
+          $ref: '#/components/schemas/MetricType'
+      - name: start_time
+        in: query
+        description: 开始时间
+        schema:
+          type: string
+          format: date-time
+          example: '2025-08-14T00:00:00Z'
+      - name: end_time
+        in: query
+        description: 结束时间
+        schema:
+          type: string
+          format: date-time
+          example: '2025-08-15T00:00:00Z'
       responses:
         '200':
           description: 查询成功
@@ -617,28 +605,27 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/IntegrationMetrics'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/IntegrationMetrics'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/integrations/alerts/webhook:
     post:
       tags:
-        - integration-alert
+      - integration-alert
       summary: 接收外部告警webhook
       description: 接收外部监控系统的告警webhook，自动创建工单
       operationId: integration_receive_alert_webhook
@@ -655,54 +642,53 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/AlertProcessResult'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AlertProcessResult'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/integrations/templates:
     get:
       tags:
-        - integration-template
+      - integration-template
       summary: 查询配置模板列表
       description: 分页查询配置模板列表
       operationId: integration_get_template_list
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: integration_type
-          in: query
-          description: 集成类型筛选
-          schema:
-            $ref: '#/components/schemas/IntegrationType'
-        - name: system_type
-          in: query
-          description: 系统类型筛选
-          schema:
-            type: string
-            example: "prometheus"
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: integration_type
+        in: query
+        description: 集成类型筛选
+        schema:
+          $ref: '#/components/schemas/IntegrationType'
+      - name: system_type
+        in: query
+        description: 系统类型筛选
+        schema:
+          type: string
+          example: prometheus
       responses:
         '200':
           description: 查询成功
@@ -710,28 +696,27 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/ConfigTemplate'
+                            $ref: '#/components/schemas/ConfigTemplate'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     post:
       tags:
-        - integration-template
+      - integration-template
       summary: 创建配置模板
       description: 创建新的配置模板
       operationId: integration_create_template
@@ -748,38 +733,37 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ConfigTemplate'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ConfigTemplate'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/integrations/templates/{id}:
     get:
       tags:
-        - integration-template
+      - integration-template
       summary: 获取配置模板详情
       description: 根据ID获取配置模板的详细信息
       operationId: integration_get_template_detail
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 模板ID
-          schema:
-            type: integer
-            format: int64
-            example: 2001
+      - name: id
+        in: path
+        required: true
+        description: 模板ID
+        schema:
+          type: integer
+          format: int64
+          example: 2001
       responses:
         '200':
           description: 查询成功
@@ -787,37 +771,36 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ConfigTemplate'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ConfigTemplate'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     put:
       tags:
-        - integration-template
+      - integration-template
       summary: 更新配置模板
       description: 全量更新配置模板信息
       operationId: integration_update_template
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 模板ID
-          schema:
-            type: integer
-            format: int64
-            example: 2001
+      - name: id
+        in: path
+        required: true
+        description: 模板ID
+        schema:
+          type: integer
+          format: int64
+          example: 2001
       requestBody:
         required: true
         content:
@@ -831,85 +814,84 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ConfigTemplate'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ConfigTemplate'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     delete:
       tags:
-        - integration-template
+      - integration-template
       summary: 删除配置模板
       description: 软删除配置模板
       operationId: integration_delete_template
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 模板ID
-          schema:
-            type: integer
-            format: int64
-            example: 2001
+      - name: id
+        in: path
+        required: true
+        description: 模板ID
+        schema:
+          type: integer
+          format: int64
+          example: 2001
       responses:
         '200':
           description: 删除成功
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/integrations/configs/export:
     get:
       tags:
-        - integration-export
+      - integration-export
       summary: 导出集成配置
       description: 导出集成配置数据为Excel或JSON格式
       operationId: integration_export_configs
       parameters:
-        - name: format
-          in: query
-          description: 导出格式
-          schema:
-            type: string
-            enum:
-              - excel
-              - json
-            default: excel
-            example: "excel"
-        - name: integration_type
-          in: query
-          description: 集成类型筛选
-          schema:
-            $ref: '#/components/schemas/IntegrationType'
-        - name: status
-          in: query
-          description: 配置状态筛选
-          schema:
-            $ref: '#/components/schemas/ConfigStatus'
+      - name: format
+        in: query
+        description: 导出格式
+        schema:
+          type: string
+          enum:
+          - excel
+          - json
+          default: excel
+          example: excel
+      - name: integration_type
+        in: query
+        description: 集成类型筛选
+        schema:
+          $ref: '#/components/schemas/IntegrationType'
+      - name: status
+        in: query
+        description: 配置状态筛选
+        schema:
+          type: array
+          items: *id001
       responses:
         '200':
           description: 导出成功
@@ -921,64 +903,63 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          download_url:
-                            type: string
-                            description: 下载链接
-                            example: "https://cdn.example.com/exports/configs_20250815.xlsx"
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        download_url:
+                          type: string
+                          description: 下载链接
+                          example: https://cdn.example.com/exports/configs_20250815.xlsx
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/integrations/logs/export:
     get:
       tags:
-        - integration-export
+      - integration-export
       summary: 导出集成日志
       description: 导出集成日志数据
       operationId: integration_export_logs
       parameters:
-        - name: integration_id
-          in: query
-          description: 集成配置ID
-          schema:
-            type: integer
-            format: int64
-            example: 1001
-        - name: start_time
-          in: query
-          description: 开始时间
-          schema:
-            type: string
-            format: date-time
-            example: "2025-08-14T00:00:00Z"
-        - name: end_time
-          in: query
-          description: 结束时间
-          schema:
-            type: string
-            format: date-time
-            example: "2025-08-15T00:00:00Z"
-        - name: format
-          in: query
-          description: 导出格式
-          schema:
-            type: string
-            enum:
-              - excel
-              - csv
-            default: excel
-            example: "excel"
+      - name: integration_id
+        in: query
+        description: 集成配置ID
+        schema:
+          type: integer
+          format: int64
+          example: 1001
+      - name: start_time
+        in: query
+        description: 开始时间
+        schema:
+          type: string
+          format: date-time
+          example: '2025-08-14T00:00:00Z'
+      - name: end_time
+        in: query
+        description: 结束时间
+        schema:
+          type: string
+          format: date-time
+          example: '2025-08-15T00:00:00Z'
+      - name: format
+        in: query
+        description: 导出格式
+        schema:
+          type: string
+          enum:
+          - excel
+          - csv
+          default: excel
+          example: excel
       responses:
         '200':
           description: 导出成功
@@ -992,18 +973,17 @@ paths:
                 type: string
                 format: binary
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/integrations/health:
     get:
       tags:
-        - integration-monitor
+      - integration-monitor
       summary: 健康检查
       description: 检查集成模块的整体健康状态
       operationId: integration_health_check
@@ -1014,70 +994,62 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/HealthCheckResult'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/HealthCheckResult'
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
 components:
   schemas:
-    # 枚举类型定义
     IntegrationType:
       type: string
       enum:
-        - api
-        - database
-        - message_queue
-        - file_transfer
+      - api
+      - database
+      - message_queue
+      - file_transfer
       description: 集成类型
-      example: "api"
-
+      example: api
     ConfigStatus:
       type: string
       enum:
-        - draft
-        - active
-        - inactive
-        - archived
+      - draft
+      - active
+      - inactive
+      - archived
       description: 配置状态
-      example: "active"
-
+      example: active
     SyncTaskStatus:
       type: string
       enum:
-        - pending
-        - running
-        - success
-        - failed
-        - cancelled
-        - timeout
+      - pending
+      - running
+      - success
+      - failed
+      - cancelled
+      - timeout
       description: 同步任务状态
-      example: "success"
-
+      example: success
     MetricType:
       type: string
       enum:
-        - performance
-        - availability
-        - error_rate
-        - throughput
+      - performance
+      - availability
+      - error_rate
+      - throughput
       description: 指标类型
-      example: "performance"
-
+      example: performance
     OperationType:
       type: string
       enum:
-        - sync
-        - test
-        - config_change
-        - error_retry
+      - sync
+      - test
+      - config_change
+      - error_retry
       description: 操作类型
-      example: "sync"
-
-    # 核心实体定义
+      example: sync
     IntegrationConfig:
       type: object
       description: 集成配置实体
@@ -1095,21 +1067,21 @@ components:
         config_name:
           type: string
           description: 配置名称
-          example: "Prometheus监控集成"
+          example: Prometheus监控集成
         config_code:
           type: string
           description: 配置编码
-          example: "prometheus_integration"
+          example: prometheus_integration
         integration_type:
           $ref: '#/components/schemas/IntegrationType'
         source_system:
           type: string
           description: 源系统
-          example: "prometheus"
+          example: prometheus
         target_system:
           type: string
           description: 目标系统
-          example: "ops_portal"
+          example: ops_portal
         connection_config:
           $ref: '#/components/schemas/ConnectionConfig'
         mapping_rules:
@@ -1137,12 +1109,12 @@ components:
           type: string
           format: date-time
           description: 生效时间
-          example: "2025-08-15T00:00:00Z"
+          example: '2025-08-15T00:00:00Z'
         expire_time:
           type: string
           format: date-time
           description: 失效时间
-          example: "2025-12-31T23:59:59Z"
+          example: '2025-12-31T23:59:59Z'
         created_by:
           type: integer
           format: int64
@@ -1157,18 +1129,17 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-15T10:00:00Z"
+          example: '2025-08-15T10:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-15T14:30:00Z"
+          example: '2025-08-15T14:30:00Z'
         deleted_at:
           type: string
           format: date-time
           description: 删除时间
           example: null
-
     ConnectionConfig:
       type: object
       description: 连接配置
@@ -1176,28 +1147,28 @@ components:
         endpoint:
           type: string
           description: 连接端点
-          example: "http://prometheus:9090/api/v1"
+          example: http://prometheus:9090/api/v1
         auth_type:
           type: string
           enum:
-            - none
-            - basic
-            - bearer
-            - api_key
+          - none
+          - basic
+          - bearer
+          - api_key
           description: 认证类型
-          example: "basic"
+          example: basic
         username:
           type: string
           description: 用户名
-          example: "admin"
+          example: admin
         password:
           type: string
           description: 密码（加密存储）
-          example: "encrypted_password"
+          example: encrypted_password
         api_key:
           type: string
           description: API密钥
-          example: "api_key_value"
+          example: api_key_value
         timeout:
           type: integer
           description: 超时时间（毫秒）
@@ -1216,9 +1187,8 @@ components:
           additionalProperties:
             type: string
           example:
-            Content-Type: "application/json"
-            User-Agent: "OpsPortal/1.0"
-
+            Content-Type: application/json
+            User-Agent: OpsPortal/1.0
     MappingRule:
       type: object
       description: 映射规则
@@ -1232,19 +1202,19 @@ components:
               source_field:
                 type: string
                 description: 源字段
-                example: "metric_name"
+                example: metric_name
               target_field:
                 type: string
                 description: 目标字段
-                example: "alert_name"
+                example: alert_name
               transform_rule:
                 type: string
                 description: 转换规则
-                example: "uppercase"
+                example: uppercase
               default_value:
                 type: string
                 description: 默认值
-                example: "unknown"
+                example: unknown
               required:
                 type: boolean
                 description: 是否必填
@@ -1258,24 +1228,23 @@ components:
               field:
                 type: string
                 description: 过滤字段
-                example: "severity"
+                example: severity
               operator:
                 type: string
                 enum:
-                  - eq
-                  - ne
-                  - gt
-                  - lt
-                  - in
-                  - not_in
-                  - contains
+                - eq
+                - ne
+                - gt
+                - lt
+                - in
+                - not_in
+                - contains
                 description: 操作符
-                example: "eq"
+                example: eq
               value:
                 type: string
                 description: 过滤值
-                example: "critical"
-
+                example: critical
     SyncConfig:
       type: object
       description: 同步配置
@@ -1283,11 +1252,11 @@ components:
         sync_type:
           type: string
           enum:
-            - realtime
-            - scheduled
-            - manual
+          - realtime
+          - scheduled
+          - manual
           description: 同步类型
-          example: "realtime"
+          example: realtime
         sync_interval:
           type: integer
           description: 同步间隔（秒）
@@ -1303,20 +1272,19 @@ components:
         sync_direction:
           type: string
           enum:
-            - source_to_target
-            - target_to_source
-            - bidirectional
+          - source_to_target
+          - target_to_source
+          - bidirectional
           description: 同步方向
-          example: "source_to_target"
+          example: source_to_target
         conflict_resolution:
           type: string
           enum:
-            - source_wins
-            - target_wins
-            - manual
+          - source_wins
+          - target_wins
+          - manual
           description: 冲突解决策略
-          example: "source_wins"
-
+          example: source_wins
     RetryConfig:
       type: object
       description: 重试配置
@@ -1332,16 +1300,15 @@ components:
         backoff_strategy:
           type: string
           enum:
-            - fixed
-            - exponential
-            - linear
+          - fixed
+          - exponential
+          - linear
           description: 退避策略
-          example: "exponential"
+          example: exponential
         max_backoff_time:
           type: integer
           description: 最大退避时间（秒）
           example: 300
-
     IntegrationLog:
       type: object
       description: 集成日志实体
@@ -1364,32 +1331,32 @@ components:
         trace_id:
           type: string
           description: 链路追踪ID
-          example: "trace_abc123def456"
+          example: trace_abc123def456
         operation_type:
           $ref: '#/components/schemas/OperationType'
         operation_data:
           type: object
           description: 操作数据
           example:
-            sync_mode: "incremental"
-            data_source: "prometheus_metrics"
+            sync_mode: incremental
+            data_source: prometheus_metrics
         request_data:
           type: object
           description: 请求数据
           example:
-            query: "up{job='prometheus'}"
-            time_range: "1h"
+            query: up{job='prometheus'}
+            time_range: 1h
         response_data:
           type: object
           description: 响应数据
           example:
-            status: "success"
+            status: success
             data_count: 150
         execution_time:
           type: string
           format: date-time
           description: 执行时间
-          example: "2025-08-15T14:30:00Z"
+          example: '2025-08-15T14:30:00Z'
         duration_ms:
           type: integer
           description: 执行时长（毫秒）
@@ -1399,11 +1366,11 @@ components:
         error_code:
           type: string
           description: 错误码
-          example: "CONN_TIMEOUT"
+          example: CONN_TIMEOUT
         error_message:
           type: string
           description: 错误信息
-          example: "连接超时"
+          example: 连接超时
         retry_count:
           type: integer
           description: 重试次数
@@ -1416,8 +1383,7 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-15T14:30:00Z"
-
+          example: '2025-08-15T14:30:00Z'
     IntegrationMetrics:
       type: object
       description: 集成监控指标实体
@@ -1441,13 +1407,13 @@ components:
           type: string
           format: date-time
           description: 指标时间
-          example: "2025-08-15T14:30:00Z"
+          example: '2025-08-15T14:30:00Z'
         metric_type:
           $ref: '#/components/schemas/MetricType'
         metric_name:
           type: string
           description: 指标名称
-          example: "response_time"
+          example: response_time
         metric_value:
           type: number
           format: double
@@ -1456,51 +1422,49 @@ components:
         metric_unit:
           type: string
           description: 指标单位
-          example: "ms"
+          example: ms
         tags:
           type: object
           description: 标签信息
           additionalProperties:
             type: string
           example:
-            environment: "production"
-            region: "beijing"
+            environment: production
+            region: beijing
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-15T14:30:00Z"
-
-    # 请求Schema定义
+          example: '2025-08-15T14:30:00Z'
     CreateIntegrationConfigRequest:
       type: object
       required:
-        - config_name
-        - config_code
-        - integration_type
-        - source_system
-        - target_system
-        - connection_config
+      - config_name
+      - config_code
+      - integration_type
+      - source_system
+      - target_system
+      - connection_config
       description: 创建集成配置请求
       properties:
         config_name:
           type: string
           description: 配置名称
-          example: "Prometheus监控集成"
+          example: Prometheus监控集成
         config_code:
           type: string
           description: 配置编码
-          example: "prometheus_integration"
+          example: prometheus_integration
         integration_type:
           $ref: '#/components/schemas/IntegrationType'
         source_system:
           type: string
           description: 源系统
-          example: "prometheus"
+          example: prometheus
         target_system:
           type: string
           description: 目标系统
-          example: "ops_portal"
+          example: ops_portal
         connection_config:
           $ref: '#/components/schemas/ConnectionConfig'
         mapping_rules:
@@ -1518,13 +1482,12 @@ components:
           type: string
           format: date-time
           description: 生效时间
-          example: "2025-08-15T00:00:00Z"
+          example: '2025-08-15T00:00:00Z'
         expire_time:
           type: string
           format: date-time
           description: 失效时间
-          example: "2025-12-31T23:59:59Z"
-
+          example: '2025-12-31T23:59:59Z'
     UpdateIntegrationConfigRequest:
       type: object
       description: 更新集成配置请求
@@ -1532,7 +1495,7 @@ components:
         config_name:
           type: string
           description: 配置名称
-          example: "Prometheus监控集成（更新）"
+          example: Prometheus监控集成（更新）
         connection_config:
           $ref: '#/components/schemas/ConnectionConfig'
         mapping_rules:
@@ -1545,13 +1508,12 @@ components:
           type: string
           format: date-time
           description: 生效时间
-          example: "2025-08-15T00:00:00Z"
+          example: '2025-08-15T00:00:00Z'
         expire_time:
           type: string
           format: date-time
           description: 失效时间
-          example: "2025-12-31T23:59:59Z"
-
+          example: '2025-12-31T23:59:59Z'
     SyncRequest:
       type: object
       description: 同步请求
@@ -1559,10 +1521,10 @@ components:
         sync_type:
           type: string
           enum:
-            - full
-            - incremental
+          - full
+          - incremental
           description: 同步类型
-          example: "incremental"
+          example: incremental
         force_sync:
           type: boolean
           description: 是否强制同步
@@ -1573,26 +1535,25 @@ components:
           additionalProperties:
             type: string
           example:
-            severity: "critical"
-            time_range: "1h"
-
+            severity: critical
+            time_range: 1h
     BatchOperationRequest:
       type: object
       required:
-        - operation
-        - items
+      - operation
+      - items
       description: 批量操作请求
       properties:
         operation:
           type: string
           enum:
-            - create
-            - update
-            - delete
-            - activate
-            - deactivate
+          - create
+          - update
+          - delete
+          - activate
+          - deactivate
           description: 操作类型
-          example: "activate"
+          example: activate
         items:
           type: array
           description: 操作项目列表
@@ -1608,60 +1569,57 @@ components:
                 type: object
                 description: 操作数据（create/update时需要）
           example:
-            - id: 1001
-            - id: 1002
-
+          - id: 1001
+          - id: 1002
     AlertWebhookRequest:
       type: object
       required:
-        - alert_name
-        - severity
-        - message
+      - alert_name
+      - severity
+      - message
       description: 告警webhook请求
       properties:
         alert_name:
           type: string
           description: 告警名称
-          example: "服务器CPU使用率过高"
+          example: 服务器CPU使用率过高
         severity:
           type: string
           enum:
-            - critical
-            - warning
-            - info
+          - critical
+          - warning
+          - info
           description: 告警级别
-          example: "critical"
+          example: critical
         message:
           type: string
           description: 告警消息
-          example: "服务器CPU使用率达到95%，超过阈值"
+          example: 服务器CPU使用率达到95%，超过阈值
         source_system:
           type: string
           description: 告警来源系统
-          example: "prometheus"
+          example: prometheus
         alert_time:
           type: string
           format: date-time
           description: 告警时间
-          example: "2025-08-15T14:30:00Z"
+          example: '2025-08-15T14:30:00Z'
         labels:
           type: object
           description: 告警标签
           additionalProperties:
             type: string
           example:
-            instance: "server-01"
-            job: "node-exporter"
+            instance: server-01
+            job: node-exporter
         annotations:
           type: object
           description: 告警注释
           additionalProperties:
             type: string
           example:
-            description: "CPU使用率过高"
-            runbook_url: "https://wiki.example.com/runbook/cpu-high"
-
-    # 响应Schema定义
+            description: CPU使用率过高
+            runbook_url: https://wiki.example.com/runbook/cpu-high
     ConnectionTestResult:
       type: object
       description: 连接测试结果
@@ -1683,8 +1641,7 @@ components:
           description: 测试数据样例
           example:
             sample_count: 10
-            data_format: "json"
-
+            data_format: json
     SyncTask:
       type: object
       description: 同步任务
@@ -1692,7 +1649,7 @@ components:
         task_id:
           type: string
           description: 任务ID
-          example: "sync_task_abc123"
+          example: sync_task_abc123
         integration_id:
           type: integer
           format: int64
@@ -1704,7 +1661,7 @@ components:
           type: string
           format: date-time
           description: 开始时间
-          example: "2025-08-15T14:30:00Z"
+          example: '2025-08-15T14:30:00Z'
         estimated_duration:
           type: integer
           description: 预估时长（秒）
@@ -1713,7 +1670,6 @@ components:
           type: integer
           description: 进度百分比
           example: 25
-
     SyncStatus:
       type: object
       description: 同步状态
@@ -1729,12 +1685,12 @@ components:
           type: string
           format: date-time
           description: 最后同步时间
-          example: "2025-08-15T14:00:00Z"
+          example: '2025-08-15T14:00:00Z'
         next_sync_time:
           type: string
           format: date-time
           description: 下次同步时间
-          example: "2025-08-15T15:00:00Z"
+          example: '2025-08-15T15:00:00Z'
         sync_count_today:
           type: integer
           description: 今日同步次数
@@ -1744,7 +1700,6 @@ components:
           format: double
           description: 成功率
           example: 98.5
-
     IntegrationStatus:
       type: object
       description: 集成状态
@@ -1759,16 +1714,16 @@ components:
         connection_status:
           type: string
           enum:
-            - connected
-            - disconnected
-            - error
+          - connected
+          - disconnected
+          - error
           description: 连接状态
-          example: "connected"
+          example: connected
         last_check_time:
           type: string
           format: date-time
           description: 最后检查时间
-          example: "2025-08-15T14:30:00Z"
+          example: '2025-08-15T14:30:00Z'
         sync_status:
           $ref: '#/components/schemas/SyncStatus'
         error_count_24h:
@@ -1780,7 +1735,6 @@ components:
           format: double
           description: 平均响应时间（毫秒）
           example: 125.5
-
     BatchOperationResult:
       type: object
       description: 批量操作结果
@@ -1811,8 +1765,7 @@ components:
               error_message:
                 type: string
                 description: 错误信息
-                example: "配置编码已存在"
-
+                example: 配置编码已存在
     AlertProcessResult:
       type: object
       description: 告警处理结果
@@ -1820,7 +1773,7 @@ components:
         alert_id:
           type: string
           description: 告警ID
-          example: "alert_abc123"
+          example: alert_abc123
         processed:
           type: boolean
           description: 是否已处理
@@ -1828,13 +1781,12 @@ components:
         ticket_id:
           type: string
           description: 创建的工单ID
-          example: "TCK-20250815-0001"
+          example: TCK-20250815-0001
         process_time:
           type: string
           format: date-time
           description: 处理时间
-          example: "2025-08-15T14:30:00Z"
-
+          example: '2025-08-15T14:30:00Z'
     ConfigTemplate:
       type: object
       description: 配置模板
@@ -1852,27 +1804,27 @@ components:
         template_name:
           type: string
           description: 模板名称
-          example: "Prometheus监控模板"
+          example: Prometheus监控模板
         template_code:
           type: string
           description: 模板编码
-          example: "prometheus_template"
+          example: prometheus_template
         integration_type:
           $ref: '#/components/schemas/IntegrationType'
         system_type:
           type: string
           description: 系统类型
-          example: "prometheus"
+          example: prometheus
         template_config:
           type: object
           description: 模板配置
           example:
-            default_endpoint: "http://prometheus:9090/api/v1"
-            default_auth_type: "basic"
+            default_endpoint: http://prometheus:9090/api/v1
+            default_auth_type: basic
         description:
           type: string
           description: 模板描述
-          example: "用于Prometheus监控系统集成的标准模板"
+          example: 用于Prometheus监控系统集成的标准模板
         is_public:
           type: boolean
           description: 是否公共模板
@@ -1890,52 +1842,50 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-15T10:00:00Z"
+          example: '2025-08-15T10:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-15T14:30:00Z"
-
+          example: '2025-08-15T14:30:00Z'
     CreateConfigTemplateRequest:
       type: object
       required:
-        - template_name
-        - template_code
-        - integration_type
-        - system_type
-        - template_config
+      - template_name
+      - template_code
+      - integration_type
+      - system_type
+      - template_config
       description: 创建配置模板请求
       properties:
         template_name:
           type: string
           description: 模板名称
-          example: "Prometheus监控模板"
+          example: Prometheus监控模板
         template_code:
           type: string
           description: 模板编码
-          example: "prometheus_template"
+          example: prometheus_template
         integration_type:
           $ref: '#/components/schemas/IntegrationType'
         system_type:
           type: string
           description: 系统类型
-          example: "prometheus"
+          example: prometheus
         template_config:
           type: object
           description: 模板配置
           example:
-            default_endpoint: "http://prometheus:9090/api/v1"
-            default_auth_type: "basic"
+            default_endpoint: http://prometheus:9090/api/v1
+            default_auth_type: basic
         description:
           type: string
           description: 模板描述
-          example: "用于Prometheus监控系统集成的标准模板"
+          example: 用于Prometheus监控系统集成的标准模板
         is_public:
           type: boolean
           description: 是否公共模板
           example: false
-
     HealthCheckResult:
       type: object
       description: 健康检查结果
@@ -1943,29 +1893,29 @@ components:
         status:
           type: string
           enum:
-            - healthy
-            - degraded
-            - unhealthy
+          - healthy
+          - degraded
+          - unhealthy
           description: 健康状态
-          example: "healthy"
+          example: healthy
         timestamp:
           type: string
           format: date-time
           description: 检查时间
-          example: "2025-08-15T14:30:00Z"
+          example: '2025-08-15T14:30:00Z'
         components:
           type: object
           description: 组件状态
           properties:
             database:
               type: string
-              example: "healthy"
+              example: healthy
             redis:
               type: string
-              example: "healthy"
+              example: healthy
             message_queue:
               type: string
-              example: "healthy"
+              example: healthy
         active_integrations:
           type: integer
           description: 活跃集成数量

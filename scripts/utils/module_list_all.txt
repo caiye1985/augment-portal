@@ -9,7 +9,9 @@ REQ-008 docs/prd/split/4.5.1/modules/REQ-008.md
 REQ-009 docs/prd/split/4.5.1/modules/REQ-009.md
 REQ-010 docs/prd/split/4.5.1/modules/REQ-010.md
 REQ-011 docs/prd/split/4.5.1/modules/REQ-011.md
+REQ-011-local docs/prd/split/4.5.1/modules/REQ-011-local.md
 REQ-012 docs/prd/split/4.5.1/modules/REQ-012.md
+REQ-012-local docs/prd/split/4.5.1/modules/REQ-012-local.md
 REQ-013 docs/prd/split/4.5.1/modules/REQ-013.md
 REQ-014 docs/prd/split/4.5.1/modules/REQ-014.md
 REQ-016 docs/prd/split/4.5.1/modules/REQ-016.md

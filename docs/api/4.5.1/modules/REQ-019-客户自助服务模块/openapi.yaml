@@ -3,32 +3,30 @@ info:
   title: 客户自助服务模块 API
   version: 1.0.0
   description: REQ-019 客户自助服务模块 API 规范 - 提供客户专属门户、智能FAQ、AI问答、自助工单、反馈评价等功能
-
 tags:
-  - name: portal-config
-    description: 客户门户配置管理
-  - name: portal-search
-    description: 智能搜索服务
-  - name: portal-ai
-    description: AI智能问答服务
-  - name: portal-tickets
-    description: 自助工单管理
-  - name: portal-feedback
-    description: 反馈与评价管理
-  - name: portal-knowledge
-    description: 知识库服务
-  - name: portal-analytics
-    description: 用户行为分析
-  - name: portal-documents
-    description: 文档下载服务
-  - name: portal-status
-    description: 服务状态查询
-
+- name: portal-config
+  description: 客户门户配置管理
+- name: portal-search
+  description: 智能搜索服务
+- name: portal-ai
+  description: AI智能问答服务
+- name: portal-tickets
+  description: 自助工单管理
+- name: portal-feedback
+  description: 反馈与评价管理
+- name: portal-knowledge
+  description: 知识库服务
+- name: portal-analytics
+  description: 用户行为分析
+- name: portal-documents
+  description: 文档下载服务
+- name: portal-status
+  description: 服务状态查询
 paths:
   /api/v1/customer-portal/config:
     get:
       tags:
-        - portal-config
+      - portal-config
       summary: 获取客户门户配置
       description: 获取当前客户的门户配置信息，包括主题、功能开关、品牌设置等
       operationId: portal_config_get
@@ -39,21 +37,20 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/CustomerPortalConfig'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/CustomerPortalConfig'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     put:
       tags:
-        - portal-config
+      - portal-config
       summary: 更新客户门户配置
       description: 更新客户门户的配置信息
       operationId: portal_config_update
@@ -70,58 +67,57 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/CustomerPortalConfig'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/CustomerPortalConfig'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/customer-portal/search:
     get:
       tags:
-        - portal-search
+      - portal-search
       summary: 全文搜索
       description: 在知识库中进行全文搜索，支持关键词匹配和智能推荐
       operationId: portal_search
       parameters:
-        - name: q
-          in: query
-          required: true
-          description: 搜索关键词
-          schema:
-            type: string
-            example: "服务器连接问题"
-        - name: category
-          in: query
-          description: 搜索分类
-          schema:
-            type: string
-            example: "网络故障"
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 50
-            default: 10
-            example: 10
+      - name: q
+        in: query
+        required: true
+        description: 搜索关键词
+        schema:
+          type: string
+          example: 服务器连接问题
+      - name: category
+        in: query
+        description: 搜索分类
+        schema:
+          type: string
+          example: 网络故障
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 10
+          example: 10
       responses:
         '200':
           description: 搜索成功
@@ -129,45 +125,44 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/SearchResult'
+                            $ref: '#/components/schemas/SearchResult'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/customer-portal/search/suggestions:
     get:
       tags:
-        - portal-search
+      - portal-search
       summary: 获取搜索建议
       description: 根据输入内容获取搜索建议
       operationId: portal_search_suggestions
       parameters:
-        - name: q
-          in: query
-          required: true
-          description: 搜索关键词前缀
-          schema:
-            type: string
-            example: "服务器"
-        - name: limit
-          in: query
-          description: 建议数量限制
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 20
-            default: 10
-            example: 10
+      - name: q
+        in: query
+        required: true
+        description: 搜索关键词前缀
+        schema:
+          type: string
+          example: 服务器
+      - name: limit
+        in: query
+        description: 建议数量限制
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 20
+          default: 10
+          example: 10
       responses:
         '200':
           description: 获取成功
@@ -175,26 +170,28 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          suggestions:
-                            type: array
-                            items:
-                              type: string
-                            example: ["服务器连接问题", "服务器性能优化", "服务器安全配置"]
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        suggestions:
+                          type: array
+                          items:
+                            type: string
+                          example:
+                          - 服务器连接问题
+                          - 服务器性能优化
+                          - 服务器安全配置
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/customer-portal/ai-chat:
     post:
       tags:
-        - portal-ai
+      - portal-ai
       summary: AI智能问答
       description: 通过AI大模型进行智能问答，提供上下文相关的回答和建议
       operationId: portal_ai_chat
@@ -211,43 +208,42 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/AIChatResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AIChatResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/customer-portal/ai-chat/sessions:
     get:
       tags:
-        - portal-ai
+      - portal-ai
       summary: 获取AI对话会话列表
       description: 获取用户的AI对话会话历史列表
       operationId: portal_ai_chat_sessions
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 50
-            default: 20
-            example: 20
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 20
+          example: 20
       responses:
         '200':
           description: 获取成功
@@ -255,25 +251,24 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/SelfServiceSession'
+                            $ref: '#/components/schemas/SelfServiceSession'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/customer-portal/tickets:
     post:
       tags:
-        - portal-tickets
+      - portal-tickets
       summary: 创建自助工单
       description: 客户通过自助服务门户创建工单
       operationId: portal_ticket_create
@@ -290,57 +285,55 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PortalTicketCreateResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PortalTicketCreateResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     get:
       tags:
-        - portal-tickets
+      - portal-tickets
       summary: 查询客户工单列表
       description: 查询当前客户的工单列表，支持状态筛选和分页
       operationId: portal_ticket_list
       parameters:
-        - name: status
-          in: query
-          description: 工单状态
-          schema:
+      - name: status
+        in: query
+        description: 工单状态
+        schema:
+          type: array
+          items:
             type: string
-            enum: [NEW, PENDING, ASSIGNED, IN_PROGRESS, SUSPENDED, ESCALATED, PENDING_VERIFICATION, RESOLVED, CLOSED, CANCELLED]
-            example: "IN_PROGRESS"
-        - name: priority
-          in: query
-          description: 优先级
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 4
-            example: 2
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 50
-            default: 20
-            example: 20
+      - name: priority
+        in: query
+        description: 优先级
+        schema:
+          type: array
+          items:
+            type: string
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 20
+          example: 20
       responses:
         '200':
           description: 查询成功
@@ -348,36 +341,35 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/PortalTicketListItem'
+                            $ref: '#/components/schemas/PortalTicketListItem'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/customer-portal/tickets/{id}:
     get:
       tags:
-        - portal-tickets
+      - portal-tickets
       summary: 获取工单详情
       description: 获取指定工单的详细信息
       operationId: portal_ticket_get
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: integer
+          example: 12345
       responses:
         '200':
           description: 获取成功
@@ -385,33 +377,32 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PortalTicketDetail'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PortalTicketDetail'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/customer-portal/tickets/{id}/status:
     get:
       tags:
-        - portal-tickets
+      - portal-tickets
       summary: 查询工单状态
       description: 查询指定工单的当前状态和处理进度
       operationId: portal_ticket_status
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: integer
+          example: 12345
       responses:
         '200':
           description: 查询成功
@@ -419,22 +410,21 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PortalTicketStatus'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PortalTicketStatus'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/customer-portal/feedback:
     post:
       tags:
-        - portal-feedback
+      - portal-feedback
       summary: 提交客户反馈
       description: 客户提交服务反馈和评价
       operationId: portal_feedback_submit
@@ -451,49 +441,52 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/CustomerFeedbackResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/CustomerFeedbackResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     get:
       tags:
-        - portal-feedback
+      - portal-feedback
       summary: 查询反馈历史
       description: 查询客户的反馈历史记录
       operationId: portal_feedback_list
       parameters:
-        - name: feedback_type
-          in: query
-          description: 反馈类型
-          schema:
-            type: string
-            enum: [service, feature, bug, suggestion]
-            example: "service"
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 50
-            default: 20
-            example: 20
+      - name: feedback_type
+        in: query
+        description: 反馈类型
+        schema:
+          type: string
+          enum:
+          - service
+          - feature
+          - bug
+          - suggestion
+          example: service
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 20
+          example: 20
       responses:
         '200':
           description: 查询成功
@@ -501,25 +494,24 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/CustomerFeedback'
+                            $ref: '#/components/schemas/CustomerFeedback'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/customer-portal/service-status:
     get:
       tags:
-        - portal-status
+      - portal-status
       summary: 获取服务状态概览
       description: 获取系统运行状态、维护计划等信息
       operationId: portal_service_status
@@ -530,48 +522,51 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ServiceStatusOverview'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ServiceStatusOverview'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/customer-portal/documents:
     get:
       tags:
-        - portal-documents
+      - portal-documents
       summary: 获取文档列表
       description: 获取可下载的文档列表，包括产品手册、运维指南等
       operationId: portal_documents_list
       parameters:
-        - name: category
-          in: query
-          description: 文档分类
-          schema:
-            type: string
-            enum: [manual, guide, policy, report]
-            example: "manual"
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 50
-            default: 20
-            example: 20
+      - name: category
+        in: query
+        description: 文档分类
+        schema:
+          type: string
+          enum:
+          - manual
+          - guide
+          - policy
+          - report
+          example: manual
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 20
+          example: 20
       responses:
         '200':
           description: 获取成功
@@ -579,36 +574,35 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/DocumentInfo'
+                            $ref: '#/components/schemas/DocumentInfo'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/customer-portal/documents/{id}/download:
     get:
       tags:
-        - portal-documents
+      - portal-documents
       summary: 下载文档
       description: 下载指定的文档文件
       operationId: portal_document_download
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 文档ID
-          schema:
-            type: integer
-            example: 4001
+      - name: id
+        in: path
+        required: true
+        description: 文档ID
+        schema:
+          type: integer
+          example: 4001
       responses:
         '200':
           description: 下载成功
@@ -618,16 +612,15 @@ paths:
                 type: string
                 format: binary
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/customer-portal/analytics/track:
     post:
       tags:
-        - portal-analytics
+      - portal-analytics
       summary: 用户行为追踪
       description: 记录用户在门户中的行为数据
       operationId: portal_analytics_track
@@ -643,51 +636,50 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/customer-portal/faq:
     get:
       tags:
-        - portal-knowledge
+      - portal-knowledge
       summary: 获取FAQ列表
       description: 获取常见问题列表，支持分类筛选
       operationId: portal_faq_list
       parameters:
-        - name: category
-          in: query
-          description: FAQ分类
-          schema:
-            type: string
-            example: "网络故障"
-        - name: tags
-          in: query
-          description: 标签筛选
-          schema:
-            type: string
-            example: "服务器,连接"
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 50
-            default: 20
-            example: 20
+      - name: category
+        in: query
+        description: FAQ分类
+        schema:
+          type: string
+          example: 网络故障
+      - name: tags
+        in: query
+        description: 标签筛选
+        schema:
+          type: string
+          example: 服务器,连接
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 20
+          example: 20
       responses:
         '200':
           description: 获取成功
@@ -695,34 +687,33 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/FAQItem'
+                            $ref: '#/components/schemas/FAQItem'
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/customer-portal/faq/{id}:
     get:
       tags:
-        - portal-knowledge
+      - portal-knowledge
       summary: 获取FAQ详情
       description: 获取指定FAQ的详细内容
       operationId: portal_faq_get
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: FAQ ID
-          schema:
-            type: integer
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: FAQ ID
+        schema:
+          type: integer
+          example: 1001
       responses:
         '200':
           description: 获取成功
@@ -730,19 +721,17 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/FAQDetail'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/FAQDetail'
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
 components:
   schemas:
-    # 客户门户配置
     CustomerPortalConfig:
       type: object
       properties:
@@ -761,73 +750,79 @@ components:
         portal_domain:
           type: string
           description: 门户域名
-          example: "abc-tech.portal.example.com"
+          example: abc-tech.portal.example.com
         portal_title:
           type: string
           description: 门户标题
-          example: "ABC科技客户服务门户"
+          example: ABC科技客户服务门户
         logo_url:
           type: string
           description: LOGO地址
-          example: "https://cdn.example.com/logos/abc-tech.png"
+          example: https://cdn.example.com/logos/abc-tech.png
         theme_color:
           type: string
           description: 主题色
-          example: "#409EFF"
+          example: '#409EFF'
         welcome_message:
           type: string
           description: 欢迎信息
-          example: "欢迎使用ABC科技客户服务门户，我们为您提供7x24小时自助服务"
+          example: 欢迎使用ABC科技客户服务门户，我们为您提供7x24小时自助服务
         enabled_features:
           type: array
           items:
             type: string
           description: 启用功能列表
-          example: ["ai_chat", "ticket_create", "knowledge_search", "feedback"]
+          example:
+          - ai_chat
+          - ticket_create
+          - knowledge_search
+          - feedback
         status:
           type: integer
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           description: 状态：1-启用，2-禁用
           example: 1
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-01-01T09:00:00Z"
+          example: '2024-01-01T09:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-14T14:30:00Z"
-
-    # 客户门户配置更新请求
+          example: '2025-08-14T14:30:00Z'
     CustomerPortalConfigUpdateRequest:
       type: object
       properties:
         portal_title:
           type: string
           description: 门户标题
-          example: "ABC科技客户服务门户"
+          example: ABC科技客户服务门户
         logo_url:
           type: string
           description: LOGO地址
-          example: "https://cdn.example.com/logos/abc-tech.png"
+          example: https://cdn.example.com/logos/abc-tech.png
         theme_color:
           type: string
           description: 主题色
-          example: "#409EFF"
+          example: '#409EFF'
         welcome_message:
           type: string
           description: 欢迎信息
-          example: "欢迎使用ABC科技客户服务门户，我们为您提供7x24小时自助服务"
+          example: 欢迎使用ABC科技客户服务门户，我们为您提供7x24小时自助服务
         enabled_features:
           type: array
           items:
             type: string
           description: 启用功能列表
-          example: ["ai_chat", "ticket_create", "knowledge_search", "feedback"]
-
-    # 搜索结果
+          example:
+          - ai_chat
+          - ticket_create
+          - knowledge_search
+          - feedback
     SearchResult:
       type: object
       properties:
@@ -838,26 +833,32 @@ components:
         title:
           type: string
           description: 标题
-          example: "服务器连接故障排查指南"
+          example: 服务器连接故障排查指南
         content:
           type: string
           description: 内容摘要
-          example: "当服务器出现连接问题时，可以按照以下步骤进行排查..."
+          example: 当服务器出现连接问题时，可以按照以下步骤进行排查...
         type:
           type: string
-          enum: [faq, knowledge_article, document]
+          enum:
+          - faq
+          - knowledge_article
+          - document
           description: 结果类型
-          example: "knowledge_article"
+          example: knowledge_article
         category:
           type: string
           description: 分类
-          example: "网络故障"
+          example: 网络故障
         tags:
           type: array
           items:
             type: string
           description: 标签
-          example: ["服务器", "网络", "故障排查"]
+          example:
+          - 服务器
+          - 网络
+          - 故障排查
         relevance_score:
           type: number
           description: 相关性评分
@@ -865,32 +866,30 @@ components:
         url:
           type: string
           description: 详情链接
-          example: "/knowledge/articles/1001"
+          example: /knowledge/articles/1001
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-06-15T10:00:00Z"
+          example: '2024-06-15T10:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-14T14:30:00Z"
-
-    # AI问答请求
+          example: '2025-08-14T14:30:00Z'
     AIChatRequest:
       type: object
       required:
-        - question
+      - question
       properties:
         question:
           type: string
           description: 用户问题
-          example: "服务器连接不上怎么办？"
+          example: 服务器连接不上怎么办？
         session_id:
           type: string
           description: 会话ID
-          example: "SESS-20250814-0001"
+          example: SESS-20250814-0001
         context:
           type: object
           description: 上下文信息
@@ -900,11 +899,13 @@ components:
               items:
                 type: string
               description: 之前的问题
-              example: ["网络问题", "服务器状态"]
+              example:
+              - 网络问题
+              - 服务器状态
             user_role:
               type: string
               description: 用户角色
-              example: "IT管理员"
+              example: IT管理员
             customer_context:
               type: object
               description: 客户上下文
@@ -912,11 +913,11 @@ components:
                 industry:
                   type: string
                   description: 行业
-                  example: "金融"
+                  example: 金融
                 system_type:
                   type: string
                   description: 系统类型
-                  example: "核心业务系统"
+                  example: 核心业务系统
         options:
           type: object
           description: 选项配置
@@ -933,15 +934,13 @@ components:
               type: number
               description: 置信度阈值
               example: 0.7
-
-    # AI问答响应
     AIChatResponse:
       type: object
       properties:
         answer:
           type: string
           description: AI回答
-          example: "服务器连接问题可能由以下原因导致：1. 网络连接异常 2. 服务器服务停止 3. 防火墙阻拦。建议您先检查网络连接，然后查看服务器状态。"
+          example: 服务器连接问题可能由以下原因导致：1. 网络连接异常 2. 服务器服务停止 3. 防火墙阻拦。建议您先检查网络连接，然后查看服务器状态。
         confidence:
           type: number
           description: 置信度
@@ -949,11 +948,11 @@ components:
         session_id:
           type: string
           description: 会话ID
-          example: "SESS-20250814-0001"
+          example: SESS-20250814-0001
         interaction_id:
           type: string
           description: 交互ID
-          example: "INT-20250814-0001"
+          example: INT-20250814-0001
         response_time:
           type: integer
           description: 响应时间（毫秒）
@@ -970,11 +969,11 @@ components:
               title:
                 type: string
                 description: 文章标题
-                example: "服务器连接故障排查指南"
+                example: 服务器连接故障排查指南
               url:
                 type: string
                 description: 文章链接
-                example: "/knowledge/articles/1001"
+                example: /knowledge/articles/1001
               relevance:
                 type: number
                 description: 相关性
@@ -982,7 +981,7 @@ components:
               category:
                 type: string
                 description: 分类
-                example: "网络故障"
+                example: 网络故障
           description: 相关文章
         suggested_actions:
           type: array
@@ -992,7 +991,7 @@ components:
               action:
                 type: string
                 description: 建议操作
-                example: "检查网络连接"
+                example: 检查网络连接
               priority:
                 type: integer
                 description: 优先级
@@ -1000,16 +999,16 @@ components:
               description:
                 type: string
                 description: 操作描述
-                example: "使用ping命令测试网络连通性"
+                example: 使用ping命令测试网络连通性
           description: 建议操作
         follow_up_questions:
           type: array
           items:
             type: string
           description: 后续问题建议
-          example: ["网络连接正常但仍无法访问怎么办？", "如何检查服务器服务状态？"]
-
-    # 自助服务会话
+          example:
+          - 网络连接正常但仍无法访问怎么办？
+          - 如何检查服务器服务状态？
     SelfServiceSession:
       type: object
       properties:
@@ -1020,7 +1019,7 @@ components:
         session_id:
           type: string
           description: 会话标识
-          example: "SESS-20250814-0001"
+          example: SESS-20250814-0001
         tenant_id:
           type: integer
           description: 租户ID
@@ -1035,18 +1034,24 @@ components:
           example: 10001
         session_type:
           type: string
-          enum: [search, ai_chat, ticket]
+          enum:
+          - search
+          - ai_chat
+          - ticket
           description: 会话类型
-          example: "ai_chat"
+          example: ai_chat
         initial_question:
           type: string
           description: 初始问题
-          example: "服务器连接不上怎么办？"
+          example: 服务器连接不上怎么办？
         resolution_status:
           type: string
-          enum: [pending, resolved, escalated]
+          enum:
+          - pending
+          - resolved
+          - escalated
           description: 解决状态
-          example: "resolved"
+          example: resolved
         satisfaction_score:
           type: integer
           minimum: 1
@@ -1065,35 +1070,33 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-14T10:00:00Z"
+          example: '2025-08-14T10:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-14T14:30:00Z"
+          example: '2025-08-14T14:30:00Z'
         ended_at:
           type: string
           format: date-time
           description: 结束时间
-          example: "2025-08-14T14:30:00Z"
-
-    # 工单创建请求
+          example: '2025-08-14T14:30:00Z'
     PortalTicketCreateRequest:
       type: object
       required:
-        - title
-        - description
-        - priority
-        - category
+      - title
+      - description
+      - priority
+      - category
       properties:
         title:
           type: string
           description: 工单标题
-          example: "服务器CPU使用率过高"
+          example: 服务器CPU使用率过高
         description:
           type: string
           description: 问题描述
-          example: "生产服务器CPU使用率持续超过90%，影响业务正常运行"
+          example: 生产服务器CPU使用率持续超过90%，影响业务正常运行
         priority:
           type: integer
           minimum: 1
@@ -1103,20 +1106,20 @@ components:
         category:
           type: string
           description: 问题分类
-          example: "性能问题"
+          example: 性能问题
         contact_phone:
           type: string
           description: 联系电话
-          example: "13800138000"
+          example: '13800138000'
         contact_email:
           type: string
           description: 联系邮箱
-          example: "user@abc-tech.com"
+          example: user@abc-tech.com
         expected_resolution_time:
           type: string
           format: date-time
           description: 期望解决时间
-          example: "2025-08-14T18:00:00Z"
+          example: '2025-08-14T18:00:00Z'
         attachments:
           type: array
           items:
@@ -1125,14 +1128,12 @@ components:
               file_name:
                 type: string
                 description: 文件名
-                example: "error_log.txt"
+                example: error_log.txt
               file_content:
                 type: string
                 format: byte
                 description: 文件内容（Base64编码）
           description: 附件列表
-
-    # 工单创建响应
     PortalTicketCreateResponse:
       type: object
       properties:
@@ -1143,23 +1144,21 @@ components:
         ticket_no:
           type: string
           description: 工单编号
-          example: "TCK-20250814-0001"
+          example: TCK-20250814-0001
         status:
           type: string
           description: 工单状态
-          example: "NEW"
+          example: NEW
         estimated_resolution_time:
           type: string
           format: date-time
           description: 预计解决时间
-          example: "2025-08-14T18:00:00Z"
+          example: '2025-08-14T18:00:00Z'
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-14T10:00:00Z"
-
-    # 工单列表项
+          example: '2025-08-14T10:00:00Z'
     PortalTicketListItem:
       type: object
       properties:
@@ -1170,15 +1169,15 @@ components:
         ticket_no:
           type: string
           description: 工单编号
-          example: "TCK-20250814-0001"
+          example: TCK-20250814-0001
         title:
           type: string
           description: 工单标题
-          example: "服务器CPU使用率过高"
+          example: 服务器CPU使用率过高
         status:
           type: string
           description: 工单状态
-          example: "IN_PROGRESS"
+          example: IN_PROGRESS
         priority:
           type: integer
           description: 优先级
@@ -1186,100 +1185,96 @@ components:
         priority_name:
           type: string
           description: 优先级名称
-          example: "高"
+          example: 高
         category:
           type: string
           description: 问题分类
-          example: "性能问题"
+          example: 性能问题
         assigned_engineer_name:
           type: string
           description: 分配工程师
-          example: "张三"
+          example: 张三
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-14T10:00:00Z"
+          example: '2025-08-14T10:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-14T14:30:00Z"
+          example: '2025-08-14T14:30:00Z'
         due_date:
           type: string
           format: date-time
           description: 截止时间
-          example: "2025-08-14T18:00:00Z"
-
-    # 工单详情
+          example: '2025-08-14T18:00:00Z'
     PortalTicketDetail:
       allOf:
-        - $ref: '#/components/schemas/PortalTicketListItem'
-        - type: object
-          properties:
-            description:
-              type: string
-              description: 问题描述
-              example: "生产服务器CPU使用率持续超过90%，影响业务正常运行"
-            contact_phone:
-              type: string
-              description: 联系电话
-              example: "13800138000"
-            contact_email:
-              type: string
-              description: 联系邮箱
-              example: "user@abc-tech.com"
-            resolution_description:
-              type: string
-              description: 解决方案描述
-              example: "已优化服务器配置，CPU使用率恢复正常"
-            attachments:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    description: 附件ID
-                    example: 67890
-                  file_name:
-                    type: string
-                    description: 文件名
-                    example: "error_log.txt"
-                  file_size:
-                    type: integer
-                    description: 文件大小（字节）
-                    example: 1024
-                  download_url:
-                    type: string
-                    description: 下载链接
-                    example: "/api/v1/customer-portal/tickets/12345/attachments/67890/download"
-              description: 附件列表
-            processing_logs:
-              type: array
-              items:
-                type: object
-                properties:
-                  action_type:
-                    type: string
-                    description: 操作类型
-                    example: "ASSIGN"
-                  action_description:
-                    type: string
-                    description: 操作描述
-                    example: "工单已分配给张工程师"
-                  operator_name:
-                    type: string
-                    description: 操作人
-                    example: "系统管理员"
-                  created_at:
-                    type: string
-                    format: date-time
-                    description: 操作时间
-                    example: "2025-08-14T10:35:00Z"
-              description: 处理记录
-
-    # 工单状态
+      - $ref: '#/components/schemas/PortalTicketListItem'
+      - type: object
+        properties:
+          description:
+            type: string
+            description: 问题描述
+            example: 生产服务器CPU使用率持续超过90%，影响业务正常运行
+          contact_phone:
+            type: string
+            description: 联系电话
+            example: '13800138000'
+          contact_email:
+            type: string
+            description: 联系邮箱
+            example: user@abc-tech.com
+          resolution_description:
+            type: string
+            description: 解决方案描述
+            example: 已优化服务器配置，CPU使用率恢复正常
+          attachments:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: 附件ID
+                  example: 67890
+                file_name:
+                  type: string
+                  description: 文件名
+                  example: error_log.txt
+                file_size:
+                  type: integer
+                  description: 文件大小（字节）
+                  example: 1024
+                download_url:
+                  type: string
+                  description: 下载链接
+                  example: /api/v1/customer-portal/tickets/12345/attachments/67890/download
+            description: 附件列表
+          processing_logs:
+            type: array
+            items:
+              type: object
+              properties:
+                action_type:
+                  type: string
+                  description: 操作类型
+                  example: ASSIGN
+                action_description:
+                  type: string
+                  description: 操作描述
+                  example: 工单已分配给张工程师
+                operator_name:
+                  type: string
+                  description: 操作人
+                  example: 系统管理员
+                created_at:
+                  type: string
+                  format: date-time
+                  description: 操作时间
+                  example: '2025-08-14T10:35:00Z'
+            description: 处理记录
     PortalTicketStatus:
       type: object
       properties:
@@ -1290,11 +1285,11 @@ components:
         ticket_no:
           type: string
           description: 工单编号
-          example: "TCK-20250814-0001"
+          example: TCK-20250814-0001
         current_status:
           type: string
           description: 当前状态
-          example: "IN_PROGRESS"
+          example: IN_PROGRESS
         progress_percentage:
           type: integer
           description: 进度百分比
@@ -1303,7 +1298,7 @@ components:
           type: string
           format: date-time
           description: 预计完成时间
-          example: "2025-08-14T18:00:00Z"
+          example: '2025-08-14T18:00:00Z'
         assigned_engineer:
           type: object
           properties:
@@ -1314,11 +1309,11 @@ components:
             engineer_name:
               type: string
               description: 工程师姓名
-              example: "张三"
+              example: 张三
             contact_phone:
               type: string
               description: 联系电话
-              example: "13900139000"
+              example: '13900139000'
           description: 分配工程师信息
         last_update:
           type: object
@@ -1327,34 +1322,39 @@ components:
               type: string
               format: date-time
               description: 更新时间
-              example: "2025-08-14T14:30:00Z"
+              example: '2025-08-14T14:30:00Z'
             update_description:
               type: string
               description: 更新描述
-              example: "正在分析服务器性能数据"
+              example: 正在分析服务器性能数据
           description: 最新更新
-
-    # 客户反馈请求
     CustomerFeedbackRequest:
       type: object
       required:
-        - feedback_type
-        - feedback_content
+      - feedback_type
+      - feedback_content
       properties:
         feedback_type:
           type: string
-          enum: [service, feature, bug, suggestion]
+          enum:
+          - service
+          - feature
+          - bug
+          - suggestion
           description: 反馈类型
-          example: "service"
+          example: service
         related_id:
           type: string
           description: 关联ID（工单、知识、会话等）
-          example: "TCK-20250814-0001"
+          example: TCK-20250814-0001
         related_type:
           type: string
-          enum: [ticket, knowledge, session]
+          enum:
+          - ticket
+          - knowledge
+          - session
           description: 关联类型
-          example: "ticket"
+          example: ticket
         rating:
           type: integer
           minimum: 1
@@ -1364,17 +1364,15 @@ components:
         feedback_content:
           type: string
           description: 反馈内容
-          example: "工程师响应及时，问题解决得很好"
+          example: 工程师响应及时，问题解决得很好
         suggestions:
           type: string
           description: 改进建议
-          example: "希望能提供更详细的解决方案文档"
+          example: 希望能提供更详细的解决方案文档
         contact_required:
           type: boolean
           description: 是否需要回访
           example: false
-
-    # 客户反馈响应
     CustomerFeedbackResponse:
       type: object
       properties:
@@ -1385,101 +1383,115 @@ components:
         feedback_no:
           type: string
           description: 反馈编号
-          example: "FB-20250814-0001"
+          example: FB-20250814-0001
         status:
           type: string
-          enum: [pending, processing, processed, closed]
+          enum:
+          - pending
+          - processing
+          - processed
+          - closed
           description: 处理状态
-          example: "pending"
+          example: pending
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-14T14:30:00Z"
-
-    # 客户反馈
+          example: '2025-08-14T14:30:00Z'
     CustomerFeedback:
       allOf:
-        - $ref: '#/components/schemas/CustomerFeedbackResponse'
-        - type: object
-          properties:
-            tenant_id:
-              type: integer
-              description: 租户ID
-              example: 100
-            customer_id:
-              type: integer
-              description: 客户ID
-              example: 5001
-            user_id:
-              type: integer
-              description: 用户ID
-              example: 10001
-            feedback_type:
-              type: string
-              enum: [service, feature, bug, suggestion]
-              description: 反馈类型
-              example: "service"
-            related_id:
-              type: string
-              description: 关联ID
-              example: "TCK-20250814-0001"
-            related_type:
-              type: string
-              enum: [ticket, knowledge, session]
-              description: 关联类型
-              example: "ticket"
-            rating:
-              type: integer
-              minimum: 1
-              maximum: 5
-              description: 评分
-              example: 5
-            feedback_content:
-              type: string
-              description: 反馈内容
-              example: "工程师响应及时，问题解决得很好"
-            suggestions:
-              type: string
-              description: 改进建议
-              example: "希望能提供更详细的解决方案文档"
-            priority_level:
-              type: integer
-              enum: [1, 2, 3]
-              description: 优先级：1-高，2-中，3-低
-              example: 2
-            sentiment_score:
-              type: number
-              description: 情感分析得分
-              example: 0.85
-            processed_by:
-              type: integer
-              description: 处理人ID
-              example: 2001
-            processed_at:
-              type: string
-              format: date-time
-              description: 处理时间
-              example: "2025-08-15T09:00:00Z"
-            response_content:
-              type: string
-              description: 回复内容
-              example: "感谢您的反馈，我们会继续改进服务质量"
-            updated_at:
-              type: string
-              format: date-time
-              description: 更新时间
-              example: "2025-08-15T09:00:00Z"
-
-    # 服务状态概览
+      - $ref: '#/components/schemas/CustomerFeedbackResponse'
+      - type: object
+        properties:
+          tenant_id:
+            type: integer
+            description: 租户ID
+            example: 100
+          customer_id:
+            type: integer
+            description: 客户ID
+            example: 5001
+          user_id:
+            type: integer
+            description: 用户ID
+            example: 10001
+          feedback_type:
+            type: string
+            enum:
+            - service
+            - feature
+            - bug
+            - suggestion
+            description: 反馈类型
+            example: service
+          related_id:
+            type: string
+            description: 关联ID
+            example: TCK-20250814-0001
+          related_type:
+            type: string
+            enum:
+            - ticket
+            - knowledge
+            - session
+            description: 关联类型
+            example: ticket
+          rating:
+            type: integer
+            minimum: 1
+            maximum: 5
+            description: 评分
+            example: 5
+          feedback_content:
+            type: string
+            description: 反馈内容
+            example: 工程师响应及时，问题解决得很好
+          suggestions:
+            type: string
+            description: 改进建议
+            example: 希望能提供更详细的解决方案文档
+          priority_level:
+            type: integer
+            enum:
+            - 1
+            - 2
+            - 3
+            description: 优先级：1-高，2-中，3-低
+            example: 2
+          sentiment_score:
+            type: number
+            description: 情感分析得分
+            example: 0.85
+          processed_by:
+            type: integer
+            description: 处理人ID
+            example: 2001
+          processed_at:
+            type: string
+            format: date-time
+            description: 处理时间
+            example: '2025-08-15T09:00:00Z'
+          response_content:
+            type: string
+            description: 回复内容
+            example: 感谢您的反馈，我们会继续改进服务质量
+          updated_at:
+            type: string
+            format: date-time
+            description: 更新时间
+            example: '2025-08-15T09:00:00Z'
     ServiceStatusOverview:
       type: object
       properties:
         overall_status:
           type: string
-          enum: [normal, warning, critical, maintenance]
+          enum:
+          - normal
+          - warning
+          - critical
+          - maintenance
           description: 整体状态
-          example: "normal"
+          example: normal
         system_health:
           type: object
           properties:
@@ -1497,9 +1509,12 @@ components:
               example: 45.8
             network_status:
               type: string
-              enum: [normal, slow, disconnected]
+              enum:
+              - normal
+              - slow
+              - disconnected
               description: 网络状态
-              example: "normal"
+              example: normal
           description: 系统健康状况
         service_availability:
           type: array
@@ -1509,12 +1524,15 @@ components:
               service_name:
                 type: string
                 description: 服务名称
-                example: "工单系统"
+                example: 工单系统
               status:
                 type: string
-                enum: [online, offline, maintenance]
+                enum:
+                - online
+                - offline
+                - maintenance
                 description: 服务状态
-                example: "online"
+                example: online
               uptime_percentage:
                 type: number
                 description: 可用性百分比
@@ -1532,34 +1550,35 @@ components:
               title:
                 type: string
                 description: 维护标题
-                example: "系统升级维护"
+                example: 系统升级维护
               description:
                 type: string
                 description: 维护描述
-                example: "进行系统版本升级，预计影响时间2小时"
+                example: 进行系统版本升级，预计影响时间2小时
               start_time:
                 type: string
                 format: date-time
                 description: 开始时间
-                example: "2025-08-15T02:00:00Z"
+                example: '2025-08-15T02:00:00Z'
               end_time:
                 type: string
                 format: date-time
                 description: 结束时间
-                example: "2025-08-15T04:00:00Z"
+                example: '2025-08-15T04:00:00Z'
               impact_level:
                 type: string
-                enum: [low, medium, high]
+                enum:
+                - low
+                - medium
+                - high
                 description: 影响级别
-                example: "medium"
+                example: medium
           description: 维护计划
         last_updated:
           type: string
           format: date-time
           description: 最后更新时间
-          example: "2025-08-14T14:30:00Z"
-
-    # 文档信息
+          example: '2025-08-14T14:30:00Z'
     DocumentInfo:
       type: object
       properties:
@@ -1570,20 +1589,24 @@ components:
         title:
           type: string
           description: 文档标题
-          example: "系统操作手册"
+          example: 系统操作手册
         description:
           type: string
           description: 文档描述
-          example: "详细介绍系统各功能模块的操作方法"
+          example: 详细介绍系统各功能模块的操作方法
         category:
           type: string
-          enum: [manual, guide, policy, report]
+          enum:
+          - manual
+          - guide
+          - policy
+          - report
           description: 文档分类
-          example: "manual"
+          example: manual
         file_name:
           type: string
           description: 文件名
-          example: "system_manual_v2.1.pdf"
+          example: system_manual_v2.1.pdf
         file_size:
           type: integer
           description: 文件大小（字节）
@@ -1591,11 +1614,11 @@ components:
         file_type:
           type: string
           description: 文件类型
-          example: "application/pdf"
+          example: application/pdf
         version:
           type: string
           description: 版本号
-          example: "v2.1"
+          example: v2.1
         download_count:
           type: integer
           description: 下载次数
@@ -1604,60 +1627,64 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-06-01T09:00:00Z"
+          example: '2024-06-01T09:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-14T14:30:00Z"
-
-    # 用户行为追踪请求
+          example: '2025-08-14T14:30:00Z'
     UserBehaviorTrackRequest:
       type: object
       required:
-        - page_path
-        - action_type
+      - page_path
+      - action_type
       properties:
         session_id:
           type: string
           description: 会话ID
-          example: "SESS-20250814-0001"
+          example: SESS-20250814-0001
         page_path:
           type: string
           description: 页面路径
-          example: "/customer-portal/search"
+          example: /customer-portal/search
         action_type:
           type: string
-          enum: [view, search, click, download, submit]
+          enum:
+          - view
+          - search
+          - click
+          - download
+          - submit
           description: 行为类型
-          example: "search"
+          example: search
         action_target:
           type: string
           description: 行为目标
-          example: "搜索按钮"
+          example: 搜索按钮
         search_keywords:
           type: string
           description: 搜索关键词
-          example: "服务器连接问题"
+          example: 服务器连接问题
         stay_duration:
           type: integer
           description: 停留时长（秒）
           example: 120
         device_type:
           type: string
-          enum: [desktop, mobile, tablet]
+          enum:
+          - desktop
+          - mobile
+          - tablet
           description: 设备类型
-          example: "desktop"
+          example: desktop
         browser_info:
           type: string
           description: 浏览器信息
-          example: "Chrome/91.0.4472.124"
+          example: Chrome/91.0.4472.124
         referrer_url:
           type: string
           description: 来源URL
-          example: "https://www.google.com"
-
-    # FAQ条目
+          example: https://www.google.com
     FAQItem:
       type: object
       properties:
@@ -1668,21 +1695,24 @@ components:
         question:
           type: string
           description: 问题
-          example: "如何重置密码？"
+          example: 如何重置密码？
         answer:
           type: string
           description: 答案
-          example: "您可以在登录页面点击'忘记密码'链接，按照提示进行密码重置"
+          example: 您可以在登录页面点击'忘记密码'链接，按照提示进行密码重置
         category:
           type: string
           description: 分类
-          example: "账户管理"
+          example: 账户管理
         tags:
           type: array
           items:
             type: string
           description: 标签
-          example: ["密码", "重置", "账户"]
+          example:
+          - 密码
+          - 重置
+          - 账户
         view_count:
           type: integer
           description: 查看次数
@@ -1695,52 +1725,50 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-03-01T09:00:00Z"
+          example: '2024-03-01T09:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-14T14:30:00Z"
-
-    # FAQ详情
+          example: '2025-08-14T14:30:00Z'
     FAQDetail:
       allOf:
-        - $ref: '#/components/schemas/FAQItem'
-        - type: object
-          properties:
-            detailed_answer:
-              type: string
-              description: 详细答案
-              example: "密码重置的详细步骤：1. 访问登录页面 2. 点击'忘记密码' 3. 输入注册邮箱 4. 查收重置邮件 5. 按照邮件指引设置新密码"
-            related_articles:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    description: 文章ID
-                    example: 2001
-                  title:
-                    type: string
-                    description: 文章标题
-                    example: "账户安全设置指南"
-                  url:
-                    type: string
-                    description: 文章链接
-                    example: "/knowledge/articles/2001"
-              description: 相关文章
-            attachments:
-              type: array
-              items:
-                type: object
-                properties:
-                  file_name:
-                    type: string
-                    description: 文件名
-                    example: "password_reset_guide.pdf"
-                  download_url:
-                    type: string
-                    description: 下载链接
-                    example: "/api/v1/customer-portal/faq/1001/attachments/password_reset_guide.pdf"
-              description: 附件列表
+      - $ref: '#/components/schemas/FAQItem'
+      - type: object
+        properties:
+          detailed_answer:
+            type: string
+            description: 详细答案
+            example: 密码重置的详细步骤：1. 访问登录页面 2. 点击'忘记密码' 3. 输入注册邮箱 4. 查收重置邮件 5. 按照邮件指引设置新密码
+          related_articles:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: 文章ID
+                  example: 2001
+                title:
+                  type: string
+                  description: 文章标题
+                  example: 账户安全设置指南
+                url:
+                  type: string
+                  description: 文章链接
+                  example: /knowledge/articles/2001
+            description: 相关文章
+          attachments:
+            type: array
+            items:
+              type: object
+              properties:
+                file_name:
+                  type: string
+                  description: 文件名
+                  example: password_reset_guide.pdf
+                download_url:
+                  type: string
+                  description: 下载链接
+                  example: /api/v1/customer-portal/faq/1001/attachments/password_reset_guide.pdf
+            description: 附件列表

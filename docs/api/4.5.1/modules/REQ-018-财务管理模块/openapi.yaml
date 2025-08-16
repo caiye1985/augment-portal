@@ -3,26 +3,24 @@ info:
   title: 财务管理模块 API
   version: 1.0.0
   description: REQ-018 财务管理模块 API 规范 - 支持合同驱动计费、智能支付对账、AI风控、展期管理等核心财务功能
-
 tags:
-  - name: invoices
-    description: 账单管理
-  - name: payments
-    description: 支付管理
-  - name: extensions
-    description: 合同展期管理
-  - name: reports
-    description: 财务报表分析
-  - name: risk
-    description: 财务风险管理
-  - name: config
-    description: 财务配置管理
-
+- name: invoices
+  description: 账单管理
+- name: payments
+  description: 支付管理
+- name: extensions
+  description: 合同展期管理
+- name: reports
+  description: 财务报表分析
+- name: risk
+  description: 财务风险管理
+- name: config
+  description: 财务配置管理
 paths:
   /api/v1/finance/invoices/generate:
     post:
       tags:
-        - invoices
+      - invoices
       summary: 生成账单
       description: 基于合同条款和SLA数据自动生成账单，支持多种计费模式
       operationId: invoice_generate
@@ -39,97 +37,105 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BillingInvoice'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BillingInvoice'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/invoices:
     get:
       tags:
-        - invoices
+      - invoices
       summary: 查询账单列表
       description: 分页查询账单列表，支持多条件筛选和排序
       operationId: invoice_list
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: status
-          in: query
-          description: 账单状态
-          schema:
-            type: integer
-            enum: [1, 2, 3, 4, 5]
-            example: 1
-        - name: customer_id
-          in: query
-          description: 客户ID
-          schema:
-            type: integer
-            example: 5001
-        - name: billing_period_start
-          in: query
-          description: 计费周期开始时间
-          schema:
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: status
+        in: query
+        description: 账单状态
+        schema:
+          type: array
+          items: &id001
             type: string
-            format: date
-            example: "2024-08-01"
-        - name: billing_period_end
-          in: query
-          description: 计费周期结束时间
-          schema:
-            type: string
-            format: date
-            example: "2024-08-31"
-        - name: risk_level
-          in: query
-          description: 风险等级
-          schema:
-            type: string
-            enum: [low, medium, high]
-            example: "low"
-        - name: sort_by
-          in: query
-          description: 排序字段
-          schema:
-            type: string
-            enum: [created_at, due_date, total_amount, risk_score]
-            default: created_at
-            example: "created_at"
-        - name: sort_order
-          in: query
-          description: 排序方向
-          schema:
-            type: string
-            enum: [asc, desc]
-            default: desc
-            example: "desc"
+      - name: customer_id
+        in: query
+        description: 客户ID
+        schema:
+          type: integer
+          example: 5001
+      - name: billing_period_start
+        in: query
+        description: 计费周期开始时间
+        schema:
+          type: string
+          format: date
+          example: '2024-08-01'
+      - name: billing_period_end
+        in: query
+        description: 计费周期结束时间
+        schema:
+          type: string
+          format: date
+          example: '2024-08-31'
+      - name: risk_level
+        in: query
+        description: 风险等级
+        schema:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+          example: low
+      - name: sort_by
+        in: query
+        description: 排序字段
+        schema:
+          type: string
+          enum:
+          - created_at
+          - due_date
+          - total_amount
+          - risk_score
+          default: created_at
+          example: created_at
+      - name: sort_order
+        in: query
+        description: 排序方向
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+          example: desc
       responses:
         '200':
           description: 查询成功
@@ -137,28 +143,27 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/InvoiceListItem'
+                            $ref: '#/components/schemas/InvoiceListItem'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     post:
       tags:
-        - invoices
+      - invoices
       summary: 创建账单
       description: 手动创建账单，用于特殊情况下的账单生成
       operationId: invoice_create
@@ -175,35 +180,34 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BillingInvoice'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BillingInvoice'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/invoices/{id}:
     get:
       tags:
-        - invoices
+      - invoices
       summary: 查询账单详情
       description: 根据账单ID查询详细信息，包括账单明细和支付记录
       operationId: invoice_get
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 账单ID
-          schema:
-            type: integer
-            example: 67890
+      - name: id
+        in: path
+        required: true
+        description: 账单ID
+        schema:
+          type: integer
+          example: 67890
       responses:
         '200':
           description: 查询成功
@@ -211,36 +215,35 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/InvoiceDetailInfo'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/InvoiceDetailInfo'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     put:
       tags:
-        - invoices
+      - invoices
       summary: 更新账单
       description: 更新账单信息，仅允许更新特定字段
       operationId: invoice_update
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 账单ID
-          schema:
-            type: integer
-            example: 67890
+      - name: id
+        in: path
+        required: true
+        description: 账单ID
+        schema:
+          type: integer
+          example: 67890
       requestBody:
         required: true
         content:
@@ -254,62 +257,60 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BillingInvoice'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BillingInvoice'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     delete:
       tags:
-        - invoices
+      - invoices
       summary: 删除账单
       description: 删除账单，仅允许删除未支付状态的账单
       operationId: invoice_delete
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 账单ID
-          schema:
-            type: integer
-            example: 67890
+      - name: id
+        in: path
+        required: true
+        description: 账单ID
+        schema:
+          type: integer
+          example: 67890
       responses:
         '200':
           description: 删除成功
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/invoices/batch:
     post:
       tags:
-        - invoices
+      - invoices
       summary: 批量操作账单
       description: 批量生成、更新或删除账单
       operationId: invoice_batch
@@ -326,63 +327,63 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/InvoiceBatchResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/InvoiceBatchResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/invoices/export:
     get:
       tags:
-        - invoices
+      - invoices
       summary: 导出账单
       description: 导出账单数据为Excel或PDF格式
       operationId: invoice_export
       parameters:
-        - name: format
-          in: query
-          description: 导出格式
-          schema:
-            type: string
-            enum: [excel, pdf]
-            default: excel
-            example: "excel"
-        - name: start_date
-          in: query
-          description: 开始日期
-          schema:
-            type: string
-            format: date
-            example: "2024-08-01"
-        - name: end_date
-          in: query
-          description: 结束日期
-          schema:
-            type: string
-            format: date
-            example: "2024-08-31"
-        - name: customer_ids
-          in: query
-          description: 客户ID列表（逗号分隔）
-          schema:
-            type: string
-            example: "5001,5002,5003"
-        - name: status
-          in: query
-          description: 账单状态
-          schema:
-            type: integer
-            enum: [1, 2, 3, 4, 5]
-            example: 1
+      - name: format
+        in: query
+        description: 导出格式
+        schema:
+          type: string
+          enum:
+          - excel
+          - pdf
+          default: excel
+          example: excel
+      - name: start_date
+        in: query
+        description: 开始日期
+        schema:
+          type: string
+          format: date
+          example: '2024-08-01'
+      - name: end_date
+        in: query
+        description: 结束日期
+        schema:
+          type: string
+          format: date
+          example: '2024-08-31'
+      - name: customer_ids
+        in: query
+        description: 客户ID列表（逗号分隔）
+        schema:
+          type: string
+          example: 5001,5002,5003
+      - name: status
+        in: query
+        description: 账单状态
+        schema:
+          type: array
+          items: *id001
       responses:
         '200':
           description: 导出成功
@@ -392,18 +393,17 @@ paths:
                 type: string
                 format: binary
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/payments/process:
     post:
       tags:
-        - payments
+      - payments
       summary: 处理支付
       description: 创建支付订单并调用支付渠道处理支付
       operationId: payment_process
@@ -420,86 +420,98 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PaymentProcessResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PaymentProcessResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/payments:
     get:
       tags:
-        - payments
+      - payments
       summary: 查询支付记录
       description: 分页查询支付记录列表，支持多条件筛选
       operationId: payment_list
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: invoice_id
-          in: query
-          description: 账单ID
-          schema:
-            type: integer
-            example: 67890
-        - name: payment_status
-          in: query
-          description: 支付状态
-          schema:
-            type: integer
-            enum: [1, 2, 3, 4, 5]
-            example: 3
-        - name: payment_channel
-          in: query
-          description: 支付渠道
-          schema:
-            type: string
-            enum: [alipay, wechat, bank_transfer, credit_card]
-            example: "alipay"
-        - name: start_time
-          in: query
-          description: 开始时间
-          schema:
-            type: string
-            format: date-time
-            example: "2024-08-01T00:00:00Z"
-        - name: end_time
-          in: query
-          description: 结束时间
-          schema:
-            type: string
-            format: date-time
-            example: "2024-08-31T23:59:59Z"
-        - name: reconciliation_status
-          in: query
-          description: 对账状态
-          schema:
-            type: integer
-            enum: [1, 2, 3, 4]
-            example: 2
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: invoice_id
+        in: query
+        description: 账单ID
+        schema:
+          type: integer
+          example: 67890
+      - name: payment_status
+        in: query
+        description: 支付状态
+        schema:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          example: 3
+      - name: payment_channel
+        in: query
+        description: 支付渠道
+        schema:
+          type: string
+          enum:
+          - alipay
+          - wechat
+          - bank_transfer
+          - credit_card
+          example: alipay
+      - name: start_time
+        in: query
+        description: 开始时间
+        schema:
+          type: string
+          format: date-time
+          example: '2024-08-01T00:00:00Z'
+      - name: end_time
+        in: query
+        description: 结束时间
+        schema:
+          type: string
+          format: date-time
+          example: '2024-08-31T23:59:59Z'
+      - name: reconciliation_status
+        in: query
+        description: 对账状态
+        schema:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          example: 2
       responses:
         '200':
           description: 查询成功
@@ -507,40 +519,39 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/PaymentRecord'
+                            $ref: '#/components/schemas/PaymentRecord'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/payments/{id}:
     get:
       tags:
-        - payments
+      - payments
       summary: 查询支付详情
       description: 根据支付ID查询详细信息
       operationId: payment_get
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 支付记录ID
-          schema:
-            type: integer
-            example: 123456
+      - name: id
+        in: path
+        required: true
+        description: 支付记录ID
+        schema:
+          type: integer
+          example: 123456
       responses:
         '200':
           description: 查询成功
@@ -548,26 +559,25 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PaymentDetailInfo'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PaymentDetailInfo'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/payments/notify:
     post:
       tags:
-        - payments
+      - payments
       summary: 支付回调通知
       description: 接收支付渠道的回调通知，更新支付状态
       operationId: payment_notify
@@ -583,16 +593,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/payments/reconcile:
     post:
       tags:
-        - payments
+      - payments
       summary: 执行对账
       description: 手动触发对账流程或查询对账结果
       operationId: payment_reconcile
@@ -609,35 +618,34 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ReconciliationResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ReconciliationResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/contracts/{id}/extensions:
     post:
       tags:
-        - extensions
+      - extensions
       summary: 申请合同展期
       description: 为指定合同申请展期，支持多种展期计费方式
       operationId: extension_apply
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 合同ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 合同ID
+        schema:
+          type: integer
+          example: 12345
       requestBody:
         required: true
         content:
@@ -651,83 +659,90 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ContractExtension'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ContractExtension'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/extensions:
     get:
       tags:
-        - extensions
+      - extensions
       summary: 查询展期列表
       description: 分页查询合同展期列表，支持多条件筛选
       operationId: extension_list
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: contract_id
-          in: query
-          description: 合同ID
-          schema:
-            type: integer
-            example: 12345
-        - name: approval_status
-          in: query
-          description: 审批状态
-          schema:
-            type: integer
-            enum: [1, 2, 3, 4]
-            example: 1
-        - name: execution_status
-          in: query
-          description: 执行状态
-          schema:
-            type: integer
-            enum: [1, 2, 3, 4]
-            example: 2
-        - name: start_date
-          in: query
-          description: 展期开始日期
-          schema:
-            type: string
-            format: date
-            example: "2024-09-01"
-        - name: end_date
-          in: query
-          description: 展期结束日期
-          schema:
-            type: string
-            format: date
-            example: "2024-09-30"
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: contract_id
+        in: query
+        description: 合同ID
+        schema:
+          type: integer
+          example: 12345
+      - name: approval_status
+        in: query
+        description: 审批状态
+        schema:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          example: 1
+      - name: execution_status
+        in: query
+        description: 执行状态
+        schema:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          example: 2
+      - name: start_date
+        in: query
+        description: 展期开始日期
+        schema:
+          type: string
+          format: date
+          example: '2024-09-01'
+      - name: end_date
+        in: query
+        description: 展期结束日期
+        schema:
+          type: string
+          format: date
+          example: '2024-09-30'
       responses:
         '200':
           description: 查询成功
@@ -735,40 +750,39 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/ExtensionListItem'
+                            $ref: '#/components/schemas/ExtensionListItem'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/extensions/{id}:
     get:
       tags:
-        - extensions
+      - extensions
       summary: 查询展期详情
       description: 根据展期ID查询详细信息
       operationId: extension_get
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 展期ID
-          schema:
-            type: integer
-            example: 98765
+      - name: id
+        in: path
+        required: true
+        description: 展期ID
+        schema:
+          type: integer
+          example: 98765
       responses:
         '200':
           description: 查询成功
@@ -776,37 +790,36 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ExtensionDetailInfo'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ExtensionDetailInfo'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/extensions/{id}/approve:
     put:
       tags:
-        - extensions
+      - extensions
       summary: 审批通过展期
       description: 审批通过合同展期申请
       operationId: extension_approve
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 展期ID
-          schema:
-            type: integer
-            example: 98765
+      - name: id
+        in: path
+        required: true
+        description: 展期ID
+        schema:
+          type: integer
+          example: 98765
       requestBody:
         required: true
         content:
@@ -820,39 +833,38 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ContractExtension'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ContractExtension'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/extensions/{id}/reject:
     put:
       tags:
-        - extensions
+      - extensions
       summary: 审批拒绝展期
       description: 审批拒绝合同展期申请
       operationId: extension_reject
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 展期ID
-          schema:
-            type: integer
-            example: 98765
+      - name: id
+        in: path
+        required: true
+        description: 展期ID
+        schema:
+          type: integer
+          example: 98765
       requestBody:
         required: true
         content:
@@ -866,76 +878,79 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ContractExtension'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ContractExtension'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/reports/revenue-analysis:
     get:
       tags:
-        - reports
+      - reports
       summary: 收入分析报表
       description: 生成收入分析报表，支持多维度统计和预测
       operationId: report_revenue_analysis
       parameters:
-        - name: start_date
-          in: query
-          required: true
-          description: 开始日期
-          schema:
-            type: string
-            format: date
-            example: "2024-01-01"
-        - name: end_date
-          in: query
-          required: true
-          description: 结束日期
-          schema:
-            type: string
-            format: date
-            example: "2024-08-31"
-        - name: group_by
-          in: query
-          description: 分组方式
-          schema:
-            type: string
-            enum: [day, week, month, quarter]
-            default: month
-            example: "month"
-        - name: currency
-          in: query
-          description: 币种
-          schema:
-            type: string
-            default: CNY
-            example: "CNY"
-        - name: customer_ids
-          in: query
-          description: 客户ID列表（逗号分隔）
-          schema:
-            type: string
-            example: "5001,5002,5003"
-        - name: include_forecast
-          in: query
-          description: 是否包含预测数据
-          schema:
-            type: boolean
-            default: false
-            example: true
+      - name: start_date
+        in: query
+        required: true
+        description: 开始日期
+        schema:
+          type: string
+          format: date
+          example: '2024-01-01'
+      - name: end_date
+        in: query
+        required: true
+        description: 结束日期
+        schema:
+          type: string
+          format: date
+          example: '2024-08-31'
+      - name: group_by
+        in: query
+        description: 分组方式
+        schema:
+          type: string
+          enum:
+          - day
+          - week
+          - month
+          - quarter
+          default: month
+          example: month
+      - name: currency
+        in: query
+        description: 币种
+        schema:
+          type: string
+          default: CNY
+          example: CNY
+      - name: customer_ids
+        in: query
+        description: 客户ID列表（逗号分隔）
+        schema:
+          type: string
+          example: 5001,5002,5003
+      - name: include_forecast
+        in: query
+        description: 是否包含预测数据
+        schema:
+          type: boolean
+          default: false
+          example: true
       responses:
         '200':
           description: 查询成功
@@ -943,60 +958,59 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/RevenueAnalysisResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/RevenueAnalysisResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/reports/cash-flow:
     get:
       tags:
-        - reports
+      - reports
       summary: 现金流分析报表
       description: 生成现金流分析报表，包含预测和趋势分析
       operationId: report_cash_flow
       parameters:
-        - name: start_date
-          in: query
-          required: true
-          description: 开始日期
-          schema:
-            type: string
-            format: date
-            example: "2024-01-01"
-        - name: end_date
-          in: query
-          required: true
-          description: 结束日期
-          schema:
-            type: string
-            format: date
-            example: "2024-08-31"
-        - name: forecast_months
-          in: query
-          description: 预测月数
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 24
-            default: 12
-            example: 12
-        - name: currency
-          in: query
-          description: 币种
-          schema:
-            type: string
-            default: CNY
-            example: "CNY"
+      - name: start_date
+        in: query
+        required: true
+        description: 开始日期
+        schema:
+          type: string
+          format: date
+          example: '2024-01-01'
+      - name: end_date
+        in: query
+        required: true
+        description: 结束日期
+        schema:
+          type: string
+          format: date
+          example: '2024-08-31'
+      - name: forecast_months
+        in: query
+        description: 预测月数
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 24
+          default: 12
+          example: 12
+      - name: currency
+        in: query
+        description: 币种
+        schema:
+          type: string
+          default: CNY
+          example: CNY
       responses:
         '200':
           description: 查询成功
@@ -1004,65 +1018,70 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/CashFlowAnalysisResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/CashFlowAnalysisResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/reports/customer-analysis:
     get:
       tags:
-        - reports
+      - reports
       summary: 客户财务分析报表
       description: 生成客户财务分析报表，包含价值分析和风险评估
       operationId: report_customer_analysis
       parameters:
-        - name: start_date
-          in: query
-          required: true
-          description: 开始日期
-          schema:
-            type: string
-            format: date
-            example: "2024-01-01"
-        - name: end_date
-          in: query
-          required: true
-          description: 结束日期
-          schema:
-            type: string
-            format: date
-            example: "2024-08-31"
-        - name: customer_id
-          in: query
-          description: 特定客户ID
-          schema:
-            type: integer
-            example: 5001
-        - name: risk_level
-          in: query
-          description: 风险等级筛选
-          schema:
-            type: string
-            enum: [low, medium, high]
-            example: "high"
-        - name: sort_by
-          in: query
-          description: 排序字段
-          schema:
-            type: string
-            enum: [revenue, payment_rate, risk_score]
-            default: revenue
-            example: "revenue"
+      - name: start_date
+        in: query
+        required: true
+        description: 开始日期
+        schema:
+          type: string
+          format: date
+          example: '2024-01-01'
+      - name: end_date
+        in: query
+        required: true
+        description: 结束日期
+        schema:
+          type: string
+          format: date
+          example: '2024-08-31'
+      - name: customer_id
+        in: query
+        description: 特定客户ID
+        schema:
+          type: integer
+          example: 5001
+      - name: risk_level
+        in: query
+        description: 风险等级筛选
+        schema:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+          example: high
+      - name: sort_by
+        in: query
+        description: 排序字段
+        schema:
+          type: string
+          enum:
+          - revenue
+          - payment_rate
+          - risk_score
+          default: revenue
+          example: revenue
       responses:
         '200':
           description: 查询成功
@@ -1070,48 +1089,50 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/CustomerAnalysisResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/CustomerAnalysisResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/risk/assessment:
     get:
       tags:
-        - risk
+      - risk
       summary: 财务风险评估
       description: 获取财务风险评估结果，包含客户风险评分和预警信息
       operationId: risk_assessment
       parameters:
-        - name: customer_id
-          in: query
-          description: 客户ID
-          schema:
-            type: integer
-            example: 5001
-        - name: risk_level
-          in: query
-          description: 风险等级筛选
-          schema:
-            type: string
-            enum: [low, medium, high]
-            example: "high"
-        - name: assessment_date
-          in: query
-          description: 评估日期
-          schema:
-            type: string
-            format: date
-            example: "2024-08-15"
+      - name: customer_id
+        in: query
+        description: 客户ID
+        schema:
+          type: integer
+          example: 5001
+      - name: risk_level
+        in: query
+        description: 风险等级筛选
+        schema:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+          example: high
+      - name: assessment_date
+        in: query
+        description: 评估日期
+        schema:
+          type: string
+          format: date
+          example: '2024-08-15'
       responses:
         '200':
           description: 查询成功
@@ -1119,24 +1140,23 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/RiskAssessmentResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/RiskAssessmentResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/config/billing-rules:
     get:
       tags:
-        - config
+      - config
       summary: 查询计费规则
       description: 查询当前的计费规则配置
       operationId: config_billing_rules_get
@@ -1147,21 +1167,20 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BillingRulesConfig'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BillingRulesConfig'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     put:
       tags:
-        - config
+      - config
       summary: 更新计费规则
       description: 更新计费规则配置
       operationId: config_billing_rules_update
@@ -1178,24 +1197,23 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BillingRulesConfig'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BillingRulesConfig'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/finance/config/tax-rates:
     get:
       tags:
-        - config
+      - config
       summary: 查询税率配置
       description: 查询当前的税率配置
       operationId: config_tax_rates_get
@@ -1206,21 +1224,20 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TaxRatesConfig'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TaxRatesConfig'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     put:
       tags:
-        - config
+      - config
       summary: 更新税率配置
       description: 更新税率配置
       operationId: config_tax_rates_update
@@ -1237,23 +1254,21 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TaxRatesConfig'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TaxRatesConfig'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
 components:
   schemas:
-    # 账单相关Schema
     BillingInvoice:
       type: object
       properties:
@@ -1268,7 +1283,7 @@ components:
         invoice_no:
           type: string
           description: 账单编号
-          example: "INV-20240815-0001"
+          example: INV-20240815-0001
         customer_id:
           type: integer
           description: 客户ID
@@ -1276,7 +1291,7 @@ components:
         customer_name:
           type: string
           description: 客户名称
-          example: "ABC科技有限公司"
+          example: ABC科技有限公司
         contract_id:
           type: integer
           description: 合同ID
@@ -1285,46 +1300,46 @@ components:
           type: string
           format: date
           description: 计费周期开始时间
-          example: "2024-08-01"
+          example: '2024-08-01'
         billing_period_end:
           type: string
           format: date
           description: 计费周期结束时间
-          example: "2024-08-31"
+          example: '2024-08-31'
         base_amount:
           type: number
           format: decimal
           description: 基础费用
-          example: 10000.00
+          example: 10000.0
         usage_amount:
           type: number
           format: decimal
           description: 用量费用
-          example: 2000.00
+          example: 2000.0
         penalty_amount:
           type: number
           format: decimal
           description: 违约扣费
-          example: 0.00
+          example: 0.0
         discount_amount:
           type: number
           format: decimal
           description: 折扣金额
-          example: 500.00
+          example: 500.0
         tax_amount:
           type: number
           format: decimal
           description: 税费
-          example: 630.00
+          example: 630.0
         total_amount:
           type: number
           format: decimal
           description: 总金额
-          example: 12130.00
+          example: 12130.0
         currency:
           type: string
           description: 币种
-          example: "CNY"
+          example: CNY
         tax_rate:
           type: number
           format: decimal
@@ -1334,22 +1349,27 @@ components:
           type: number
           format: decimal
           description: 汇率
-          example: 1.000000
+          example: 1.0
         status:
           type: integer
           description: 账单状态 1:待付款 2:已付款 3:已逾期 4:已取消 5:部分付款
-          enum: [1, 2, 3, 4, 5]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
           example: 1
         due_date:
           type: string
           format: date
           description: 到期日期
-          example: "2024-09-14"
+          example: '2024-09-14'
         paid_date:
           type: string
           format: date-time
           description: 支付日期
-          example: "2024-09-10T15:30:00Z"
+          example: '2024-09-10T15:30:00Z'
         overdue_days:
           type: integer
           description: 逾期天数
@@ -1357,8 +1377,11 @@ components:
         risk_level:
           type: string
           description: 风险等级
-          enum: [low, medium, high]
-          example: "low"
+          enum:
+          - low
+          - medium
+          - high
+          example: low
         risk_score:
           type: number
           format: decimal
@@ -1367,33 +1390,35 @@ components:
         revenue_recognition_method:
           type: integer
           description: 收入确认方式 1:一次性 2:分期确认
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           example: 1
         recognition_start_date:
           type: string
           format: date
           description: 确认开始日期
-          example: "2024-08-01"
+          example: '2024-08-01'
         recognition_end_date:
           type: string
           format: date
           description: 确认结束日期
-          example: "2024-08-31"
+          example: '2024-08-31'
         recognized_amount:
           type: number
           format: decimal
           description: 已确认金额
-          example: 12130.00
+          example: 12130.0
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-15T10:30:00Z"
+          example: '2024-08-15T10:30:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-15T10:30:00Z"
+          example: '2024-08-15T10:30:00Z'
         created_by:
           type: integer
           description: 创建人ID
@@ -1406,7 +1431,6 @@ components:
           type: integer
           description: 版本号
           example: 1
-
     InvoiceListItem:
       type: object
       properties:
@@ -1417,7 +1441,7 @@ components:
         invoice_no:
           type: string
           description: 账单编号
-          example: "INV-20240815-0001"
+          example: INV-20240815-0001
         customer_id:
           type: integer
           description: 客户ID
@@ -1425,36 +1449,41 @@ components:
         customer_name:
           type: string
           description: 客户名称
-          example: "ABC科技有限公司"
+          example: ABC科技有限公司
         billing_period_start:
           type: string
           format: date
           description: 计费周期开始时间
-          example: "2024-08-01"
+          example: '2024-08-01'
         billing_period_end:
           type: string
           format: date
           description: 计费周期结束时间
-          example: "2024-08-31"
+          example: '2024-08-31'
         total_amount:
           type: number
           format: decimal
           description: 总金额
-          example: 12130.00
+          example: 12130.0
         currency:
           type: string
           description: 币种
-          example: "CNY"
+          example: CNY
         status:
           type: integer
           description: 账单状态
-          enum: [1, 2, 3, 4, 5]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
           example: 1
         due_date:
           type: string
           format: date
           description: 到期日期
-          example: "2024-09-14"
+          example: '2024-09-14'
         overdue_days:
           type: integer
           description: 逾期天数
@@ -1462,21 +1491,23 @@ components:
         risk_level:
           type: string
           description: 风险等级
-          enum: [low, medium, high]
-          example: "low"
+          enum:
+          - low
+          - medium
+          - high
+          example: low
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-15T10:30:00Z"
-
+          example: '2024-08-15T10:30:00Z'
     InvoiceGenerateRequest:
       type: object
       required:
-        - customer_id
-        - contract_id
-        - billing_period_start
-        - billing_period_end
+      - customer_id
+      - contract_id
+      - billing_period_start
+      - billing_period_end
       properties:
         customer_id:
           type: integer
@@ -1490,12 +1521,12 @@ components:
           type: string
           format: date
           description: 计费周期开始时间
-          example: "2024-08-01"
+          example: '2024-08-01'
         billing_period_end:
           type: string
           format: date
           description: 计费周期结束时间
-          example: "2024-08-31"
+          example: '2024-08-31'
         billing_items:
           type: array
           description: 计费项目列表
@@ -1510,7 +1541,7 @@ components:
           type: number
           format: decimal
           description: 折扣金额
-          example: 500.00
+          example: 500.0
         force_regenerate:
           type: boolean
           description: 是否强制重新生成
@@ -1521,14 +1552,13 @@ components:
           description: 是否自动发送
           default: true
           example: true
-
     InvoiceCreateRequest:
       type: object
       required:
-        - customer_id
-        - billing_period_start
-        - billing_period_end
-        - total_amount
+      - customer_id
+      - billing_period_start
+      - billing_period_end
+      - total_amount
       properties:
         customer_id:
           type: integer
@@ -1542,59 +1572,60 @@ components:
           type: string
           format: date
           description: 计费周期开始时间
-          example: "2024-08-01"
+          example: '2024-08-01'
         billing_period_end:
           type: string
           format: date
           description: 计费周期结束时间
-          example: "2024-08-31"
+          example: '2024-08-31'
         base_amount:
           type: number
           format: decimal
           description: 基础费用
-          example: 10000.00
+          example: 10000.0
         usage_amount:
           type: number
           format: decimal
           description: 用量费用
-          example: 2000.00
+          example: 2000.0
         penalty_amount:
           type: number
           format: decimal
           description: 违约扣费
-          example: 0.00
+          example: 0.0
         discount_amount:
           type: number
           format: decimal
           description: 折扣金额
-          example: 500.00
+          example: 500.0
         tax_amount:
           type: number
           format: decimal
           description: 税费
-          example: 630.00
+          example: 630.0
         total_amount:
           type: number
           format: decimal
           description: 总金额
-          example: 12130.00
+          example: 12130.0
         currency:
           type: string
           description: 币种
           default: CNY
-          example: "CNY"
+          example: CNY
         due_date:
           type: string
           format: date
           description: 到期日期
-          example: "2024-09-14"
+          example: '2024-09-14'
         revenue_recognition_method:
           type: integer
           description: 收入确认方式
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           default: 1
           example: 1
-
     InvoiceUpdateRequest:
       type: object
       properties:
@@ -1602,43 +1633,52 @@ components:
           type: number
           format: decimal
           description: 折扣金额
-          example: 600.00
+          example: 600.0
         due_date:
           type: string
           format: date
           description: 到期日期
-          example: "2024-09-20"
+          example: '2024-09-20'
         status:
           type: integer
           description: 账单状态
-          enum: [1, 2, 3, 4, 5]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
           example: 1
         notes:
           type: string
           description: 备注信息
-          example: "客户申请延期付款"
-
+          example: 客户申请延期付款
     BillingItem:
       type: object
       required:
-        - item_type
-        - description
-        - amount
+      - item_type
+      - description
+      - amount
       properties:
         item_type:
           type: string
           description: 项目类型
-          enum: [base_fee, usage_fee, penalty_fee, discount, tax]
-          example: "base_fee"
+          enum:
+          - base_fee
+          - usage_fee
+          - penalty_fee
+          - discount
+          - tax
+          example: base_fee
         description:
           type: string
           description: 项目描述
-          example: "基础服务费"
+          example: 基础服务费
         amount:
           type: number
           format: decimal
           description: 金额
-          example: 10000.00
+          example: 10000.0
         quantity:
           type: integer
           description: 数量
@@ -1647,13 +1687,11 @@ components:
           type: number
           format: decimal
           description: 单价
-          example: 10000.00
+          example: 10000.0
         unit:
           type: string
           description: 单位
-          example: "月"
-
-    # 支付相关Schema
+          example: 月
     PaymentRecord:
       type: object
       properties:
@@ -1668,7 +1706,7 @@ components:
         payment_no:
           type: string
           description: 支付编号
-          example: "PAY-20240815-0001"
+          example: PAY-20240815-0001
         invoice_id:
           type: integer
           description: 账单ID
@@ -1677,34 +1715,38 @@ components:
           type: number
           format: decimal
           description: 支付金额
-          example: 12130.00
+          example: 12130.0
         payment_currency:
           type: string
           description: 支付币种
-          example: "CNY"
+          example: CNY
         exchange_rate:
           type: number
           format: decimal
           description: 汇率
-          example: 1.000000
+          example: 1.0
         actual_amount:
           type: number
           format: decimal
           description: 实际到账金额
-          example: 12130.00
+          example: 12130.0
         payment_channel:
           type: string
           description: 支付渠道
-          enum: [alipay, wechat, bank_transfer, credit_card]
-          example: "alipay"
+          enum:
+          - alipay
+          - wechat
+          - bank_transfer
+          - credit_card
+          example: alipay
         payment_method:
           type: string
           description: 支付方式
-          example: "scan_code"
+          example: scan_code
         channel_transaction_id:
           type: string
           description: 渠道交易号
-          example: "2024081522001234567890"
+          example: '2024081522001234567890'
         channel_fee:
           type: number
           format: decimal
@@ -1713,47 +1755,60 @@ components:
         payment_status:
           type: integer
           description: 支付状态 1:待支付 2:支付中 3:支付成功 4:支付失败 5:已退款
-          enum: [1, 2, 3, 4, 5]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
           example: 3
         payment_time:
           type: string
           format: date-time
           description: 支付时间
-          example: "2024-08-15T15:30:00Z"
+          example: '2024-08-15T15:30:00Z'
         callback_time:
           type: string
           format: date-time
           description: 回调时间
-          example: "2024-08-15T15:30:05Z"
+          example: '2024-08-15T15:30:05Z'
         settlement_time:
           type: string
           format: date-time
           description: 结算时间
-          example: "2024-08-16T09:00:00Z"
+          example: '2024-08-16T09:00:00Z'
         reconciliation_status:
           type: integer
           description: 对账状态 1:未对账 2:已对账 3:差异 4:已调整
-          enum: [1, 2, 3, 4]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
           example: 2
         reconciliation_time:
           type: string
           format: date-time
           description: 对账时间
-          example: "2024-08-16T10:00:00Z"
+          example: '2024-08-16T10:00:00Z'
         reconciliation_difference:
           type: number
           format: decimal
           description: 对账差异金额
-          example: 0.00
+          example: 0.0
         risk_check_status:
           type: integer
           description: 风险检查状态 1:未检查 2:通过 3:风险 4:拒绝
-          enum: [1, 2, 3, 4]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
           example: 2
         risk_check_result:
           type: string
           description: 风险检查结果
-          example: "正常交易"
+          example: 正常交易
         fraud_score:
           type: number
           format: decimal
@@ -1763,19 +1818,18 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-15T15:25:00Z"
+          example: '2024-08-15T15:25:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-15T15:30:05Z"
-
+          example: '2024-08-15T15:30:05Z'
     PaymentProcessRequest:
       type: object
       required:
-        - invoice_id
-        - payment_amount
-        - payment_channel
+      - invoice_id
+      - payment_amount
+      - payment_channel
       properties:
         invoice_id:
           type: integer
@@ -1785,35 +1839,38 @@ components:
           type: number
           format: decimal
           description: 支付金额
-          example: 12130.00
+          example: 12130.0
         payment_channel:
           type: string
           description: 支付渠道
-          enum: [alipay, wechat, bank_transfer, credit_card]
-          example: "alipay"
+          enum:
+          - alipay
+          - wechat
+          - bank_transfer
+          - credit_card
+          example: alipay
         payment_method:
           type: string
           description: 支付方式
-          example: "scan_code"
+          example: scan_code
         return_url:
           type: string
           format: uri
           description: 支付成功返回URL
-          example: "https://portal.example.com/payment/return"
+          example: https://portal.example.com/payment/return
         notify_url:
           type: string
           format: uri
           description: 支付回调通知URL
-          example: "https://portal.example.com/api/v1/finance/payments/notify"
+          example: https://portal.example.com/api/v1/finance/payments/notify
         client_ip:
           type: string
           description: 客户端IP地址
-          example: "192.168.1.100"
+          example: 192.168.1.100
         device_info:
           type: string
           description: 设备信息
-          example: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-
+          example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
     PaymentProcessResponse:
       type: object
       properties:
@@ -1824,37 +1881,40 @@ components:
         payment_no:
           type: string
           description: 支付编号
-          example: "PAY-20240815-0001"
+          example: PAY-20240815-0001
         payment_url:
           type: string
           format: uri
           description: 支付链接
-          example: "https://qr.alipay.com/bax08431qjhxf23ad5dc"
+          example: https://qr.alipay.com/bax08431qjhxf23ad5dc
         qr_code:
           type: string
           description: 二维码数据
-          example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+          example: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...
         expire_time:
           type: string
           format: date-time
           description: 过期时间
-          example: "2024-08-15T16:00:00Z"
+          example: '2024-08-15T16:00:00Z'
         payment_status:
           type: integer
           description: 支付状态
-          enum: [1, 2, 3, 4, 5]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
           example: 1
         channel_transaction_id:
           type: string
           description: 渠道交易号
-          example: "2024081522001234567890"
+          example: '2024081522001234567890'
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-15T15:25:00Z"
-
-    # 合同展期相关Schema
+          example: '2024-08-15T15:25:00Z'
     ContractExtension:
       type: object
       properties:
@@ -1873,17 +1933,17 @@ components:
         extension_request_id:
           type: string
           description: 展期申请编号
-          example: "EXT-20240815-0001"
+          example: EXT-20240815-0001
         extension_start_date:
           type: string
           format: date
           description: 展期开始日期
-          example: "2024-09-01"
+          example: '2024-09-01'
         extension_end_date:
           type: string
           format: date
           description: 展期结束日期
-          example: "2024-09-30"
+          example: '2024-09-30'
         extension_days:
           type: integer
           description: 展期天数
@@ -1891,7 +1951,11 @@ components:
         billing_type:
           type: integer
           description: 计费方式 1:免费 2:按日 3:按月 4:固定金额
-          enum: [1, 2, 3, 4]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
           example: 2
         daily_rate:
           type: number
@@ -1902,25 +1966,29 @@ components:
           type: number
           format: decimal
           description: 月费率
-          example: 1000.00
+          example: 1000.0
         fixed_amount:
           type: number
           format: decimal
           description: 固定金额
-          example: 1000.00
+          example: 1000.0
         total_amount:
           type: number
           format: decimal
           description: 总金额
-          example: 1000.00
+          example: 1000.0
         currency:
           type: string
           description: 币种
-          example: "CNY"
+          example: CNY
         approval_status:
           type: integer
           description: 审批状态 1:待审批 2:已批准 3:已拒绝 4:已撤销
-          enum: [1, 2, 3, 4]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
           example: 2
         approval_workflow_id:
           type: integer
@@ -1934,31 +2002,35 @@ components:
           type: string
           format: date-time
           description: 审批时间
-          example: "2024-08-15T12:00:00Z"
+          example: '2024-08-15T12:00:00Z'
         rejection_reason:
           type: string
           description: 拒绝原因
-          example: "展期时间过长，需要重新评估"
+          example: 展期时间过长，需要重新评估
         execution_status:
           type: integer
           description: 执行状态 1:未生效 2:生效中 3:已结束 4:已取消
-          enum: [1, 2, 3, 4]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
           example: 2
         actual_start_date:
           type: string
           format: date
           description: 实际开始日期
-          example: "2024-09-01"
+          example: '2024-09-01'
         actual_end_date:
           type: string
           format: date
           description: 实际结束日期
-          example: "2024-09-30"
+          example: '2024-09-30'
         original_contract_end_date:
           type: string
           format: date
           description: 原合同结束日期
-          example: "2024-08-31"
+          example: '2024-08-31'
         new_contract_id:
           type: integer
           description: 新合同ID
@@ -1971,12 +2043,12 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-15T10:30:00Z"
+          example: '2024-08-15T10:30:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-15T12:00:00Z"
+          example: '2024-08-15T12:00:00Z'
         created_by:
           type: integer
           description: 创建人ID
@@ -1985,12 +2057,11 @@ components:
           type: integer
           description: 更新人ID
           example: 1002
-
     ExtensionApplyRequest:
       type: object
       required:
-        - extension_days
-        - billing_type
+      - extension_days
+      - billing_type
       properties:
         extension_days:
           type: integer
@@ -2001,7 +2072,11 @@ components:
         billing_type:
           type: integer
           description: 计费方式
-          enum: [1, 2, 3, 4]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
           example: 2
         daily_rate:
           type: number
@@ -2012,16 +2087,16 @@ components:
           type: number
           format: decimal
           description: 月费率（按月计费时必填）
-          example: 1000.00
+          example: 1000.0
         fixed_amount:
           type: number
           format: decimal
           description: 固定金额（固定金额计费时必填）
-          example: 1000.00
+          example: 1000.0
         reason:
           type: string
           description: 申请原因
-          example: "新合同审批中，申请临时展期避免服务中断"
+          example: 新合同审批中，申请临时展期避免服务中断
         auto_approve:
           type: boolean
           description: 是否自动审批
@@ -2035,33 +2110,32 @@ components:
         business_justification:
           type: string
           description: 业务理由
-          example: "客户续约意向明确，新合同预计15天内完成签署"
-
+          example: 客户续约意向明确，新合同预计15天内完成签署
     ExtensionApprovalRequest:
       type: object
       required:
-        - approval_decision
+      - approval_decision
       properties:
         approval_decision:
           type: string
           description: 审批决定
-          enum: [approve, reject]
-          example: "approve"
+          enum:
+          - approve
+          - reject
+          example: approve
         approval_comments:
           type: string
           description: 审批意见
-          example: "同意展期申请，客户信誉良好"
+          example: 同意展期申请，客户信誉良好
         adjusted_amount:
           type: number
           format: decimal
           description: 调整后金额
-          example: 800.00
+          example: 800.0
         conditions:
           type: string
           description: 审批条件
-          example: "展期期间需要提供额外担保"
-
-    # 财务报表相关Schema
+          example: 展期期间需要提供额外担保
     RevenueAnalysisResponse:
       type: object
       properties:
@@ -2073,7 +2147,7 @@ components:
               type: number
               format: decimal
               description: 总收入
-              example: 1250000.00
+              example: 1250000.0
             total_invoices:
               type: integer
               description: 总账单数
@@ -2102,12 +2176,12 @@ components:
               period:
                 type: string
                 description: 时间周期
-                example: "2024-08"
+                example: 2024-08
               revenue:
                 type: number
                 format: decimal
                 description: 收入
-                example: 150000.00
+                example: 150000.0
               invoices_count:
                 type: integer
                 description: 账单数量
@@ -2116,12 +2190,12 @@ components:
                 type: number
                 format: decimal
                 description: 已付金额
-                example: 142000.00
+                example: 142000.0
               overdue_amount:
                 type: number
                 format: decimal
                 description: 逾期金额
-                example: 8000.00
+                example: 8000.0
         forecast:
           type: object
           description: 预测数据
@@ -2130,7 +2204,7 @@ components:
               type: number
               format: decimal
               description: 下月预测收入
-              example: 165000.00
+              example: 165000.0
             confidence_level:
               type: number
               format: decimal
@@ -2139,18 +2213,20 @@ components:
             trend:
               type: string
               description: 趋势
-              enum: [increasing, decreasing, stable]
-              example: "increasing"
+              enum:
+              - increasing
+              - decreasing
+              - stable
+              example: increasing
         currency:
           type: string
           description: 币种
-          example: "CNY"
+          example: CNY
         generated_at:
           type: string
           format: date-time
           description: 生成时间
-          example: "2024-08-15T10:30:00Z"
-
+          example: '2024-08-15T10:30:00Z'
     CashFlowAnalysisResponse:
       type: object
       properties:
@@ -2162,22 +2238,22 @@ components:
               type: number
               format: decimal
               description: 当前余额
-              example: 2500000.00
+              example: 2500000.0
             monthly_inflow:
               type: number
               format: decimal
               description: 月度流入
-              example: 1200000.00
+              example: 1200000.0
             monthly_outflow:
               type: number
               format: decimal
               description: 月度流出
-              example: 800000.00
+              example: 800000.0
             net_cash_flow:
               type: number
               format: decimal
               description: 净现金流
-              example: 400000.00
+              example: 400000.0
         historical_data:
           type: array
           description: 历史数据
@@ -2187,27 +2263,27 @@ components:
               month:
                 type: string
                 description: 月份
-                example: "2024-08"
+                example: 2024-08
               inflow:
                 type: number
                 format: decimal
                 description: 流入
-                example: 1200000.00
+                example: 1200000.0
               outflow:
                 type: number
                 format: decimal
                 description: 流出
-                example: 800000.00
+                example: 800000.0
               net_flow:
                 type: number
                 format: decimal
                 description: 净流量
-                example: 400000.00
+                example: 400000.0
               balance:
                 type: number
                 format: decimal
                 description: 余额
-                example: 2500000.00
+                example: 2500000.0
         forecast_data:
           type: array
           description: 预测数据
@@ -2217,22 +2293,22 @@ components:
               month:
                 type: string
                 description: 月份
-                example: "2024-09"
+                example: 2024-09
               predicted_inflow:
                 type: number
                 format: decimal
                 description: 预测流入
-                example: 1300000.00
+                example: 1300000.0
               predicted_outflow:
                 type: number
                 format: decimal
                 description: 预测流出
-                example: 850000.00
+                example: 850000.0
               predicted_net_flow:
                 type: number
                 format: decimal
                 description: 预测净流量
-                example: 450000.00
+                example: 450000.0
               confidence_level:
                 type: number
                 format: decimal
@@ -2241,13 +2317,12 @@ components:
         currency:
           type: string
           description: 币种
-          example: "CNY"
+          example: CNY
         generated_at:
           type: string
           format: date-time
           description: 生成时间
-          example: "2024-08-15T10:30:00Z"
-
+          example: '2024-08-15T10:30:00Z'
     RiskAssessmentResponse:
       type: object
       properties:
@@ -2258,8 +2333,11 @@ components:
             risk_level:
               type: string
               description: 风险等级
-              enum: [low, medium, high]
-              example: "medium"
+              enum:
+              - low
+              - medium
+              - high
+              example: medium
             risk_score:
               type: number
               format: decimal
@@ -2269,7 +2347,7 @@ components:
               type: number
               format: decimal
               description: 总风险敞口
-              example: 5000000.00
+              example: 5000000.0
         customer_risks:
           type: array
           description: 客户风险列表
@@ -2283,12 +2361,15 @@ components:
               customer_name:
                 type: string
                 description: 客户名称
-                example: "ABC科技有限公司"
+                example: ABC科技有限公司
               risk_level:
                 type: string
                 description: 风险等级
-                enum: [low, medium, high]
-                example: "high"
+                enum:
+                - low
+                - medium
+                - high
+                example: high
               risk_score:
                 type: number
                 format: decimal
@@ -2298,7 +2379,7 @@ components:
                 type: number
                 format: decimal
                 description: 未付金额
-                example: 50000.00
+                example: 50000.0
               overdue_days:
                 type: integer
                 description: 逾期天数
@@ -2311,7 +2392,7 @@ components:
               recommended_action:
                 type: string
                 description: 建议措施
-                example: "加强催收，考虑暂停服务"
+                example: 加强催收，考虑暂停服务
         risk_factors:
           type: array
           description: 风险因素
@@ -2321,7 +2402,7 @@ components:
               factor_name:
                 type: string
                 description: 因素名称
-                example: "逾期账单比例"
+                example: 逾期账单比例
               factor_value:
                 type: number
                 format: decimal
@@ -2330,19 +2411,20 @@ components:
               impact_level:
                 type: string
                 description: 影响程度
-                enum: [low, medium, high]
-                example: "high"
+                enum:
+                - low
+                - medium
+                - high
+                example: high
               description:
                 type: string
                 description: 描述
-                example: "当前逾期账单比例较高，需要关注"
+                example: 当前逾期账单比例较高，需要关注
         generated_at:
           type: string
           format: date-time
           description: 生成时间
-          example: "2024-08-15T10:30:00Z"
-
-    # 配置管理相关Schema
+          example: '2024-08-15T10:30:00Z'
     BillingRulesConfig:
       type: object
       properties:
@@ -2357,17 +2439,20 @@ components:
             calculation_method:
               type: string
               description: 计算方法
-              enum: [fixed, tiered, percentage]
-              example: "fixed"
+              enum:
+              - fixed
+              - tiered
+              - percentage
+              example: fixed
             default_amount:
               type: number
               format: decimal
               description: 默认金额
-              example: 10000.00
+              example: 10000.0
             currency:
               type: string
               description: 币种
-              example: "CNY"
+              example: CNY
         usage_fee_rules:
           type: object
           description: 用量费用规则
@@ -2375,13 +2460,16 @@ components:
             calculation_method:
               type: string
               description: 计算方法
-              enum: [per_ticket, per_hour, tiered]
-              example: "per_ticket"
+              enum:
+              - per_ticket
+              - per_hour
+              - tiered
+              example: per_ticket
             unit_price:
               type: number
               format: decimal
               description: 单价
-              example: 50.00
+              example: 50.0
             free_quota:
               type: integer
               description: 免费额度
@@ -2389,7 +2477,7 @@ components:
             currency:
               type: string
               description: 币种
-              example: "CNY"
+              example: CNY
         penalty_rules:
           type: object
           description: 违约扣费规则
@@ -2403,11 +2491,11 @@ components:
               type: number
               format: decimal
               description: 最大扣费金额
-              example: 5000.00
+              example: 5000.0
             currency:
               type: string
               description: 币种
-              example: "CNY"
+              example: CNY
         discount_rules:
           type: object
           description: 折扣规则
@@ -2422,7 +2510,7 @@ components:
                     type: number
                     format: decimal
                     description: 最小金额
-                    example: 100000.00
+                    example: 100000.0
                   discount_rate:
                     type: number
                     format: decimal
@@ -2445,12 +2533,11 @@ components:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-15T10:30:00Z"
+          example: '2024-08-15T10:30:00Z'
         updated_by:
           type: integer
           description: 更新人ID
           example: 1001
-
     TaxRatesConfig:
       type: object
       properties:
@@ -2472,11 +2559,11 @@ components:
               region:
                 type: string
                 description: 地区
-                example: "北京"
+                example: 北京
               tax_type:
                 type: string
                 description: 税种
-                example: "增值税"
+                example: 增值税
               tax_rate:
                 type: number
                 format: decimal
@@ -2486,79 +2573,75 @@ components:
                 type: string
                 format: date
                 description: 生效日期
-                example: "2024-01-01"
+                example: '2024-01-01'
               expiry_date:
                 type: string
                 format: date
                 description: 失效日期
-                example: "2024-12-31"
+                example: '2024-12-31'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-15T10:30:00Z"
+          example: '2024-08-15T10:30:00Z'
         updated_by:
           type: integer
           description: 更新人ID
           example: 1001
-
-    # 其他辅助Schema
     InvoiceDetailInfo:
       allOf:
-        - $ref: '#/components/schemas/BillingInvoice'
-        - type: object
-          properties:
-            invoice_items:
-              type: array
-              description: 账单明细
-              items:
-                $ref: '#/components/schemas/BillingItem'
-            payment_records:
-              type: array
-              description: 支付记录
-              items:
-                $ref: '#/components/schemas/PaymentRecord'
-            contract_info:
-              type: object
-              description: 合同信息
-              properties:
-                contract_no:
-                  type: string
-                  description: 合同编号
-                  example: "CON-20240101-0001"
-                contract_name:
-                  type: string
-                  description: 合同名称
-                  example: "IT运维服务合同"
-                service_level:
-                  type: string
-                  description: 服务等级
-                  example: "专业版"
-
+      - $ref: '#/components/schemas/BillingInvoice'
+      - type: object
+        properties:
+          invoice_items:
+            type: array
+            description: 账单明细
+            items:
+              $ref: '#/components/schemas/BillingItem'
+          payment_records:
+            type: array
+            description: 支付记录
+            items:
+              $ref: '#/components/schemas/PaymentRecord'
+          contract_info:
+            type: object
+            description: 合同信息
+            properties:
+              contract_no:
+                type: string
+                description: 合同编号
+                example: CON-20240101-0001
+              contract_name:
+                type: string
+                description: 合同名称
+                example: IT运维服务合同
+              service_level:
+                type: string
+                description: 服务等级
+                example: 专业版
     PaymentDetailInfo:
       allOf:
-        - $ref: '#/components/schemas/PaymentRecord'
-        - type: object
-          properties:
-            invoice_info:
-              type: object
-              description: 账单信息
-              properties:
-                invoice_no:
-                  type: string
-                  description: 账单编号
-                  example: "INV-20240815-0001"
-                total_amount:
-                  type: number
-                  format: decimal
-                  description: 账单总金额
-                  example: 12130.00
-                due_date:
-                  type: string
-                  format: date
-                  description: 到期日期
-                  example: "2024-09-14"
-
+      - $ref: '#/components/schemas/PaymentRecord'
+      - type: object
+        properties:
+          invoice_info:
+            type: object
+            description: 账单信息
+            properties:
+              invoice_no:
+                type: string
+                description: 账单编号
+                example: INV-20240815-0001
+              total_amount:
+                type: number
+                format: decimal
+                description: 账单总金额
+                example: 12130.0
+              due_date:
+                type: string
+                format: date
+                description: 到期日期
+                example: '2024-09-14'
     ExtensionListItem:
       type: object
       properties:
@@ -2569,7 +2652,7 @@ components:
         extension_request_id:
           type: string
           description: 展期申请编号
-          example: "EXT-20240815-0001"
+          example: EXT-20240815-0001
         contract_id:
           type: integer
           description: 合同ID
@@ -2577,7 +2660,7 @@ components:
         customer_name:
           type: string
           description: 客户名称
-          example: "ABC科技有限公司"
+          example: ABC科技有限公司
         extension_days:
           type: integer
           description: 展期天数
@@ -2586,97 +2669,111 @@ components:
           type: number
           format: decimal
           description: 总金额
-          example: 1000.00
+          example: 1000.0
         approval_status:
           type: integer
           description: 审批状态
-          enum: [1, 2, 3, 4]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
           example: 2
         execution_status:
           type: integer
           description: 执行状态
-          enum: [1, 2, 3, 4]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
           example: 2
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-15T10:30:00Z"
-
+          example: '2024-08-15T10:30:00Z'
     ExtensionDetailInfo:
       allOf:
-        - $ref: '#/components/schemas/ContractExtension'
-        - type: object
-          properties:
-            contract_info:
+      - $ref: '#/components/schemas/ContractExtension'
+      - type: object
+        properties:
+          contract_info:
+            type: object
+            description: 合同信息
+            properties:
+              contract_no:
+                type: string
+                description: 合同编号
+                example: CON-20240101-0001
+              customer_name:
+                type: string
+                description: 客户名称
+                example: ABC科技有限公司
+              original_end_date:
+                type: string
+                format: date
+                description: 原结束日期
+                example: '2024-08-31'
+          approval_history:
+            type: array
+            description: 审批历史
+            items:
               type: object
-              description: 合同信息
               properties:
-                contract_no:
+                approver_id:
+                  type: integer
+                  description: 审批人ID
+                  example: 1002
+                approver_name:
                   type: string
-                  description: 合同编号
-                  example: "CON-20240101-0001"
-                customer_name:
+                  description: 审批人姓名
+                  example: 李经理
+                action:
                   type: string
-                  description: 客户名称
-                  example: "ABC科技有限公司"
-                original_end_date:
+                  description: 审批动作
+                  enum:
+                  - approve
+                  - reject
+                  - request_info
+                  example: approve
+                comments:
                   type: string
-                  format: date
-                  description: 原结束日期
-                  example: "2024-08-31"
-            approval_history:
-              type: array
-              description: 审批历史
-              items:
-                type: object
-                properties:
-                  approver_id:
-                    type: integer
-                    description: 审批人ID
-                    example: 1002
-                  approver_name:
-                    type: string
-                    description: 审批人姓名
-                    example: "李经理"
-                  action:
-                    type: string
-                    description: 审批动作
-                    enum: [approve, reject, request_info]
-                    example: "approve"
-                  comments:
-                    type: string
-                    description: 审批意见
-                    example: "同意展期申请"
-                  action_time:
-                    type: string
-                    format: date-time
-                    description: 操作时间
-                    example: "2024-08-15T12:00:00Z"
-
-    # 批量操作相关Schema
+                  description: 审批意见
+                  example: 同意展期申请
+                action_time:
+                  type: string
+                  format: date-time
+                  description: 操作时间
+                  example: '2024-08-15T12:00:00Z'
     InvoiceBatchRequest:
       type: object
       required:
-        - operation
-        - invoice_ids
+      - operation
+      - invoice_ids
       properties:
         operation:
           type: string
           description: 操作类型
-          enum: [generate, update, delete, send]
-          example: "generate"
+          enum:
+          - generate
+          - update
+          - delete
+          - send
+          example: generate
         invoice_ids:
           type: array
           description: 账单ID列表
           items:
             type: integer
-          example: [67890, 67891, 67892]
+          example:
+          - 67890
+          - 67891
+          - 67892
         batch_data:
           type: object
           description: 批量操作数据
           additionalProperties: true
-
     InvoiceBatchResponse:
       type: object
       properties:
@@ -2705,48 +2802,51 @@ components:
               status:
                 type: string
                 description: 操作状态
-                enum: [success, failed]
-                example: "success"
+                enum:
+                - success
+                - failed
+                example: success
               message:
                 type: string
                 description: 操作消息
-                example: "操作成功"
+                example: 操作成功
               error_code:
                 type: string
                 description: 错误码
-                example: "INVOICE_NOT_FOUND"
-
-    # 支付回调和对账相关Schema
+                example: INVOICE_NOT_FOUND
     PaymentNotifyRequest:
       type: object
       required:
-        - payment_no
-        - channel_transaction_id
-        - payment_status
+      - payment_no
+      - channel_transaction_id
+      - payment_status
       properties:
         payment_no:
           type: string
           description: 支付编号
-          example: "PAY-20240815-0001"
+          example: PAY-20240815-0001
         channel_transaction_id:
           type: string
           description: 渠道交易号
-          example: "2024081522001234567890"
+          example: '2024081522001234567890'
         payment_status:
           type: string
           description: 支付状态
-          enum: [success, failed, cancelled]
-          example: "success"
+          enum:
+          - success
+          - failed
+          - cancelled
+          example: success
         payment_amount:
           type: number
           format: decimal
           description: 支付金额
-          example: 12130.00
+          example: 12130.0
         actual_amount:
           type: number
           format: decimal
           description: 实际到账金额
-          example: 12130.00
+          example: 12130.0
         channel_fee:
           type: number
           format: decimal
@@ -2756,49 +2856,51 @@ components:
           type: string
           format: date-time
           description: 支付时间
-          example: "2024-08-15T15:30:00Z"
+          example: '2024-08-15T15:30:00Z'
         signature:
           type: string
           description: 签名
-          example: "abc123def456ghi789"
+          example: abc123def456ghi789
         extra_data:
           type: object
           description: 额外数据
           additionalProperties: true
-
     ReconciliationRequest:
       type: object
       required:
-        - reconciliation_date
+      - reconciliation_date
       properties:
         reconciliation_date:
           type: string
           format: date
           description: 对账日期
-          example: "2024-08-15"
+          example: '2024-08-15'
         payment_channel:
           type: string
           description: 支付渠道
-          enum: [alipay, wechat, bank_transfer, credit_card]
-          example: "alipay"
+          enum:
+          - alipay
+          - wechat
+          - bank_transfer
+          - credit_card
+          example: alipay
         force_reconcile:
           type: boolean
           description: 是否强制对账
           default: false
           example: false
-
     ReconciliationResponse:
       type: object
       properties:
         reconciliation_id:
           type: string
           description: 对账批次ID
-          example: "REC-20240815-0001"
+          example: REC-20240815-0001
         reconciliation_date:
           type: string
           format: date
           description: 对账日期
-          example: "2024-08-15"
+          example: '2024-08-15'
         total_records:
           type: integer
           description: 总记录数
@@ -2815,12 +2917,15 @@ components:
           type: number
           format: decimal
           description: 差异金额
-          example: 25.50
+          example: 25.5
         reconciliation_status:
           type: string
           description: 对账状态
-          enum: [completed, partial, failed]
-          example: "partial"
+          enum:
+          - completed
+          - partial
+          - failed
+          example: partial
         differences:
           type: array
           description: 差异明细
@@ -2830,12 +2935,12 @@ components:
               payment_no:
                 type: string
                 description: 支付编号
-                example: "PAY-20240815-0001"
+                example: PAY-20240815-0001
               system_amount:
                 type: number
                 format: decimal
                 description: 系统金额
-                example: 12130.00
+                example: 12130.0
               channel_amount:
                 type: number
                 format: decimal
@@ -2849,15 +2954,16 @@ components:
               difference_type:
                 type: string
                 description: 差异类型
-                enum: [fee_difference, amount_mismatch, missing_record]
-                example: "fee_difference"
+                enum:
+                - fee_difference
+                - amount_mismatch
+                - missing_record
+                example: fee_difference
         processed_at:
           type: string
           format: date-time
           description: 处理时间
-          example: "2024-08-16T10:00:00Z"
-
-    # 更新请求Schema
+          example: '2024-08-16T10:00:00Z'
     BillingRulesUpdateRequest:
       type: object
       properties:
@@ -2877,7 +2983,6 @@ components:
           type: object
           description: 折扣规则
           additionalProperties: true
-
     TaxRatesUpdateRequest:
       type: object
       properties:
@@ -2895,11 +3000,11 @@ components:
               region:
                 type: string
                 description: 地区
-                example: "北京"
+                example: 北京
               tax_type:
                 type: string
                 description: 税种
-                example: "增值税"
+                example: 增值税
               tax_rate:
                 type: number
                 format: decimal
@@ -2909,27 +3014,25 @@ components:
                 type: string
                 format: date
                 description: 生效日期
-                example: "2024-01-01"
+                example: '2024-01-01'
               expiry_date:
                 type: string
                 format: date
                 description: 失效日期
-                example: "2024-12-31"
-
+                example: '2024-12-31'
     ExtensionRejectionRequest:
       type: object
       required:
-        - rejection_reason
+      - rejection_reason
       properties:
         rejection_reason:
           type: string
           description: 拒绝原因
-          example: "展期时间过长，需要重新评估合同条款"
+          example: 展期时间过长，需要重新评估合同条款
         alternative_suggestion:
           type: string
           description: 替代建议
-          example: "建议缩短展期时间至15天"
-
+          example: 建议缩短展期时间至15天
     CustomerAnalysisResponse:
       type: object
       properties:
@@ -2953,7 +3056,7 @@ components:
               type: number
               format: decimal
               description: 平均客户收入
-              example: 25000.00
+              example: 25000.0
         customer_segments:
           type: array
           description: 客户分群
@@ -2963,7 +3066,7 @@ components:
               segment_name:
                 type: string
                 description: 分群名称
-                example: "高价值客户"
+                example: 高价值客户
               customer_count:
                 type: integer
                 description: 客户数量
@@ -2972,12 +3075,12 @@ components:
                 type: number
                 format: decimal
                 description: 总收入
-                example: 750000.00
+                example: 750000.0
               average_revenue:
                 type: number
                 format: decimal
                 description: 平均收入
-                example: 50000.00
+                example: 50000.0
               payment_rate:
                 type: number
                 format: decimal
@@ -2996,12 +3099,12 @@ components:
               customer_name:
                 type: string
                 description: 客户名称
-                example: "ABC科技有限公司"
+                example: ABC科技有限公司
               total_revenue:
                 type: number
                 format: decimal
                 description: 总收入
-                example: 120000.00
+                example: 120000.0
               payment_rate:
                 type: number
                 format: decimal
@@ -3010,15 +3113,18 @@ components:
               risk_level:
                 type: string
                 description: 风险等级
-                enum: [low, medium, high]
-                example: "low"
+                enum:
+                - low
+                - medium
+                - high
+                example: low
               last_payment_date:
                 type: string
                 format: date
                 description: 最后付款日期
-                example: "2024-08-10"
+                example: '2024-08-10'
         generated_at:
           type: string
           format: date-time
           description: 生成时间
-          example: "2024-08-15T10:30:00Z"
+          example: '2024-08-15T10:30:00Z'

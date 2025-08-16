@@ -7,7 +7,7 @@
 set -e
 
 # 导入版本工具
-source "$(dirname "$0")/version_utils.sh"
+source "$(dirname "$0")/../utils/version_utils.sh"
 
 # 检测版本并设置路径
 VERSION=$(detect_prd_version)
@@ -17,7 +17,7 @@ if [[ $? -ne 0 ]]; then
 fi
 
 MODULES_DIR="docs/prd/split/$VERSION/modules"
-OUTPUT_DIR="scripts"
+OUTPUT_DIR="scripts/utils"
 mkdir -p "$OUTPUT_DIR"
 
 # 定义不需要生成API的模块列表（与init_api_structure.sh保持一致）

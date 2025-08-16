@@ -3,24 +3,22 @@ info:
   title: 工单管理系统 API
   version: 1.0.0
   description: 工单管理系统模块 - 负责工单全生命周期管理、智能派单、SLA监控等核心业务功能
-
 tags:
-  - name: tickets
-    description: 工单管理
-  - name: ticket-status
-    description: 工单状态管理
-  - name: ticket-batch
-    description: 工单批量操作
-  - name: ticket-search
-    description: 工单查询统计
-  - name: ticket-attachments
-    description: 工单附件管理
-
+- name: tickets
+  description: 工单管理
+- name: ticket-status
+  description: 工单状态管理
+- name: ticket-batch
+  description: 工单批量操作
+- name: ticket-search
+  description: 工单查询统计
+- name: ticket-attachments
+  description: 工单附件管理
 paths:
   /api/v1/tickets:
     post:
       tags:
-        - tickets
+      - tickets
       summary: 创建工单
       description: 创建新的工单，支持手动创建、自动创建、批量创建三种模式
       operationId: ticket_create
@@ -37,113 +35,117 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TicketCreateResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TicketCreateResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     get:
       tags:
-        - tickets
+      - tickets
       summary: 查询工单列表
       description: 分页查询工单列表，支持多条件筛选和排序
       operationId: ticket_list
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: status
-          in: query
-          description: 工单状态
-          schema:
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: status
+        in: query
+        description: 工单状态
+        schema:
+          type: array
+          items:
             type: string
-            enum: [NEW, PENDING, ASSIGNED, IN_PROGRESS, SUSPENDED, ESCALATED, PENDING_VERIFICATION, RESOLVED, CLOSED, CANCELLED]
-            example: "IN_PROGRESS"
-        - name: priority
-          in: query
-          description: 优先级
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 4
-            example: 2
-        - name: category
-          in: query
-          description: 问题分类
-          schema:
+      - name: priority
+        in: query
+        description: 优先级
+        schema:
+          type: array
+          items:
             type: string
-            example: "硬件故障"
-        - name: assigned_to
-          in: query
-          description: 分配给工程师ID
-          schema:
-            type: integer
-            example: 12345
-        - name: customer_id
-          in: query
-          description: 客户ID
-          schema:
-            type: integer
-            example: 67890
-        - name: created_start
-          in: query
-          description: 创建时间开始
-          schema:
-            type: string
-            format: date-time
-            example: "2024-08-01T00:00:00Z"
-        - name: created_end
-          in: query
-          description: 创建时间结束
-          schema:
-            type: string
-            format: date-time
-            example: "2024-08-31T23:59:59Z"
-        - name: keyword
-          in: query
-          description: 关键词搜索（标题、描述）
-          schema:
-            type: string
-            example: "邮件服务器"
-        - name: sort
-          in: query
-          description: 排序字段
-          schema:
-            type: string
-            enum: [created_at, updated_at, priority, status]
-            default: created_at
-            example: "created_at"
-        - name: order
-          in: query
-          description: 排序方向
-          schema:
-            type: string
-            enum: [asc, desc]
-            default: desc
-            example: "desc"
+      - name: category
+        in: query
+        description: 问题分类
+        schema:
+          type: string
+          example: 硬件故障
+      - name: assigned_to
+        in: query
+        description: 分配给工程师ID
+        schema:
+          type: integer
+          example: 12345
+      - name: customer_id
+        in: query
+        description: 客户ID
+        schema:
+          type: integer
+          example: 67890
+      - name: created_start
+        in: query
+        description: 创建时间开始
+        schema:
+          type: string
+          format: date-time
+          example: '2024-08-01T00:00:00Z'
+      - name: created_end
+        in: query
+        description: 创建时间结束
+        schema:
+          type: string
+          format: date-time
+          example: '2024-08-31T23:59:59Z'
+      - name: keyword
+        in: query
+        description: 关键词搜索（标题、描述）
+        schema:
+          type: string
+          example: 邮件服务器
+      - name: sort
+        in: query
+        description: 排序字段
+        schema:
+          type: string
+          enum:
+          - created_at
+          - updated_at
+          - priority
+          - status
+          default: created_at
+          example: created_at
+      - name: order
+        in: query
+        description: 排序方向
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+          example: desc
       responses:
         '200':
           description: 查询成功
@@ -151,40 +153,39 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/TicketListItem'
+                            $ref: '#/components/schemas/TicketListItem'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/tickets/{id}:
     get:
       tags:
-        - tickets
+      - tickets
       summary: 获取工单详情
       description: 根据工单ID获取工单详细信息，包括处理记录和附件
       operationId: ticket_detail
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: integer
+          example: 12345
       responses:
         '200':
           description: 获取成功
@@ -192,36 +193,35 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TicketDetail'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TicketDetail'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     put:
       tags:
-        - tickets
+      - tickets
       summary: 更新工单
       description: 更新工单信息，支持部分字段更新
       operationId: ticket_update
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: integer
+          example: 12345
       requestBody:
         required: true
         content:
@@ -235,71 +235,69 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TicketDetail'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TicketDetail'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     delete:
       tags:
-        - tickets
+      - tickets
       summary: 删除工单
       description: 软删除工单，保留历史记录
       operationId: ticket_delete
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: integer
+          example: 12345
       responses:
         '200':
           description: 删除成功
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/tickets/{id}/status:
     put:
       tags:
-        - ticket-status
+      - ticket-status
       summary: 更新工单状态
       description: 更新工单状态，支持状态流转验证
       operationId: ticket_status_update
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: integer
+          example: 12345
       requestBody:
         required: true
         content:
@@ -313,39 +311,38 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TicketStatusUpdateResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TicketStatusUpdateResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/tickets/{id}/assign:
     post:
       tags:
-        - ticket-status
+      - ticket-status
       summary: 派单操作
       description: 将工单分配给指定工程师
       operationId: ticket_assign
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: integer
+          example: 12345
       requestBody:
         required: true
         content:
@@ -359,37 +356,36 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TicketAssignResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TicketAssignResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/tickets/{id}/accept:
     post:
       tags:
-        - ticket-status
+      - ticket-status
       summary: 接单操作
       description: 工程师接受分配的工单
       operationId: ticket_accept
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: integer
+          example: 12345
       requestBody:
         required: true
         content:
@@ -403,37 +399,36 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TicketAcceptResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TicketAcceptResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/tickets/{id}/escalate:
     post:
       tags:
-        - ticket-status
+      - ticket-status
       summary: 升级操作
       description: 将工单升级到高级工程师或专家
       operationId: ticket_escalate
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: integer
+          example: 12345
       requestBody:
         required: true
         content:
@@ -447,37 +442,36 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TicketEscalateResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TicketEscalateResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/tickets/{id}/resolve:
     post:
       tags:
-        - ticket-status
+      - ticket-status
       summary: 解决操作
       description: 标记工单为已解决状态
       operationId: ticket_resolve
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: integer
+          example: 12345
       requestBody:
         required: true
         content:
@@ -491,26 +485,25 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TicketResolveResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TicketResolveResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/tickets/batch:
     post:
       tags:
-        - ticket-batch
+      - ticket-batch
       summary: 批量创建工单
       description: 批量创建多个工单，支持Excel导入和API批量创建
       operationId: ticket_batch_create
@@ -527,23 +520,22 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TicketBatchCreateResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TicketBatchCreateResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     put:
       tags:
-        - ticket-batch
+      - ticket-batch
       summary: 批量更新工单
       description: 批量修改工单状态、优先级、分类等字段
       operationId: ticket_batch_update
@@ -560,24 +552,23 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TicketBatchUpdateResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TicketBatchUpdateResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/tickets/batch/assign:
     post:
       tags:
-        - ticket-batch
+      - ticket-batch
       summary: 批量派单
       description: 一次性分配多个工单给指定工程师
       operationId: ticket_batch_assign
@@ -594,24 +585,23 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TicketBatchAssignResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TicketBatchAssignResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/tickets/batch/close:
     post:
       tags:
-        - ticket-batch
+      - ticket-batch
       summary: 批量关闭工单
       description: 批量关闭已解决的工单
       operationId: ticket_batch_close
@@ -628,66 +618,70 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TicketBatchCloseResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TicketBatchCloseResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/tickets/search:
     get:
       tags:
-        - ticket-search
+      - ticket-search
       summary: 高级搜索
       description: 基于Elasticsearch的全文检索和高级搜索
       operationId: ticket_search
       parameters:
-        - name: q
-          in: query
-          description: 搜索关键词
-          schema:
+      - name: q
+        in: query
+        description: 搜索关键词
+        schema:
+          type: string
+          example: 邮件服务器故障
+      - name: fields
+        in: query
+        description: 搜索字段
+        schema:
+          type: array
+          items:
             type: string
-            example: "邮件服务器故障"
-        - name: fields
-          in: query
-          description: 搜索字段
-          schema:
-            type: array
-            items:
-              type: string
-              enum: [title, description, customer_name]
-            example: ["title", "description"]
-        - name: filters
-          in: query
-          description: 过滤条件（JSON格式）
-          schema:
-            type: string
-            example: '{"status":["IN_PROGRESS","ASSIGNED"],"priority":[1,2]}'
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
+            enum:
+            - title
+            - description
+            - customer_name
+          example:
+          - title
+          - description
+      - name: filters
+        in: query
+        description: 过滤条件（JSON格式）
+        schema:
+          type: string
+          example: '{"status":["IN_PROGRESS","ASSIGNED"],"priority":[1,2]}'
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
       responses:
         '200':
           description: 搜索成功
@@ -695,63 +689,72 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/TicketSearchResult'
+                            $ref: '#/components/schemas/TicketSearchResult'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/tickets/statistics:
     get:
       tags:
-        - ticket-search
+      - ticket-search
       summary: 统计数据
       description: 获取工单统计数据，包括状态分布、趋势分析等
       operationId: ticket_statistics
       parameters:
-        - name: type
-          in: query
-          description: 统计类型
-          schema:
-            type: string
-            enum: [status, priority, category, trend, engineer, customer]
-            default: status
-            example: "status"
-        - name: start_date
-          in: query
-          description: 开始日期
-          schema:
-            type: string
-            format: date
-            example: "2024-08-01"
-        - name: end_date
-          in: query
-          description: 结束日期
-          schema:
-            type: string
-            format: date
-            example: "2024-08-31"
-        - name: group_by
-          in: query
-          description: 分组维度
-          schema:
-            type: string
-            enum: [day, week, month, year]
-            default: day
-            example: "day"
+      - name: type
+        in: query
+        description: 统计类型
+        schema:
+          type: string
+          enum:
+          - status
+          - priority
+          - category
+          - trend
+          - engineer
+          - customer
+          default: status
+          example: status
+      - name: start_date
+        in: query
+        description: 开始日期
+        schema:
+          type: string
+          format: date
+          example: '2024-08-01'
+      - name: end_date
+        in: query
+        description: 结束日期
+        schema:
+          type: string
+          format: date
+          example: '2024-08-31'
+      - name: group_by
+        in: query
+        description: 分组维度
+        schema:
+          type: string
+          enum:
+          - day
+          - week
+          - month
+          - year
+          default: day
+          example: day
       responses:
         '200':
           description: 统计成功
@@ -759,50 +762,57 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TicketStatistics'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TicketStatistics'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/tickets/export:
     get:
       tags:
-        - ticket-search
+      - ticket-search
       summary: 导出数据
       description: 导出工单数据，支持Excel、PDF、CSV格式
       operationId: ticket_export
       parameters:
-        - name: format
-          in: query
-          description: 导出格式
-          schema:
+      - name: format
+        in: query
+        description: 导出格式
+        schema:
+          type: string
+          enum:
+          - excel
+          - pdf
+          - csv
+          default: excel
+          example: excel
+      - name: filters
+        in: query
+        description: 过滤条件（JSON格式）
+        schema:
+          type: string
+          example: '{"status":["CLOSED"],"created_start":"2024-08-01T00:00:00Z"}'
+      - name: fields
+        in: query
+        description: 导出字段
+        schema:
+          type: array
+          items:
             type: string
-            enum: [excel, pdf, csv]
-            default: excel
-            example: "excel"
-        - name: filters
-          in: query
-          description: 过滤条件（JSON格式）
-          schema:
-            type: string
-            example: '{"status":["CLOSED"],"created_start":"2024-08-01T00:00:00Z"}'
-        - name: fields
-          in: query
-          description: 导出字段
-          schema:
-            type: array
-            items:
-              type: string
-            example: ["ticket_no", "title", "status", "priority", "created_at"]
+          example:
+          - ticket_no
+          - title
+          - status
+          - priority
+          - created_at
       responses:
         '200':
           description: 导出成功
@@ -812,18 +822,17 @@ paths:
                 type: string
                 format: binary
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/tickets/dashboard:
     get:
       tags:
-        - ticket-search
+      - ticket-search
       summary: 仪表板数据
       description: 获取工单仪表板数据，用于首页展示
       operationId: ticket_dashboard
@@ -834,33 +843,32 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TicketDashboard'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TicketDashboard'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/tickets/{id}/attachments:
     post:
       tags:
-        - ticket-attachments
+      - ticket-attachments
       summary: 上传附件
       description: 为工单上传附件文件
       operationId: ticket_attachment_upload
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: integer
+          example: 12345
       requestBody:
         required: true
         content:
@@ -875,7 +883,7 @@ paths:
                 description:
                   type: string
                   description: 附件描述
-                  example: "错误日志文件"
+                  example: 错误日志文件
       responses:
         '200':
           description: 上传成功
@@ -883,36 +891,35 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TicketAttachment'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TicketAttachment'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     get:
       tags:
-        - ticket-attachments
+      - ticket-attachments
       summary: 获取附件列表
       description: 获取工单的所有附件列表
       operationId: ticket_attachment_list
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: integer
+          example: 12345
       responses:
         '200':
           description: 获取成功
@@ -920,85 +927,81 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/TicketAttachment'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/TicketAttachment'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/tickets/{ticket_id}/attachments/{attachment_id}:
     delete:
       tags:
-        - ticket-attachments
+      - ticket-attachments
       summary: 删除附件
       description: 删除工单的指定附件
       operationId: ticket_attachment_delete
       parameters:
-        - name: ticket_id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
-        - name: attachment_id
-          in: path
-          required: true
-          description: 附件ID
-          schema:
-            type: integer
-            example: 67890
+      - name: ticket_id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: string
+      - name: attachment_id
+        in: path
+        required: true
+        description: 附件ID
+        schema:
+          type: integer
+          example: 67890
       responses:
         '200':
           description: 删除成功
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
 components:
   schemas:
-    # 工单创建请求
     TicketCreateRequest:
       type: object
       required:
-        - title
-        - description
-        - customer_id
-        - priority
+      - title
+      - description
+      - customer_id
+      - priority
       properties:
         title:
           type: string
           maxLength: 200
           description: 工单标题
-          example: "邮件服务器故障"
+          example: 邮件服务器故障
         description:
           type: string
           description: 问题描述
-          example: "邮件服务器无法发送邮件，影响公司正常业务运营"
+          example: 邮件服务器无法发送邮件，影响公司正常业务运营
         category:
           type: string
           maxLength: 50
           description: 问题分类
-          example: "硬件故障"
+          example: 硬件故障
         priority:
           type: integer
           minimum: 1
@@ -1007,10 +1010,15 @@ components:
           example: 2
         source:
           type: string
-          enum: [WEB, EMAIL, API, MONITORING, PHONE]
+          enum:
+          - WEB
+          - EMAIL
+          - API
+          - MONITORING
+          - PHONE
           default: WEB
           description: 工单来源
-          example: "WEB"
+          example: WEB
         customer_id:
           type: integer
           description: 客户ID
@@ -1019,38 +1027,39 @@ components:
           type: string
           maxLength: 100
           description: 客户姓名
-          example: "张三"
+          example: 张三
         customer_phone:
           type: string
           maxLength: 20
           description: 客户电话
-          example: "13800138000"
+          example: '13800138000'
         customer_email:
           type: string
           maxLength: 100
           format: email
           description: 客户邮箱
-          example: "zhangsan@company.com"
+          example: zhangsan@company.com
         tags:
           type: array
           items:
             type: string
           description: 标签数组
-          example: ["邮件", "服务器", "紧急"]
+          example:
+          - 邮件
+          - 服务器
+          - 紧急
         custom_fields:
           type: object
           description: 自定义字段
           example:
-            server_ip: "192.168.1.100"
+            server_ip: 192.168.1.100
             affected_users: 50
-            business_impact: "high"
+            business_impact: high
         attachments:
           type: array
           items:
             $ref: '#/components/schemas/AttachmentInfo'
           description: 附件信息
-
-    # 工单创建响应
     TicketCreateResponse:
       type: object
       properties:
@@ -1061,24 +1070,32 @@ components:
         ticket_no:
           type: string
           description: 工单编号
-          example: "TK-20240814-0001"
+          example: TK-20240814-0001
         status:
           type: string
-          enum: [NEW, PENDING, ASSIGNED, IN_PROGRESS, SUSPENDED, ESCALATED, PENDING_VERIFICATION, RESOLVED, CLOSED, CANCELLED]
+          enum:
+          - NEW
+          - PENDING
+          - ASSIGNED
+          - IN_PROGRESS
+          - SUSPENDED
+          - ESCALATED
+          - PENDING_VERIFICATION
+          - RESOLVED
+          - CLOSED
+          - CANCELLED
           description: 工单状态
-          example: "NEW"
+          example: NEW
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-14T10:30:00Z"
+          example: '2024-08-14T10:30:00Z'
         estimated_resolve_time:
           type: string
           format: date-time
           description: 预计解决时间
-          example: "2024-08-14T18:30:00Z"
-
-    # 工单列表项
+          example: '2024-08-14T18:30:00Z'
     TicketListItem:
       type: object
       properties:
@@ -1089,16 +1106,26 @@ components:
         ticket_no:
           type: string
           description: 工单编号
-          example: "TK-20240814-0001"
+          example: TK-20240814-0001
         title:
           type: string
           description: 工单标题
-          example: "邮件服务器故障"
+          example: 邮件服务器故障
         status:
           type: string
-          enum: [NEW, PENDING, ASSIGNED, IN_PROGRESS, SUSPENDED, ESCALATED, PENDING_VERIFICATION, RESOLVED, CLOSED, CANCELLED]
+          enum:
+          - NEW
+          - PENDING
+          - ASSIGNED
+          - IN_PROGRESS
+          - SUSPENDED
+          - ESCALATED
+          - PENDING_VERIFICATION
+          - RESOLVED
+          - CLOSED
+          - CANCELLED
           description: 工单状态
-          example: "IN_PROGRESS"
+          example: IN_PROGRESS
         priority:
           type: integer
           minimum: 1
@@ -1108,135 +1135,142 @@ components:
         category:
           type: string
           description: 问题分类
-          example: "硬件故障"
+          example: 硬件故障
         customer_name:
           type: string
           description: 客户姓名
-          example: "张三"
+          example: 张三
         assigned_to_name:
           type: string
           description: 分配给工程师姓名
-          example: "李工程师"
+          example: 李工程师
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-14T10:30:00Z"
+          example: '2024-08-14T10:30:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-14T15:30:00Z"
+          example: '2024-08-14T15:30:00Z'
         response_due_time:
           type: string
           format: date-time
           description: 响应截止时间
-          example: "2024-08-14T11:00:00Z"
+          example: '2024-08-14T11:00:00Z'
         resolve_due_time:
           type: string
           format: date-time
           description: 解决截止时间
-          example: "2024-08-14T18:30:00Z"
+          example: '2024-08-14T18:30:00Z'
         sla_status:
           type: string
-          enum: [NORMAL, WARNING, OVERDUE]
+          enum:
+          - NORMAL
+          - WARNING
+          - OVERDUE
           description: SLA状态
-          example: "NORMAL"
-
-    # 工单详情
+          example: NORMAL
     TicketDetail:
       allOf:
-        - $ref: '#/components/schemas/TicketListItem'
-        - type: object
-          properties:
-            description:
+      - $ref: '#/components/schemas/TicketListItem'
+      - type: object
+        properties:
+          description:
+            type: string
+            description: 问题描述
+            example: 邮件服务器无法发送邮件，影响公司正常业务运营
+          source:
+            type: string
+            enum:
+            - WEB
+            - EMAIL
+            - API
+            - MONITORING
+            - PHONE
+            description: 工单来源
+            example: WEB
+          customer_id:
+            type: integer
+            description: 客户ID
+            example: 12345
+          customer_phone:
+            type: string
+            description: 客户电话
+            example: '13800138000'
+          customer_email:
+            type: string
+            description: 客户邮箱
+            example: zhangsan@company.com
+          assigned_to:
+            type: integer
+            description: 分配给工程师ID
+            example: 67890
+          assigned_at:
+            type: string
+            format: date-time
+            description: 分配时间
+            example: '2024-08-14T10:35:00Z'
+          started_at:
+            type: string
+            format: date-time
+            description: 开始处理时间
+            example: '2024-08-14T10:40:00Z'
+          resolved_at:
+            type: string
+            format: date-time
+            description: 解决时间
+            example: '2024-08-14T16:30:00Z'
+          closed_at:
+            type: string
+            format: date-time
+            description: 关闭时间
+            example: '2024-08-14T17:00:00Z'
+          sla_level:
+            type: string
+            description: SLA等级
+            example: GOLD
+          satisfaction_score:
+            type: integer
+            minimum: 1
+            maximum: 5
+            description: 满意度评分
+            example: 5
+          satisfaction_comment:
+            type: string
+            description: 满意度评价
+            example: 服务及时，问题解决彻底
+          tags:
+            type: array
+            items:
               type: string
-              description: 问题描述
-              example: "邮件服务器无法发送邮件，影响公司正常业务运营"
-            source:
-              type: string
-              enum: [WEB, EMAIL, API, MONITORING, PHONE]
-              description: 工单来源
-              example: "WEB"
-            customer_id:
-              type: integer
-              description: 客户ID
-              example: 12345
-            customer_phone:
-              type: string
-              description: 客户电话
-              example: "13800138000"
-            customer_email:
-              type: string
-              description: 客户邮箱
-              example: "zhangsan@company.com"
-            assigned_to:
-              type: integer
-              description: 分配给工程师ID
-              example: 67890
-            assigned_at:
-              type: string
-              format: date-time
-              description: 分配时间
-              example: "2024-08-14T10:35:00Z"
-            started_at:
-              type: string
-              format: date-time
-              description: 开始处理时间
-              example: "2024-08-14T10:40:00Z"
-            resolved_at:
-              type: string
-              format: date-time
-              description: 解决时间
-              example: "2024-08-14T16:30:00Z"
-            closed_at:
-              type: string
-              format: date-time
-              description: 关闭时间
-              example: "2024-08-14T17:00:00Z"
-            sla_level:
-              type: string
-              description: SLA等级
-              example: "GOLD"
-            satisfaction_score:
-              type: integer
-              minimum: 1
-              maximum: 5
-              description: 满意度评分
-              example: 5
-            satisfaction_comment:
-              type: string
-              description: 满意度评价
-              example: "服务及时，问题解决彻底"
-            tags:
-              type: array
-              items:
-                type: string
-              description: 标签数组
-              example: ["邮件", "服务器", "紧急"]
-            custom_fields:
-              type: object
-              description: 自定义字段
-              example:
-                server_ip: "192.168.1.100"
-                affected_users: 50
-                business_impact: "high"
-            logs:
-              type: array
-              items:
-                $ref: '#/components/schemas/TicketLog'
-              description: 处理记录
-            attachments:
-              type: array
-              items:
-                $ref: '#/components/schemas/TicketAttachment'
-              description: 附件列表
-            version:
-              type: integer
-              description: 版本号（乐观锁）
-              example: 1
-
-    # 工单更新请求
+            description: 标签数组
+            example:
+            - 邮件
+            - 服务器
+            - 紧急
+          custom_fields:
+            type: object
+            description: 自定义字段
+            example:
+              server_ip: 192.168.1.100
+              affected_users: 50
+              business_impact: high
+          logs:
+            type: array
+            items:
+              $ref: '#/components/schemas/TicketLog'
+            description: 处理记录
+          attachments:
+            type: array
+            items:
+              $ref: '#/components/schemas/TicketAttachment'
+            description: 附件列表
+          version:
+            type: integer
+            description: 版本号（乐观锁）
+            example: 1
     TicketUpdateRequest:
       type: object
       properties:
@@ -1244,16 +1278,16 @@ components:
           type: string
           maxLength: 200
           description: 工单标题
-          example: "邮件服务器故障（已修复）"
+          example: 邮件服务器故障（已修复）
         description:
           type: string
           description: 问题描述
-          example: "邮件服务器无法发送邮件，影响公司正常业务运营。已重启服务解决。"
+          example: 邮件服务器无法发送邮件，影响公司正常业务运营。已重启服务解决。
         category:
           type: string
           maxLength: 50
           description: 问题分类
-          example: "硬件故障"
+          example: 硬件故障
         priority:
           type: integer
           minimum: 1
@@ -1264,53 +1298,62 @@ components:
           type: string
           maxLength: 20
           description: 客户电话
-          example: "13800138001"
+          example: '13800138001'
         customer_email:
           type: string
           maxLength: 100
           format: email
           description: 客户邮箱
-          example: "zhangsan@company.com"
+          example: zhangsan@company.com
         tags:
           type: array
           items:
             type: string
           description: 标签数组
-          example: ["邮件", "服务器", "已解决"]
+          example:
+          - 邮件
+          - 服务器
+          - 已解决
         custom_fields:
           type: object
           description: 自定义字段
           example:
-            server_ip: "192.168.1.100"
+            server_ip: 192.168.1.100
             affected_users: 0
-            business_impact: "low"
+            business_impact: low
         version:
           type: integer
           description: 版本号（乐观锁）
           example: 1
-
-    # 工单状态更新请求
     TicketStatusUpdateRequest:
       type: object
       required:
-        - status
+      - status
       properties:
         status:
           type: string
-          enum: [NEW, PENDING, ASSIGNED, IN_PROGRESS, SUSPENDED, ESCALATED, PENDING_VERIFICATION, RESOLVED, CLOSED, CANCELLED]
+          enum:
+          - NEW
+          - PENDING
+          - ASSIGNED
+          - IN_PROGRESS
+          - SUSPENDED
+          - ESCALATED
+          - PENDING_VERIFICATION
+          - RESOLVED
+          - CLOSED
+          - CANCELLED
           description: 目标状态
-          example: "IN_PROGRESS"
+          example: IN_PROGRESS
         comment:
           type: string
           description: 状态变更说明
-          example: "开始处理邮件服务器故障问题"
+          example: 开始处理邮件服务器故障问题
         estimated_resolve_time:
           type: string
           format: date-time
           description: 预计解决时间
-          example: "2024-08-14T18:30:00Z"
-
-    # 工单状态更新响应
+          example: '2024-08-14T18:30:00Z'
     TicketStatusUpdateResponse:
       type: object
       properties:
@@ -1321,22 +1364,20 @@ components:
         old_status:
           type: string
           description: 原状态
-          example: "ASSIGNED"
+          example: ASSIGNED
         new_status:
           type: string
           description: 新状态
-          example: "IN_PROGRESS"
+          example: IN_PROGRESS
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-14T10:40:00Z"
-
-    # 派单请求
+          example: '2024-08-14T10:40:00Z'
     TicketAssignRequest:
       type: object
       required:
-        - assigned_to
+      - assigned_to
       properties:
         assigned_to:
           type: integer
@@ -1345,15 +1386,13 @@ components:
         comment:
           type: string
           description: 派单说明
-          example: "根据技能匹配分配给李工程师处理"
+          example: 根据技能匹配分配给李工程师处理
         priority:
           type: integer
           minimum: 1
           maximum: 4
           description: 调整优先级
           example: 2
-
-    # 派单响应
     TicketAssignResponse:
       type: object
       properties:
@@ -1368,33 +1407,29 @@ components:
         assigned_to_name:
           type: string
           description: 工程师姓名
-          example: "李工程师"
+          example: 李工程师
         assigned_at:
           type: string
           format: date-time
           description: 分配时间
-          example: "2024-08-14T10:35:00Z"
+          example: '2024-08-14T10:35:00Z'
         response_due_time:
           type: string
           format: date-time
           description: 响应截止时间
-          example: "2024-08-14T11:05:00Z"
-
-    # 接单请求
+          example: '2024-08-14T11:05:00Z'
     TicketAcceptRequest:
       type: object
       properties:
         comment:
           type: string
           description: 接单说明
-          example: "已接单，开始处理邮件服务器故障"
+          example: 已接单，开始处理邮件服务器故障
         estimated_resolve_time:
           type: string
           format: date-time
           description: 预计解决时间
-          example: "2024-08-14T18:30:00Z"
-
-    # 接单响应
+          example: '2024-08-14T18:30:00Z'
     TicketAcceptResponse:
       type: object
       properties:
@@ -1405,34 +1440,35 @@ components:
         status:
           type: string
           description: 工单状态
-          example: "IN_PROGRESS"
+          example: IN_PROGRESS
         started_at:
           type: string
           format: date-time
           description: 开始处理时间
-          example: "2024-08-14T10:40:00Z"
+          example: '2024-08-14T10:40:00Z'
         estimated_resolve_time:
           type: string
           format: date-time
           description: 预计解决时间
-          example: "2024-08-14T18:30:00Z"
-
-    # 升级请求
+          example: '2024-08-14T18:30:00Z'
     TicketEscalateRequest:
       type: object
       required:
-        - escalate_type
-        - reason
+      - escalate_type
+      - reason
       properties:
         escalate_type:
           type: string
-          enum: [TECHNICAL, TIMEOUT, CUSTOMER_COMPLAINT]
+          enum:
+          - TECHNICAL
+          - TIMEOUT
+          - CUSTOMER_COMPLAINT
           description: 升级类型
-          example: "TECHNICAL"
+          example: TECHNICAL
         reason:
           type: string
           description: 升级原因
-          example: "技术难度超出当前工程师能力范围"
+          example: 技术难度超出当前工程师能力范围
         escalate_to:
           type: integer
           description: 升级到工程师ID（可选）
@@ -1440,9 +1476,7 @@ components:
         comment:
           type: string
           description: 升级说明
-          example: "需要高级工程师协助处理复杂的邮件服务器配置问题"
-
-    # 升级响应
+          example: 需要高级工程师协助处理复杂的邮件服务器配置问题
     TicketEscalateResponse:
       type: object
       properties:
@@ -1453,7 +1487,7 @@ components:
         escalate_type:
           type: string
           description: 升级类型
-          example: "TECHNICAL"
+          example: TECHNICAL
         escalated_to:
           type: integer
           description: 升级到工程师ID
@@ -1461,34 +1495,30 @@ components:
         escalated_to_name:
           type: string
           description: 升级到工程师姓名
-          example: "王高级工程师"
+          example: 王高级工程师
         escalated_at:
           type: string
           format: date-time
           description: 升级时间
-          example: "2024-08-14T14:30:00Z"
-
-    # 解决请求
+          example: '2024-08-14T14:30:00Z'
     TicketResolveRequest:
       type: object
       required:
-        - solution
+      - solution
       properties:
         solution:
           type: string
           description: 解决方案
-          example: "重启邮件服务器，重新配置SMTP设置，问题已解决"
+          example: 重启邮件服务器，重新配置SMTP设置，问题已解决
         resolution_time:
           type: string
           format: date-time
           description: 解决时间
-          example: "2024-08-14T16:30:00Z"
+          example: '2024-08-14T16:30:00Z'
         comment:
           type: string
           description: 解决说明
-          example: "邮件服务器已恢复正常，建议客户定期检查服务器状态"
-
-    # 解决响应
+          example: 邮件服务器已恢复正常，建议客户定期检查服务器状态
     TicketResolveResponse:
       type: object
       properties:
@@ -1499,22 +1529,20 @@ components:
         status:
           type: string
           description: 工单状态
-          example: "RESOLVED"
+          example: RESOLVED
         resolved_at:
           type: string
           format: date-time
           description: 解决时间
-          example: "2024-08-14T16:30:00Z"
+          example: '2024-08-14T16:30:00Z'
         solution:
           type: string
           description: 解决方案
-          example: "重启邮件服务器，重新配置SMTP设置，问题已解决"
-
-    # 批量创建工单请求
+          example: 重启邮件服务器，重新配置SMTP设置，问题已解决
     TicketBatchCreateRequest:
       type: object
       required:
-        - tickets
+      - tickets
       properties:
         tickets:
           type: array
@@ -1527,8 +1555,6 @@ components:
           default: false
           description: 是否自动派单
           example: true
-
-    # 批量创建工单响应
     TicketBatchCreateResponse:
       type: object
       properties:
@@ -1564,18 +1590,16 @@ components:
               ticket_no:
                 type: string
                 description: 工单编号（成功时）
-                example: "TK-20240814-0001"
+                example: TK-20240814-0001
               error:
                 type: string
                 description: 错误信息（失败时）
-                example: "标题不能为空"
-
-    # 批量更新工单请求
+                example: 标题不能为空
     TicketBatchUpdateRequest:
       type: object
       required:
-        - ticket_ids
-        - updates
+      - ticket_ids
+      - updates
       properties:
         ticket_ids:
           type: array
@@ -1583,16 +1607,29 @@ components:
           items:
             type: integer
           description: 工单ID列表
-          example: [12345, 12346, 12347]
+          example:
+          - 12345
+          - 12346
+          - 12347
         updates:
           type: object
           description: 更新字段
           properties:
             status:
               type: string
-              enum: [NEW, PENDING, ASSIGNED, IN_PROGRESS, SUSPENDED, ESCALATED, PENDING_VERIFICATION, RESOLVED, CLOSED, CANCELLED]
+              enum:
+              - NEW
+              - PENDING
+              - ASSIGNED
+              - IN_PROGRESS
+              - SUSPENDED
+              - ESCALATED
+              - PENDING_VERIFICATION
+              - RESOLVED
+              - CLOSED
+              - CANCELLED
               description: 状态
-              example: "CLOSED"
+              example: CLOSED
             priority:
               type: integer
               minimum: 1
@@ -1602,7 +1639,7 @@ components:
             category:
               type: string
               description: 分类
-              example: "软件故障"
+              example: 软件故障
             assigned_to:
               type: integer
               description: 分配给工程师ID
@@ -1612,9 +1649,9 @@ components:
               items:
                 type: string
               description: 标签
-              example: ["批量处理", "已解决"]
-
-    # 批量更新工单响应
+              example:
+              - 批量处理
+              - 已解决
     TicketBatchUpdateResponse:
       type: object
       properties:
@@ -1646,14 +1683,12 @@ components:
               error:
                 type: string
                 description: 错误信息（失败时）
-                example: "工单不存在"
-
-    # 批量派单请求
+                example: 工单不存在
     TicketBatchAssignRequest:
       type: object
       required:
-        - ticket_ids
-        - assigned_to
+      - ticket_ids
+      - assigned_to
       properties:
         ticket_ids:
           type: array
@@ -1661,7 +1696,10 @@ components:
           items:
             type: integer
           description: 工单ID列表
-          example: [12345, 12346, 12347]
+          example:
+          - 12345
+          - 12346
+          - 12347
         assigned_to:
           type: integer
           description: 分配给工程师ID
@@ -1669,9 +1707,7 @@ components:
         comment:
           type: string
           description: 派单说明
-          example: "批量分配给李工程师处理"
-
-    # 批量派单响应
+          example: 批量分配给李工程师处理
     TicketBatchAssignResponse:
       type: object
       properties:
@@ -1694,7 +1730,7 @@ components:
         assigned_to_name:
           type: string
           description: 工程师姓名
-          example: "李工程师"
+          example: 李工程师
         results:
           type: array
           items:
@@ -1711,13 +1747,11 @@ components:
               error:
                 type: string
                 description: 错误信息（失败时）
-                example: "工单状态不允许派单"
-
-    # 批量关闭工单请求
+                example: 工单状态不允许派单
     TicketBatchCloseRequest:
       type: object
       required:
-        - ticket_ids
+      - ticket_ids
       properties:
         ticket_ids:
           type: array
@@ -1725,13 +1759,14 @@ components:
           items:
             type: integer
           description: 工单ID列表
-          example: [12345, 12346, 12347]
+          example:
+          - 12345
+          - 12346
+          - 12347
         comment:
           type: string
           description: 关闭说明
-          example: "批量关闭已解决的工单"
-
-    # 批量关闭工单响应
+          example: 批量关闭已解决的工单
     TicketBatchCloseResponse:
       type: object
       properties:
@@ -1763,43 +1798,41 @@ components:
               error:
                 type: string
                 description: 错误信息（失败时）
-                example: "工单状态不允许关闭"
-
-    # 搜索结果
+                example: 工单状态不允许关闭
     TicketSearchResult:
       allOf:
-        - $ref: '#/components/schemas/TicketListItem'
-        - type: object
-          properties:
-            highlight:
-              type: object
-              description: 高亮字段
-              properties:
-                title:
-                  type: array
-                  items:
-                    type: string
-                  description: 标题高亮
-                  example: ["<em>邮件</em>服务器故障"]
-                description:
-                  type: array
-                  items:
-                    type: string
-                  description: 描述高亮
-                  example: ["<em>邮件</em>服务器无法发送邮件"]
-            score:
-              type: number
-              description: 相关性评分
-              example: 0.95
-
-    # 统计数据
+      - $ref: '#/components/schemas/TicketListItem'
+      - type: object
+        properties:
+          highlight:
+            type: object
+            description: 高亮字段
+            properties:
+              title:
+                type: array
+                items:
+                  type: string
+                description: 标题高亮
+                example:
+                - <em>邮件</em>服务器故障
+              description:
+                type: array
+                items:
+                  type: string
+                description: 描述高亮
+                example:
+                - <em>邮件</em>服务器无法发送邮件
+          score:
+            type: number
+            description: 相关性评分
+            example: 0.95
     TicketStatistics:
       type: object
       properties:
         type:
           type: string
           description: 统计类型
-          example: "status"
+          example: status
         period:
           type: object
           description: 统计周期
@@ -1808,12 +1841,12 @@ components:
               type: string
               format: date
               description: 开始日期
-              example: "2024-08-01"
+              example: '2024-08-01'
             end_date:
               type: string
               format: date
               description: 结束日期
-              example: "2024-08-31"
+              example: '2024-08-31'
         data:
           type: array
           items:
@@ -1822,7 +1855,7 @@ components:
               label:
                 type: string
                 description: 标签
-                example: "IN_PROGRESS"
+                example: IN_PROGRESS
               value:
                 type: integer
                 description: 数值
@@ -1841,14 +1874,12 @@ components:
                 type: string
                 format: date
                 description: 日期
-                example: "2024-08-14"
+                example: '2024-08-14'
               count:
                 type: integer
                 description: 数量
                 example: 15
           description: 趋势数据
-
-    # 仪表板数据
     TicketDashboard:
       type: object
       properties:
@@ -1880,7 +1911,7 @@ components:
               status:
                 type: string
                 description: 状态
-                example: "IN_PROGRESS"
+                example: IN_PROGRESS
               count:
                 type: integer
                 description: 数量
@@ -1902,7 +1933,7 @@ components:
               priority_name:
                 type: string
                 description: 优先级名称
-                example: "紧急"
+                example: 紧急
               count:
                 type: integer
                 description: 数量
@@ -1929,19 +1960,17 @@ components:
               type: number
               description: 平均响应时间（分钟）
               example: 18.5
-
-    # 附件信息
     AttachmentInfo:
       type: object
       properties:
         file_name:
           type: string
           description: 文件名
-          example: "error_log.txt"
+          example: error_log.txt
         file_path:
           type: string
           description: 文件路径
-          example: "/uploads/2024/08/error_log.txt"
+          example: /uploads/2024/08/error_log.txt
         file_size:
           type: integer
           description: 文件大小（字节）
@@ -1949,50 +1978,50 @@ components:
         file_type:
           type: string
           description: 文件类型
-          example: "text/plain"
-
-    # 工单附件
+          example: text/plain
     TicketAttachment:
       allOf:
-        - $ref: '#/components/schemas/AttachmentInfo'
-        - type: object
-          properties:
-            id:
-              type: integer
-              description: 附件ID
-              example: 67890
-            ticket_id:
-              type: integer
-              description: 工单ID
-              example: 12345
-            file_hash:
-              type: string
-              description: 文件哈希值
-              example: "d41d8cd98f00b204e9800998ecf8427e"
-            scan_status:
-              type: string
-              enum: [PENDING, CLEAN, INFECTED, ERROR]
-              description: 病毒扫描状态
-              example: "CLEAN"
-            upload_by:
-              type: integer
-              description: 上传人ID
-              example: 78901
-            upload_by_name:
-              type: string
-              description: 上传人姓名
-              example: "张三"
-            created_at:
-              type: string
-              format: date-time
-              description: 上传时间
-              example: "2024-08-14T10:32:00Z"
-            download_url:
-              type: string
-              description: 下载链接
-              example: "https://api.example.com/v1/tickets/12345/attachments/67890/download"
-
-    # 工单处理记录
+      - $ref: '#/components/schemas/AttachmentInfo'
+      - type: object
+        properties:
+          id:
+            type: integer
+            description: 附件ID
+            example: 67890
+          ticket_id:
+            type: integer
+            description: 工单ID
+            example: 12345
+          file_hash:
+            type: string
+            description: 文件哈希值
+            example: d41d8cd98f00b204e9800998ecf8427e
+          scan_status:
+            type: string
+            enum:
+            - PENDING
+            - CLEAN
+            - INFECTED
+            - ERROR
+            description: 病毒扫描状态
+            example: CLEAN
+          upload_by:
+            type: integer
+            description: 上传人ID
+            example: 78901
+          upload_by_name:
+            type: string
+            description: 上传人姓名
+            example: 张三
+          created_at:
+            type: string
+            format: date-time
+            description: 上传时间
+            example: '2024-08-14T10:32:00Z'
+          download_url:
+            type: string
+            description: 下载链接
+            example: https://api.example.com/v1/tickets/12345/attachments/67890/download
     TicketLog:
       type: object
       properties:
@@ -2006,21 +2035,32 @@ components:
           example: 12345
         action_type:
           type: string
-          enum: [CREATE, UPDATE, ASSIGN, ACCEPT, REJECT, ESCALATE, RESOLVE, CLOSE, REOPEN, COMMENT, ATTACH]
+          enum:
+          - CREATE
+          - UPDATE
+          - ASSIGN
+          - ACCEPT
+          - REJECT
+          - ESCALATE
+          - RESOLVE
+          - CLOSE
+          - REOPEN
+          - COMMENT
+          - ATTACH
           description: 操作类型
-          example: "ASSIGN"
+          example: ASSIGN
         action_description:
           type: string
           description: 操作描述
-          example: "工单已分配给李工程师"
+          example: 工单已分配给李工程师
         old_value:
           type: string
           description: 变更前值
-          example: "null"
+          example: 'null'
         new_value:
           type: string
           description: 变更后值
-          example: "67890"
+          example: '67890'
         operator_id:
           type: integer
           description: 操作人ID
@@ -2028,17 +2068,17 @@ components:
         operator_name:
           type: string
           description: 操作人姓名
-          example: "管理员"
+          example: 管理员
         operator_role:
           type: string
           description: 操作人角色
-          example: "ADMIN"
+          example: ADMIN
         ip_address:
           type: string
           description: 操作IP地址
-          example: "192.168.1.100"
+          example: 192.168.1.100
         created_at:
           type: string
           format: date-time
           description: 操作时间
-          example: "2024-08-14T10:35:00Z"
+          example: '2024-08-14T10:35:00Z'

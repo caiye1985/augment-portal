@@ -3,24 +3,22 @@ info:
   title: 工作流引擎系统 API
   version: 1.0.0
   description: REQ-014 工作流引擎系统 API 规范 - 提供强大的业务流程管理能力，支持BPMN 2.0标准的流程设计、执行和监控
-
 tags:
-  - name: workflow-definitions
-    description: 流程定义管理
-  - name: workflow-instances
-    description: 流程实例管理
-  - name: workflow-tasks
-    description: 任务管理
-  - name: workflow-approvals
-    description: 审批管理
-  - name: workflow-statistics
-    description: 统计分析
-
+- name: workflow-definitions
+  description: 流程定义管理
+- name: workflow-instances
+  description: 流程实例管理
+- name: workflow-tasks
+  description: 任务管理
+- name: workflow-approvals
+  description: 审批管理
+- name: workflow-statistics
+  description: 统计分析
 paths:
-  /api/v1/workflow/definitions:
+  /api/v1/workflows/definitions:
     post:
       tags:
-        - workflow-definitions
+      - workflow-definitions
       summary: 创建流程定义
       description: 创建新的BPMN流程定义，支持可视化流程设计和业务规则配置
       operationId: workflow_definition_create
@@ -37,63 +35,62 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/WorkflowDefinition'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/WorkflowDefinition'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     get:
       tags:
-        - workflow-definitions
+      - workflow-definitions
       summary: 查询流程定义列表
       description: 分页查询流程定义列表，支持按分类、状态等条件筛选
       operationId: workflow_definition_list
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: category
-          in: query
-          description: 流程分类
-          schema:
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: category
+        in: query
+        description: 流程分类
+        schema:
+          type: string
+          example: finance
+      - name: status
+        in: query
+        description: 流程状态
+        schema:
+          type: array
+          items: &id001
             type: string
-            example: "finance"
-        - name: status
-          in: query
-          description: 流程状态
-          schema:
-            type: string
-            enum: [DRAFT, PUBLISHED, DEPRECATED]
-            example: "PUBLISHED"
-        - name: keyword
-          in: query
-          description: 关键词搜索
-          schema:
-            type: string
-            example: "费用审批"
+      - name: keyword
+        in: query
+        description: 关键词搜索
+        schema:
+          type: string
+          example: 费用审批
       responses:
         '200':
           description: 查询成功
@@ -101,38 +98,37 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/WorkflowDefinition'
+                            $ref: '#/components/schemas/WorkflowDefinition'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
-  /api/v1/workflow/definitions/{id}:
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/workflows/definitions/{id}:
     get:
       tags:
-        - workflow-definitions
+      - workflow-definitions
       summary: 查询流程定义详情
       description: 根据ID查询流程定义的详细信息，包含BPMN XML和配置信息
       operationId: workflow_definition_get
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 流程定义ID
-          schema:
-            type: integer
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 流程定义ID
+        schema:
+          type: integer
+          example: 1001
       responses:
         '200':
           description: 查询成功
@@ -140,32 +136,31 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/WorkflowDefinitionDetail'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/WorkflowDefinitionDetail'
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     put:
       tags:
-        - workflow-definitions
+      - workflow-definitions
       summary: 更新流程定义
       description: 更新流程定义信息，仅允许更新草稿状态的流程
       operationId: workflow_definition_update
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 流程定义ID
-          schema:
-            type: integer
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 流程定义ID
+        schema:
+          type: integer
+          example: 1001
       requestBody:
         required: true
         content:
@@ -179,63 +174,61 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/WorkflowDefinition'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/WorkflowDefinition'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     delete:
       tags:
-        - workflow-definitions
+      - workflow-definitions
       summary: 删除流程定义
       description: 删除流程定义，仅允许删除草稿状态且无关联实例的流程
       operationId: workflow_definition_delete
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 流程定义ID
-          schema:
-            type: integer
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 流程定义ID
+        schema:
+          type: integer
+          example: 1001
       responses:
         '200':
           description: 删除成功
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
-  /api/v1/workflow/definitions/{id}/publish:
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/workflows/definitions/{id}/publish:
     post:
       tags:
-        - workflow-definitions
+      - workflow-definitions
       summary: 发布流程定义
       description: 将草稿状态的流程定义发布到生产环境
       operationId: workflow_definition_publish
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 流程定义ID
-          schema:
-            type: integer
-            example: 1001
+      - name: id
+        in: path
+        required: true
+        description: 流程定义ID
+        schema:
+          type: integer
+          example: 1001
       responses:
         '200':
           description: 发布成功
@@ -243,35 +236,34 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                            example: 1001
-                          status:
-                            type: string
-                            example: "PUBLISHED"
-                          published_at:
-                            type: string
-                            format: date-time
-                            example: "2025-08-15T10:30:00Z"
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1001
+                        status:
+                          type: string
+                          example: PUBLISHED
+                        published_at:
+                          type: string
+                          format: date-time
+                          example: '2025-08-15T10:30:00Z'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
-  /api/v1/workflow/instances/start:
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/workflows/instances/start:
     post:
       tags:
-        - workflow-instances
+      - workflow-instances
       summary: 启动流程实例
       description: 根据流程定义启动新的流程实例，支持传入业务数据和流程变量
       operationId: workflow_instance_start
@@ -288,70 +280,68 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/WorkflowInstanceStartResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/WorkflowInstanceStartResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
-  /api/v1/workflow/instances:
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/workflows/instances:
     get:
       tags:
-        - workflow-instances
+      - workflow-instances
       summary: 查询流程实例列表
       description: 分页查询流程实例列表，支持按状态、发起人等条件筛选
       operationId: workflow_instance_list
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: status
-          in: query
-          description: 实例状态
-          schema:
-            type: string
-            enum: [RUNNING, COMPLETED, TERMINATED, SUSPENDED]
-            example: "RUNNING"
-        - name: process_key
-          in: query
-          description: 流程标识
-          schema:
-            type: string
-            example: "expense_approval"
-        - name: initiator_id
-          in: query
-          description: 发起人ID
-          schema:
-            type: integer
-            example: 1001
-        - name: business_key
-          in: query
-          description: 业务标识
-          schema:
-            type: string
-            example: "EXP-20250815-0001"
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: status
+        in: query
+        description: 实例状态
+        schema:
+          type: array
+          items: *id001
+      - name: process_key
+        in: query
+        description: 流程标识
+        schema:
+          type: string
+          example: expense_approval
+      - name: initiator_id
+        in: query
+        description: 发起人ID
+        schema:
+          type: integer
+          example: 1001
+      - name: business_key
+        in: query
+        description: 业务标识
+        schema:
+          type: string
+          example: EXP-20250815-0001
       responses:
         '200':
           description: 查询成功
@@ -359,38 +349,37 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/WorkflowInstance'
+                            $ref: '#/components/schemas/WorkflowInstance'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
-  /api/v1/workflow/instances/{instance_id}:
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/workflows/instances/{instance_id}:
     get:
       tags:
-        - workflow-instances
+      - workflow-instances
       summary: 查询流程实例详情
       description: 根据实例ID查询流程实例的详细信息，包含当前状态和任务信息
       operationId: workflow_instance_get
       parameters:
-        - name: instance_id
-          in: path
-          required: true
-          description: 流程实例ID
-          schema:
-            type: string
-            example: "WF-20250815-0001"
+      - name: instance_id
+        in: path
+        required: true
+        description: 流程实例ID
+        schema:
+          type: string
+          example: WF-20250815-0001
       responses:
         '200':
           description: 查询成功
@@ -398,33 +387,32 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/WorkflowInstanceDetail'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/WorkflowInstanceDetail'
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
-  /api/v1/workflow/instances/{instance_id}/suspend:
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/workflows/instances/{instance_id}/suspend:
     post:
       tags:
-        - workflow-instances
+      - workflow-instances
       summary: 暂停流程实例
       description: 暂停正在运行的流程实例，可以稍后恢复执行
       operationId: workflow_instance_suspend
       parameters:
-        - name: instance_id
-          in: path
-          required: true
-          description: 流程实例ID
-          schema:
-            type: string
-            example: "WF-20250815-0001"
+      - name: instance_id
+        in: path
+        required: true
+        description: 流程实例ID
+        schema:
+          type: string
+          example: WF-20250815-0001
       requestBody:
         content:
           application/json:
@@ -434,7 +422,7 @@ paths:
                 reason:
                   type: string
                   description: 暂停原因
-                  example: "等待外部系统响应"
+                  example: 等待外部系统响应
       responses:
         '200':
           description: 暂停成功
@@ -442,46 +430,45 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          instance_id:
-                            type: string
-                            example: "WF-20250815-0001"
-                          status:
-                            type: string
-                            example: "SUSPENDED"
-                          suspended_at:
-                            type: string
-                            format: date-time
-                            example: "2025-08-15T14:30:00Z"
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        instance_id:
+                          type: string
+                          example: WF-20250815-0001
+                        status:
+                          type: string
+                          example: SUSPENDED
+                        suspended_at:
+                          type: string
+                          format: date-time
+                          example: '2025-08-15T14:30:00Z'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
-  /api/v1/workflow/instances/{instance_id}/resume:
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/workflows/instances/{instance_id}/resume:
     post:
       tags:
-        - workflow-instances
+      - workflow-instances
       summary: 恢复流程实例
       description: 恢复已暂停的流程实例继续执行
       operationId: workflow_instance_resume
       parameters:
-        - name: instance_id
-          in: path
-          required: true
-          description: 流程实例ID
-          schema:
-            type: string
-            example: "WF-20250815-0001"
+      - name: instance_id
+        in: path
+        required: true
+        description: 流程实例ID
+        schema:
+          type: string
+          example: WF-20250815-0001
       responses:
         '200':
           description: 恢复成功
@@ -489,75 +476,74 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          instance_id:
-                            type: string
-                            example: "WF-20250815-0001"
-                          status:
-                            type: string
-                            example: "RUNNING"
-                          resumed_at:
-                            type: string
-                            format: date-time
-                            example: "2025-08-15T15:00:00Z"
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        instance_id:
+                          type: string
+                          example: WF-20250815-0001
+                        status:
+                          type: string
+                          example: RUNNING
+                        resumed_at:
+                          type: string
+                          format: date-time
+                          example: '2025-08-15T15:00:00Z'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
-  /api/v1/workflow/tasks/pending:
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/workflows/tasks/pending:
     get:
       tags:
-        - workflow-tasks
+      - workflow-tasks
       summary: 查询待办任务列表
       description: 查询当前用户的待办任务列表，支持分页和筛选
       operationId: workflow_task_pending_list
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: assignee
-          in: query
-          description: 分配人ID
-          schema:
-            type: integer
-            example: 1001
-        - name: priority
-          in: query
-          description: 优先级
-          schema:
-            type: integer
-            enum: [1, 2, 3, 4]
-            example: 2
-        - name: process_key
-          in: query
-          description: 流程标识
-          schema:
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: assignee
+        in: query
+        description: 分配人ID
+        schema:
+          type: integer
+          example: 1001
+      - name: priority
+        in: query
+        description: 优先级
+        schema:
+          type: array
+          items:
             type: string
-            example: "expense_approval"
+      - name: process_key
+        in: query
+        description: 流程标识
+        schema:
+          type: string
+          example: expense_approval
       responses:
         '200':
           description: 查询成功
@@ -565,38 +551,36 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/WorkflowTask'
+                            $ref: '#/components/schemas/WorkflowTask'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
-  /api/v1/workflow/tasks/{task_id}:
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/workflows/tasks/{task_id}:
     get:
       tags:
-        - workflow-tasks
+      - workflow-tasks
       summary: 查询任务详情
       description: 根据任务ID查询任务的详细信息
       operationId: workflow_task_get
       parameters:
-        - name: task_id
-          in: path
-          required: true
-          description: 任务ID
-          schema:
-            type: string
-            example: "TASK-20250815-0001"
+      - name: task_id
+        in: path
+        required: true
+        description: 任务ID
+        schema:
+          type: string
       responses:
         '200':
           description: 查询成功
@@ -604,33 +588,31 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/WorkflowTaskDetail'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/WorkflowTaskDetail'
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
-  /api/v1/workflow/tasks/{task_id}/complete:
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/workflows/tasks/{task_id}/complete:
     post:
       tags:
-        - workflow-tasks
+      - workflow-tasks
       summary: 完成任务
       description: 完成指定的任务，提交处理结果和流程变量
       operationId: workflow_task_complete
       parameters:
-        - name: task_id
-          in: path
-          required: true
-          description: 任务ID
-          schema:
-            type: string
-            example: "TASK-20250815-0001"
+      - name: task_id
+        in: path
+        required: true
+        description: 任务ID
+        schema:
+          type: string
       requestBody:
         required: true
         content:
@@ -644,35 +626,33 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/WorkflowTaskCompleteResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/WorkflowTaskCompleteResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
-  /api/v1/workflow/tasks/{task_id}/delegate:
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/workflows/tasks/{task_id}/delegate:
     post:
       tags:
-        - workflow-tasks
+      - workflow-tasks
       summary: 委托任务
       description: 将任务委托给其他用户处理
       operationId: workflow_task_delegate
       parameters:
-        - name: task_id
-          in: path
-          required: true
-          description: 任务ID
-          schema:
-            type: string
-            example: "TASK-20250815-0001"
+      - name: task_id
+        in: path
+        required: true
+        description: 任务ID
+        schema:
+          type: string
       requestBody:
         required: true
         content:
@@ -686,62 +666,61 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          task_id:
-                            type: string
-                            example: "TASK-20250815-0001"
-                          original_assignee:
-                            type: integer
-                            example: 1001
-                          delegate_to:
-                            type: integer
-                            example: 1002
-                          delegate_time:
-                            type: string
-                            format: date-time
-                            example: "2025-08-15T17:00:00Z"
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        task_id:
+                          type: string
+                          example: TASK-20250815-0001
+                        original_assignee:
+                          type: integer
+                          example: 1001
+                        delegate_to:
+                          type: integer
+                          example: 1002
+                        delegate_time:
+                          type: string
+                          format: date-time
+                          example: '2025-08-15T17:00:00Z'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
-  /api/v1/workflow/statistics:
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
+  /api/v1/workflows/statistics:
     get:
       tags:
-        - workflow-statistics
+      - workflow-statistics
       summary: 工作流统计
       description: 获取工作流相关的统计数据，包括流程实例、任务处理等统计信息
       operationId: workflow_statistics_get
       parameters:
-        - name: start_date
-          in: query
-          description: 开始日期
-          schema:
-            type: string
-            format: date
-            example: "2025-08-01"
-        - name: end_date
-          in: query
-          description: 结束日期
-          schema:
-            type: string
-            format: date
-            example: "2025-08-31"
-        - name: process_key
-          in: query
-          description: 流程标识
-          schema:
-            type: string
-            example: "expense_approval"
+      - name: start_date
+        in: query
+        description: 开始日期
+        schema:
+          type: string
+          format: date
+          example: '2025-08-01'
+      - name: end_date
+        in: query
+        description: 结束日期
+        schema:
+          type: string
+          format: date
+          example: '2025-08-31'
+      - name: process_key
+        in: query
+        description: 流程标识
+        schema:
+          type: string
+          example: expense_approval
       responses:
         '200':
           description: 查询成功
@@ -749,18 +728,17 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/WorkflowStatistics'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/WorkflowStatistics'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
 components:
   schemas:
     WorkflowDefinition:
@@ -773,11 +751,11 @@ components:
         process_key:
           type: string
           description: 流程标识
-          example: "expense_approval"
+          example: expense_approval
         process_name:
           type: string
           description: 流程名称
-          example: "费用报销审批流程"
+          example: 费用报销审批流程
         process_version:
           type: integer
           description: 流程版本
@@ -785,16 +763,19 @@ components:
         category:
           type: string
           description: 流程分类
-          example: "finance"
+          example: finance
         description:
           type: string
           description: 流程描述
-          example: "员工费用报销审批流程，支持多级审批和条件分支"
+          example: 员工费用报销审批流程，支持多级审批和条件分支
         status:
           type: string
-          enum: [DRAFT, PUBLISHED, DEPRECATED]
+          enum:
+          - DRAFT
+          - PUBLISHED
+          - DEPRECATED
           description: 流程状态
-          example: "PUBLISHED"
+          example: PUBLISHED
         is_template:
           type: boolean
           description: 是否为模板
@@ -807,79 +788,80 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-15T10:30:00Z"
+          example: '2025-08-15T10:30:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-15T14:30:00Z"
-
+          example: '2025-08-15T14:30:00Z'
     WorkflowDefinitionDetail:
       allOf:
-        - $ref: '#/components/schemas/WorkflowDefinition'
-        - type: object
-          properties:
-            bpmn_xml:
-              type: string
-              description: BPMN流程定义XML
-              example: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><bpmn:definitions>...</bpmn:definitions>"
-            form_config:
-              type: object
-              description: 表单配置
-              example:
-                fields:
-                  - name: "amount"
-                    type: "number"
-                    label: "报销金额"
-                    required: true
-                    validation:
-                      min: 0
-                      max: 50000
-            business_rules:
-              type: object
-              description: 业务规则
-              example:
-                approval_rules:
-                  - condition: "amount <= 1000"
-                    approvers: ["direct_manager"]
-                  - condition: "amount > 1000 && amount <= 5000"
-                    approvers: ["direct_manager", "finance_manager"]
-            timeout_config:
-              type: object
-              description: 超时配置
-              example:
-                default_timeout: 3600
-                node_timeouts:
-                  manager_approval: 7200
-                  finance_approval: 14400
-
+      - $ref: '#/components/schemas/WorkflowDefinition'
+      - type: object
+        properties:
+          bpmn_xml:
+            type: string
+            description: BPMN流程定义XML
+            example: <?xml version="1.0" encoding="UTF-8"?><bpmn:definitions>...</bpmn:definitions>
+          form_config:
+            type: object
+            description: 表单配置
+            example:
+              fields:
+              - name: amount
+                type: number
+                label: 报销金额
+                required: true
+                validation:
+                  min: 0
+                  max: 50000
+          business_rules:
+            type: object
+            description: 业务规则
+            example:
+              approval_rules:
+              - condition: amount <= 1000
+                approvers:
+                - direct_manager
+              - condition: amount > 1000 && amount <= 5000
+                approvers:
+                - direct_manager
+                - finance_manager
+          timeout_config:
+            type: object
+            description: 超时配置
+            example:
+              default_timeout: 3600
+              node_timeouts:
+                manager_approval: 7200
+                finance_approval: 14400
     WorkflowDefinitionCreateRequest:
       type: object
       required:
-        - process_key
-        - process_name
-        - bpmn_xml
+      - process_key
+      - process_name
+      - bpmn_xml
       properties:
         process_key:
           type: string
           description: 流程标识
-          example: "expense_approval"
+          example: expense_approval
         process_name:
           type: string
           description: 流程名称
-          example: "费用报销审批流程"
+          example: 费用报销审批流程
         category:
           type: string
           description: 流程分类
-          example: "finance"
+          example: finance
         description:
           type: string
           description: 流程描述
-          example: "员工费用报销审批流程，支持多级审批和条件分支"
+          example: 员工费用报销审批流程，支持多级审批和条件分支
         bpmn_xml:
           type: string
           description: BPMN流程定义XML
-          example: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><bpmn:definitions>...</bpmn:definitions>"
+          example: <?xml version="1.0" encoding="UTF-8"?><bpmn:definitions>...</bpmn:definitions>
         form_config:
           type: object
           description: 表单配置
@@ -894,22 +876,21 @@ components:
           description: 是否为模板
           default: false
           example: false
-
     WorkflowDefinitionUpdateRequest:
       type: object
       properties:
         process_name:
           type: string
           description: 流程名称
-          example: "费用报销审批流程"
+          example: 费用报销审批流程
         description:
           type: string
           description: 流程描述
-          example: "员工费用报销审批流程，支持多级审批和条件分支"
+          example: 员工费用报销审批流程，支持多级审批和条件分支
         bpmn_xml:
           type: string
           description: BPMN流程定义XML
-          example: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><bpmn:definitions>...</bpmn:definitions>"
+          example: <?xml version="1.0" encoding="UTF-8"?><bpmn:definitions>...</bpmn:definitions>
         form_config:
           type: object
           description: 表单配置
@@ -919,26 +900,25 @@ components:
         timeout_config:
           type: object
           description: 超时配置
-
     WorkflowInstance:
       type: object
       properties:
         instance_id:
           type: string
           description: 流程实例ID
-          example: "WF-20250815-0001"
+          example: WF-20250815-0001
         process_key:
           type: string
           description: 流程标识
-          example: "expense_approval"
+          example: expense_approval
         process_name:
           type: string
           description: 流程名称
-          example: "费用报销审批流程"
+          example: 费用报销审批流程
         business_key:
           type: string
           description: 业务标识
-          example: "EXP-20250815-0001"
+          example: EXP-20250815-0001
         initiator_id:
           type: integer
           description: 发起人ID
@@ -946,11 +926,11 @@ components:
         initiator_name:
           type: string
           description: 发起人姓名
-          example: "张三"
+          example: 张三
         current_activity:
           type: string
           description: 当前活动
-          example: "manager_approval"
+          example: manager_approval
         current_assignee:
           type: integer
           description: 当前处理人ID
@@ -958,121 +938,132 @@ components:
         priority:
           type: integer
           description: 优先级：1-紧急，2-高，3-中，4-低
-          enum: [1, 2, 3, 4]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
           example: 2
         status:
           type: string
-          enum: [RUNNING, COMPLETED, TERMINATED, SUSPENDED]
+          enum:
+          - RUNNING
+          - COMPLETED
+          - TERMINATED
+          - SUSPENDED
           description: 实例状态
-          example: "RUNNING"
+          example: RUNNING
         start_time:
           type: string
           format: date-time
           description: 开始时间
-          example: "2025-08-15T10:30:00Z"
+          example: '2025-08-15T10:30:00Z'
         end_time:
           type: string
           format: date-time
           description: 结束时间
-          example: "2025-08-15T16:30:00Z"
+          example: '2025-08-15T16:30:00Z'
         timeout_time:
           type: string
           format: date-time
           description: 超时时间
-          example: "2025-08-16T18:00:00Z"
+          example: '2025-08-16T18:00:00Z'
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-15T10:30:00Z"
+          example: '2025-08-15T10:30:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-15T14:30:00Z"
-
+          example: '2025-08-15T14:30:00Z'
     WorkflowInstanceDetail:
       allOf:
-        - $ref: '#/components/schemas/WorkflowInstance'
-        - type: object
-          properties:
-            instance_data:
-              type: object
-              description: 实例数据
-              example:
-                amount: 3500
-                category: "travel"
-                applicant: "张三"
-                department: "技术部"
-            variables:
-              type: object
-              description: 流程变量
-              example:
-                amount: 3500
-                category: "travel"
-                approval_result: "approved"
-            tasks:
-              type: array
-              description: 任务列表
-              items:
-                $ref: '#/components/schemas/WorkflowTask'
-
+      - $ref: '#/components/schemas/WorkflowInstance'
+      - type: object
+        properties:
+          instance_data:
+            type: object
+            description: 实例数据
+            example:
+              amount: 3500
+              category: travel
+              applicant: 张三
+              department: 技术部
+          variables:
+            type: object
+            description: 流程变量
+            example:
+              amount: 3500
+              category: travel
+              approval_result: approved
+          tasks:
+            type: array
+            description: 任务列表
+            items:
+              $ref: '#/components/schemas/WorkflowTask'
     WorkflowInstanceStartRequest:
       type: object
       required:
-        - process_key
+      - process_key
       properties:
         process_key:
           type: string
           description: 流程标识
-          example: "expense_approval"
+          example: expense_approval
         business_key:
           type: string
           description: 业务标识
-          example: "EXP-20250815-0001"
+          example: EXP-20250815-0001
         variables:
           type: object
           description: 流程变量
           example:
             amount: 3500
-            category: "travel"
-            applicant: "张三"
-            department: "技术部"
-            description: "出差费用报销"
+            category: travel
+            applicant: 张三
+            department: 技术部
+            description: 出差费用报销
         form_data:
           type: object
           description: 表单数据
           example:
-            receipts: ["receipt1.jpg", "receipt2.jpg"]
+            receipts:
+            - receipt1.jpg
+            - receipt2.jpg
             travel_dates:
-              start: "2025-08-10"
-              end: "2025-08-12"
+              start: '2025-08-10'
+              end: '2025-08-12'
         priority:
           type: integer
           description: 优先级：1-紧急，2-高，3-中，4-低
-          enum: [1, 2, 3, 4]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
           default: 3
           example: 2
-
     WorkflowInstanceStartResponse:
       type: object
       properties:
         instance_id:
           type: string
           description: 流程实例ID
-          example: "WF-20250815-0001"
+          example: WF-20250815-0001
         process_key:
           type: string
           description: 流程标识
-          example: "expense_approval"
+          example: expense_approval
         status:
           type: string
           description: 实例状态
-          example: "RUNNING"
+          example: RUNNING
         current_activity:
           type: string
           description: 当前活动
-          example: "manager_approval"
+          example: manager_approval
         next_tasks:
           type: array
           description: 下一步任务
@@ -1081,41 +1072,43 @@ components:
             properties:
               task_id:
                 type: string
-                example: "TASK-20250815-0001"
+                example: TASK-20250815-0001
               task_name:
                 type: string
-                example: "部门经理审批"
+                example: 部门经理审批
               assignee:
                 type: string
-                example: "manager001"
+                example: manager001
               due_date:
                 type: string
                 format: date-time
-                example: "2025-08-16T18:00:00Z"
-
+                example: '2025-08-16T18:00:00Z'
     WorkflowTask:
       type: object
       properties:
         task_id:
           type: string
           description: 任务ID
-          example: "TASK-20250815-0001"
+          example: TASK-20250815-0001
         instance_id:
           type: string
           description: 流程实例ID
-          example: "WF-20250815-0001"
+          example: WF-20250815-0001
         task_definition_key:
           type: string
           description: 任务定义标识
-          example: "manager_approval"
+          example: manager_approval
         task_name:
           type: string
           description: 任务名称
-          example: "部门经理审批"
+          example: 部门经理审批
         task_type:
           type: integer
           description: 任务类型：1-用户任务，2-服务任务，3-脚本任务
-          enum: [1, 2, 3]
+          enum:
+          - 1
+          - 2
+          - 3
           example: 1
         assignee_id:
           type: integer
@@ -1124,85 +1117,98 @@ components:
         assignee_name:
           type: string
           description: 分配人姓名
-          example: "李经理"
+          example: 李经理
         business_key:
           type: string
           description: 业务标识
-          example: "EXP-20250815-0001"
+          example: EXP-20250815-0001
         priority:
           type: integer
           description: 优先级：1-紧急，2-高，3-中，4-低
-          enum: [1, 2, 3, 4]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
           example: 2
         status:
           type: string
-          enum: [PENDING, IN_PROGRESS, COMPLETED, SKIPPED]
+          enum:
+          - PENDING
+          - IN_PROGRESS
+          - COMPLETED
+          - SKIPPED
           description: 任务状态
-          example: "PENDING"
+          example: PENDING
         due_date:
           type: string
           format: date-time
           description: 截止时间
-          example: "2025-08-16T18:00:00Z"
+          example: '2025-08-16T18:00:00Z'
         claim_time:
           type: string
           format: date-time
           description: 认领时间
-          example: "2025-08-15T11:00:00Z"
+          example: '2025-08-15T11:00:00Z'
         start_time:
           type: string
           format: date-time
           description: 开始时间
-          example: "2025-08-15T11:00:00Z"
+          example: '2025-08-15T11:00:00Z'
         end_time:
           type: string
           format: date-time
           description: 完成时间
-          example: "2025-08-15T16:30:00Z"
+          example: '2025-08-15T16:30:00Z'
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-15T10:30:00Z"
+          example: '2025-08-15T10:30:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-15T16:30:00Z"
-
+          example: '2025-08-15T16:30:00Z'
     WorkflowTaskDetail:
       allOf:
-        - $ref: '#/components/schemas/WorkflowTask'
-        - type: object
-          properties:
-            task_data:
-              type: object
-              description: 任务数据
-              example:
-                amount: 3500
-                category: "travel"
-                applicant: "张三"
-            form_data:
-              type: object
-              description: 表单数据
-              example:
-                receipts: ["receipt1.jpg", "receipt2.jpg"]
-                travel_dates:
-                  start: "2025-08-10"
-                  end: "2025-08-12"
-            candidate_users:
-              type: array
-              description: 候选用户列表
-              items:
-                type: integer
-              example: [1001, 1002, 1003]
-            candidate_roles:
-              type: array
-              description: 候选角色列表
-              items:
-                type: string
-              example: ["manager", "finance_manager"]
-
+      - $ref: '#/components/schemas/WorkflowTask'
+      - type: object
+        properties:
+          task_data:
+            type: object
+            description: 任务数据
+            example:
+              amount: 3500
+              category: travel
+              applicant: 张三
+          form_data:
+            type: object
+            description: 表单数据
+            example:
+              receipts:
+              - receipt1.jpg
+              - receipt2.jpg
+              travel_dates:
+                start: '2025-08-10'
+                end: '2025-08-12'
+          candidate_users:
+            type: array
+            description: 候选用户列表
+            items:
+              type: integer
+            example:
+            - 1001
+            - 1002
+            - 1003
+          candidate_roles:
+            type: array
+            description: 候选角色列表
+            items:
+              type: string
+            example:
+            - manager
+            - finance_manager
     WorkflowTaskCompleteRequest:
       type: object
       properties:
@@ -1210,35 +1216,34 @@ components:
           type: object
           description: 流程变量
           example:
-            approval_result: "approved"
-            approval_comment: "同意报销，注意控制费用"
+            approval_result: approved
+            approval_comment: 同意报销，注意控制费用
             approved_amount: 3200
         form_data:
           type: object
           description: 表单数据
           example:
-            signature: "manager_signature.png"
-            approval_time: "2025-08-15T16:30:00Z"
+            signature: manager_signature.png
+            approval_time: '2025-08-15T16:30:00Z'
         comment:
           type: string
           description: 处理意见
-          example: "审批通过，请注意控制费用"
-
+          example: 审批通过，请注意控制费用
     WorkflowTaskCompleteResponse:
       type: object
       properties:
         task_id:
           type: string
           description: 任务ID
-          example: "TASK-20250815-0001"
+          example: TASK-20250815-0001
         instance_id:
           type: string
           description: 流程实例ID
-          example: "WF-20250815-0001"
+          example: WF-20250815-0001
         next_activity:
           type: string
           description: 下一个活动
-          example: "finance_approval"
+          example: finance_approval
         next_tasks:
           type: array
           description: 下一步任务
@@ -1247,22 +1252,21 @@ components:
             properties:
               task_id:
                 type: string
-                example: "TASK-20250815-0002"
+                example: TASK-20250815-0002
               task_name:
                 type: string
-                example: "财务审批"
+                example: 财务审批
               assignee:
                 type: string
-                example: "finance001"
+                example: finance001
               due_date:
                 type: string
                 format: date-time
-                example: "2025-08-17T18:00:00Z"
-
+                example: '2025-08-17T18:00:00Z'
     WorkflowTaskDelegateRequest:
       type: object
       required:
-        - delegate_to
+      - delegate_to
       properties:
         delegate_to:
           type: integer
@@ -1271,13 +1275,12 @@ components:
         delegate_reason:
           type: string
           description: 委托原因
-          example: "出差期间委托处理"
+          example: 出差期间委托处理
         delegate_until:
           type: string
           format: date-time
           description: 委托截止时间
-          example: "2025-08-20T18:00:00Z"
-
+          example: '2025-08-20T18:00:00Z'
     WorkflowStatistics:
       type: object
       properties:
@@ -1329,10 +1332,10 @@ components:
             properties:
               process_key:
                 type: string
-                example: "expense_approval"
+                example: expense_approval
               process_name:
                 type: string
-                example: "费用报销审批流程"
+                example: 费用报销审批流程
               total_instances:
                 type: integer
                 example: 450
@@ -1354,7 +1357,7 @@ components:
                 example: 1001
               user_name:
                 type: string
-                example: "张三"
+                example: 张三
               pending_tasks:
                 type: integer
                 example: 8

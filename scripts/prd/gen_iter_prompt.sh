@@ -2,7 +2,7 @@
 set -e
 
 # 导入版本工具
-source "$(dirname "$0")/version_utils.sh"
+source "$(dirname "$0")/../utils/version_utils.sh"
 
 # 检测版本并设置路径
 VERSION=$(detect_prd_version)
@@ -130,8 +130,8 @@ render_prompt() {
 
 generate_all_modules() {
     local mode="$1" phase="$2"
-    local list_file="scripts/module_list_${phase}.txt"
-    [ ! -f "$list_file" ] && ./scripts/gen_module_list.sh
+    local list_file="scripts/utils/module_list_${phase}.txt"
+    [ ! -f "$list_file" ] && bash scripts/prd/gen_module_list.sh
     read_progress "$phase" "$mode"
     local total
     total=$(wc -l < "$list_file" | tr -d ' ')
@@ -151,9 +151,9 @@ generate_all_modules() {
       frontend) template_file="prompt-templates/frontend-iter.md" ;;
       mobile-init) template_file="prompt-templates/mobile-init.md" ;;
       mobile) template_file="prompt-templates/mobile-iter.md" ;;
-      prd) template_file="prompt-templates/prd-generation.md" ;;
-      prd-ai) template_file="prompt-templates/prd-generation-ai-focused.md" ;;
-      prd-mobile) template_file="prompt-templates/prd-mobile.md" ;;
+      prd) template_file="prompt-templates/prd-generation-ai-enhanced.md" ;;
+      prd-ai) template_file="prompt-templates/prd-generation-ai-enhanced.md" ;;
+      prd-mobile) template_file="prompt-templates/prd-mobile-specialized.md" ;;
       prd-quality) template_file="prompt-templates/prd-quality-check.md" ;;
       *) echo "[x] 未知模式: $mode" && exit 1 ;;
     esac

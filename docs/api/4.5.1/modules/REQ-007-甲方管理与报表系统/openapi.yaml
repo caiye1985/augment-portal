@@ -3,44 +3,42 @@ info:
   title: IT运维门户系统 API
   version: 1.0.0
   description: REQ-007 甲方管理与报表系统 API规范
-
 tags:
-  - name: client-auth
-    description: 甲方认证与权限管理
-  - name: client-dashboard
-    description: 甲方仪表板与概览
-  - name: client-tickets
-    description: 甲方工单跟踪监控
-  - name: client-sla
-    description: 甲方SLA达成监控
-  - name: client-reports
-    description: 甲方报表生成管理
-  - name: client-export
-    description: 甲方数据导出
-  - name: client-subscriptions
-    description: 甲方推送订阅管理
-  - name: client-satisfaction
-    description: 甲方满意度管理
-  - name: client-costs
-    description: 甲方成本分析
-
+- name: client-auth
+  description: 甲方认证与权限管理
+- name: client-dashboard
+  description: 甲方仪表板与概览
+- name: client-tickets
+  description: 甲方工单跟踪监控
+- name: client-sla
+  description: 甲方SLA达成监控
+- name: client-reports
+  description: 甲方报表生成管理
+- name: client-export
+  description: 甲方数据导出
+- name: client-subscriptions
+  description: 甲方推送订阅管理
+- name: client-satisfaction
+  description: 甲方满意度管理
+- name: client-costs
+  description: 甲方成本分析
 paths:
   /api/v1/client/theme/{tenant_id}:
     get:
       tags:
-        - client-auth
+      - client-auth
       summary: 获取甲方主题配置
       description: 获取指定租户的主题配置信息，包括Logo、主题色等定制化设置
       operationId: client_get_theme
       parameters:
-        - name: tenant_id
-          in: path
-          required: true
-          description: 租户ID
-          schema:
-            type: integer
-            format: int64
-            example: 12345
+      - name: tenant_id
+        in: path
+        required: true
+        description: 租户ID
+        schema:
+          type: integer
+          format: int64
+          example: 12345
       responses:
         '200':
           description: 获取成功
@@ -48,11 +46,11 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ClientTheme'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ClientTheme'
         '401':
           description: 未授权
           content:
@@ -77,11 +75,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
   /api/v1/client/auth/login:
     post:
       tags:
-        - client-auth
+      - client-auth
       summary: 甲方用户登录
       description: 甲方用户登录认证，支持用户名密码和SSO登录
       operationId: client_login
@@ -98,39 +95,38 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ClientLoginResponse'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ClientLoginResponse'
         '400':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/auth/permissions:
     get:
       tags:
-        - client-auth
+      - client-auth
       summary: 获取用户权限
       description: 获取当前登录用户的权限信息和数据访问范围
       operationId: client_get_permissions
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: 获取成功
@@ -138,39 +134,38 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ClientPermission'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ClientPermission'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/workspace:
     get:
       tags:
-        - client-auth
+      - client-auth
       summary: 获取甲方工作空间配置
       description: 获取甲方专属工作空间的配置信息和布局设置
       operationId: client_get_workspace
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: 获取成功
@@ -178,55 +173,57 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/WorkspaceConfig'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/WorkspaceConfig'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/dashboard/overview:
     get:
       tags:
-        - client-dashboard
+      - client-dashboard
       summary: 获取服务概览数据
       description: 获取甲方服务状态的实时监控和关键指标展示数据
       operationId: client_get_dashboard_overview
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: period
-          in: query
-          description: 统计周期
-          schema:
-            type: string
-            enum: [7d, 30d, 90d]
-            default: 30d
-            example: "30d"
-        - name: refresh
-          in: query
-          description: 是否强制刷新缓存
-          schema:
-            type: boolean
-            default: false
-            example: true
+      - name: period
+        in: query
+        description: 统计周期
+        schema:
+          type: string
+          enum:
+          - 7d
+          - 30d
+          - 90d
+          default: 30d
+          example: 30d
+      - name: refresh
+        in: query
+        description: 是否强制刷新缓存
+        schema:
+          type: boolean
+          default: false
+          example: true
       responses:
         '200':
           description: 获取成功
@@ -234,39 +231,38 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/DashboardOverview'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/DashboardOverview'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/dashboard/config:
     get:
       tags:
-        - client-dashboard
+      - client-dashboard
       summary: 获取仪表板配置列表
       description: 获取用户的仪表板配置列表
       operationId: client_list_dashboard_configs
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: 获取成功
@@ -274,39 +270,39 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/DashboardConfig'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/DashboardConfig'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
     post:
       tags:
-        - client-dashboard
+      - client-dashboard
       summary: 创建仪表板配置
       description: 创建新的仪表板配置
       operationId: client_create_dashboard_config
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -320,54 +316,53 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/DashboardConfig'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/DashboardConfig'
         '400':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/dashboard/config/{config_id}:
     get:
       tags:
-        - client-dashboard
+      - client-dashboard
       summary: 获取仪表板配置详情
       description: 获取指定仪表板配置的详细信息
       operationId: client_get_dashboard_config
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: config_id
-          in: path
-          required: true
-          description: 配置ID
-          schema:
-            type: integer
-            format: int64
-            example: 1001
+      - name: config_id
+        in: path
+        required: true
+        description: 配置ID
+        schema:
+          type: integer
+          format: int64
+          example: 1001
       responses:
         '200':
           description: 获取成功
@@ -375,52 +370,52 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/DashboardConfig'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/DashboardConfig'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
     put:
       tags:
-        - client-dashboard
+      - client-dashboard
       summary: 更新仪表板配置
       description: 更新指定的仪表板配置
       operationId: client_update_dashboard_config
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: config_id
-          in: path
-          required: true
-          description: 配置ID
-          schema:
-            type: integer
-            format: int64
-            example: 1001
+      - name: config_id
+        in: path
+        required: true
+        description: 配置ID
+        schema:
+          type: integer
+          format: int64
+          example: 1001
       requestBody:
         required: true
         content:
@@ -434,97 +429,96 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/DashboardConfig'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/DashboardConfig'
         '400':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/tickets:
     get:
       tags:
-        - client-tickets
+      - client-tickets
       summary: 获取工单列表
       description: 获取甲方的工单列表，支持分页和筛选
       operationId: client_list_tickets
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: status
-          in: query
-          description: 工单状态筛选
-          schema:
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: status
+        in: query
+        description: 工单状态筛选
+        schema:
+          type: array
+          items: &id001
             type: string
-            enum: [pending, processing, completed, closed]
-            example: "processing"
-        - name: priority
-          in: query
-          description: 优先级筛选
-          schema:
+      - name: priority
+        in: query
+        description: 优先级筛选
+        schema:
+          type: array
+          items:
             type: string
-            enum: [low, medium, high, urgent]
-            example: "high"
-        - name: date_from
-          in: query
-          description: 开始日期
-          schema:
-            type: string
-            format: date
-            example: "2025-08-01"
-        - name: date_to
-          in: query
-          description: 结束日期
-          schema:
-            type: string
-            format: date
-            example: "2025-08-14"
+      - name: date_from
+        in: query
+        description: 开始日期
+        schema:
+          type: string
+          format: date
+          example: '2025-08-01'
+      - name: date_to
+        in: query
+        description: 结束日期
+        schema:
+          type: string
+          format: date
+          example: '2025-08-14'
       responses:
         '200':
           description: 获取成功
@@ -532,52 +526,50 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: '#/components/schemas/PagedResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/ClientTicket'
+                            $ref: '#/components/schemas/ClientTicket'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/tickets/{ticket_id}:
     get:
       tags:
-        - client-tickets
+      - client-tickets
       summary: 获取工单详情
       description: 获取指定工单的详细信息
       operationId: client_get_ticket
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: ticket_id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: string
-            example: "TCK-20250814-0001"
+      - name: ticket_id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: string
       responses:
         '200':
           description: 获取成功
@@ -585,62 +577,69 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ClientTicket'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ClientTicket'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/tickets/statistics:
     get:
       tags:
-        - client-tickets
+      - client-tickets
       summary: 获取工单统计数据
       description: 获取甲方工单的统计分析数据
       operationId: client_get_ticket_statistics
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: period
-          in: query
-          description: 统计周期
-          schema:
-            type: string
-            enum: [7d, 30d, 90d, 1y]
-            default: 30d
-            example: "30d"
-        - name: group_by
-          in: query
-          description: 分组维度
-          schema:
-            type: string
-            enum: [status, priority, category, engineer]
-            default: status
-            example: "status"
+      - name: period
+        in: query
+        description: 统计周期
+        schema:
+          type: string
+          enum:
+          - 7d
+          - 30d
+          - 90d
+          - 1y
+          default: 30d
+          example: 30d
+      - name: group_by
+        in: query
+        description: 分组维度
+        schema:
+          type: string
+          enum:
+          - status
+          - priority
+          - category
+          - engineer
+          default: status
+          example: status
       responses:
         '200':
           description: 获取成功
@@ -648,64 +647,74 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TicketStatistics'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TicketStatistics'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/sla/compliance:
     get:
       tags:
-        - client-sla
+      - client-sla
       summary: 获取SLA达成情况
       description: 获取甲方SLA达成率和违约分析数据
       operationId: client_get_sla_compliance
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: period
-          in: query
-          description: 统计周期
-          schema:
-            type: string
-            enum: [7d, 30d, 90d, 1y]
-            default: 30d
-            example: "30d"
-        - name: service_type
-          in: query
-          description: 服务类型筛选
-          schema:
-            type: string
-            enum: [all, incident, request, change]
-            default: all
-            example: "all"
-        - name: group_by
-          in: query
-          description: 分组维度
-          schema:
-            type: string
-            enum: [service_type, priority, engineer]
-            default: service_type
-            example: "service_type"
+      - name: period
+        in: query
+        description: 统计周期
+        schema:
+          type: string
+          enum:
+          - 7d
+          - 30d
+          - 90d
+          - 1y
+          default: 30d
+          example: 30d
+      - name: service_type
+        in: query
+        description: 服务类型筛选
+        schema:
+          type: string
+          enum:
+          - all
+          - incident
+          - request
+          - change
+          default: all
+          example: all
+      - name: group_by
+        in: query
+        description: 分组维度
+        schema:
+          type: string
+          enum:
+          - service_type
+          - priority
+          - engineer
+          default: service_type
+          example: service_type
       responses:
         '200':
           description: 获取成功
@@ -713,78 +722,80 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/SLACompliance'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/SLACompliance'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/sla/violations:
     get:
       tags:
-        - client-sla
+      - client-sla
       summary: 获取SLA违约记录
       description: 获取SLA违约记录列表和详细信息
       operationId: client_get_sla_violations
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: violation_type
-          in: query
-          description: 违约类型
-          schema:
-            type: string
-            enum: [response_time, resolution_time, quality]
-            example: "response_time"
-        - name: date_from
-          in: query
-          description: 开始日期
-          schema:
-            type: string
-            format: date
-            example: "2025-08-01"
-        - name: date_to
-          in: query
-          description: 结束日期
-          schema:
-            type: string
-            format: date
-            example: "2025-08-14"
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: violation_type
+        in: query
+        description: 违约类型
+        schema:
+          type: string
+          enum:
+          - response_time
+          - resolution_time
+          - quality
+          example: response_time
+      - name: date_from
+        in: query
+        description: 开始日期
+        schema:
+          type: string
+          format: date
+          example: '2025-08-01'
+      - name: date_to
+        in: query
+        description: 结束日期
+        schema:
+          type: string
+          format: date
+          example: '2025-08-14'
       responses:
         '200':
           description: 获取成功
@@ -792,44 +803,43 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: '#/components/schemas/PagedResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/SLAViolation'
+                            $ref: '#/components/schemas/SLAViolation'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/reports/generate:
     post:
       tags:
-        - client-reports
+      - client-reports
       summary: 生成报表
       description: 根据指定参数生成报表，支持异步生成
       operationId: client_generate_report
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -843,53 +853,51 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ReportProgress'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ReportProgress'
         '400':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/reports/progress/{task_id}:
     get:
       tags:
-        - client-reports
+      - client-reports
       summary: 查询报表生成进度
       description: 查询指定报表生成任务的进度和状态
       operationId: client_get_report_progress
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: task_id
-          in: path
-          required: true
-          description: 任务ID
-          schema:
-            type: string
-            example: "RPT-20250814-001"
+      - name: task_id
+        in: path
+        required: true
+        description: 任务ID
+        schema:
+          type: string
       responses:
         '200':
           description: 查询成功
@@ -897,91 +905,89 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ReportProgress'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ReportProgress'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/reports/history:
     get:
       tags:
-        - client-reports
+      - client-reports
       summary: 获取报表历史
       description: 获取甲方的报表生成历史记录
       operationId: client_get_report_history
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-            example: 20
-        - name: template_id
-          in: query
-          description: 报表模板ID筛选
-          schema:
-            type: integer
-            format: int64
-            example: 1001
-        - name: status
-          in: query
-          description: 生成状态筛选
-          schema:
-            type: string
-            enum: [processing, completed, failed]
-            example: "completed"
-        - name: date_from
-          in: query
-          description: 开始日期
-          schema:
-            type: string
-            format: date
-            example: "2025-08-01"
-        - name: date_to
-          in: query
-          description: 结束日期
-          schema:
-            type: string
-            format: date
-            example: "2025-08-14"
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          example: 20
+      - name: template_id
+        in: query
+        description: 报表模板ID筛选
+        schema:
+          type: integer
+          format: int64
+          example: 1001
+      - name: status
+        in: query
+        description: 生成状态筛选
+        schema:
+          type: array
+          items: *id001
+      - name: date_from
+        in: query
+        description: 开始日期
+        schema:
+          type: string
+          format: date
+          example: '2025-08-01'
+      - name: date_to
+        in: query
+        description: 结束日期
+        schema:
+          type: string
+          format: date
+          example: '2025-08-14'
       responses:
         '200':
           description: 获取成功
@@ -989,58 +995,61 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: '#/components/schemas/PagedResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/ReportHistory'
+                            $ref: '#/components/schemas/ReportHistory'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/reports/templates:
     get:
       tags:
-        - client-reports
+      - client-reports
       summary: 获取报表模板列表
       description: 获取可用的报表模板列表
       operationId: client_list_report_templates
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: category
-          in: query
-          description: 模板分类筛选
-          schema:
-            type: string
-            enum: [ticket, sla, cost, satisfaction]
-            example: "ticket"
-        - name: is_public
-          in: query
-          description: 是否公共模板
-          schema:
-            type: boolean
-            example: true
+      - name: category
+        in: query
+        description: 模板分类筛选
+        schema:
+          type: string
+          enum:
+          - ticket
+          - sla
+          - cost
+          - satisfaction
+          example: ticket
+      - name: is_public
+        in: query
+        description: 是否公共模板
+        schema:
+          type: boolean
+          example: true
       responses:
         '200':
           description: 获取成功
@@ -1048,41 +1057,40 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/ReportTemplate'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ReportTemplate'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/export/data:
     post:
       tags:
-        - client-export
+      - client-export
       summary: 导出数据
       description: 导出指定类型的数据，支持多种格式
       operationId: client_export_data
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -1096,53 +1104,52 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ExportProgress'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ExportProgress'
         '400':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/export/progress/{export_id}:
     get:
       tags:
-        - client-export
+      - client-export
       summary: 查询导出进度
       description: 查询指定导出任务的进度和状态
       operationId: client_get_export_progress
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: export_id
-          in: path
-          required: true
-          description: 导出任务ID
-          schema:
-            type: string
-            example: "EXP-20250814-001"
+      - name: export_id
+        in: path
+        required: true
+        description: 导出任务ID
+        schema:
+          type: string
+          example: EXP-20250814-001
       responses:
         '200':
           description: 查询成功
@@ -1150,59 +1157,58 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ExportProgress'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ExportProgress'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/files/download/{file_id}:
     get:
       tags:
-        - client-export
+      - client-export
       summary: 下载文件
       description: 下载生成的报表或导出文件
       operationId: client_download_file
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - name: file_id
-          in: path
-          required: true
-          description: 文件ID
-          schema:
-            type: string
-            example: "FILE-20250814-001"
-        - name: token
-          in: query
-          description: 下载令牌
-          schema:
-            type: string
-            example: "download_token_123456"
+      - name: file_id
+        in: path
+        required: true
+        description: 文件ID
+        schema:
+          type: string
+          example: FILE-20250814-001
+      - name: token
+        in: query
+        description: 下载令牌
+        schema:
+          type: string
+          example: download_token_123456
       responses:
         '200':
           description: 文件下载成功
@@ -1228,35 +1234,34 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
   /api/v1/client/subscriptions:
     get:
       tags:
-        - client-subscriptions
+      - client-subscriptions
       summary: 获取推送订阅列表
       description: 获取甲方的推送订阅配置列表
       operationId: client_list_subscriptions
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: 获取成功
@@ -1264,39 +1269,39 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/PushSubscription'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/PushSubscription'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
     post:
       tags:
-        - client-subscriptions
+      - client-subscriptions
       summary: 创建推送订阅
       description: 创建新的推送订阅配置
       operationId: client_create_subscription
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -1310,39 +1315,37 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PushSubscription'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PushSubscription'
         '400':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: 错误响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
-    # 本地通用响应Schema（用于验证）
     ApiResponse:
       type: object
       properties:
@@ -1353,7 +1356,7 @@ components:
         message:
           type: string
           description: 响应消息
-          example: "操作成功"
+          example: 操作成功
         data:
           type: object
           description: 响应数据
@@ -1361,8 +1364,7 @@ components:
           type: string
           format: date-time
           description: 响应时间
-          example: "2025-08-14T14:30:00Z"
-
+          example: '2025-08-14T14:30:00Z'
     PagedResponse:
       type: object
       properties:
@@ -1373,7 +1375,7 @@ components:
         message:
           type: string
           description: 响应消息
-          example: "查询成功"
+          example: 查询成功
         data:
           type: object
           properties:
@@ -1400,8 +1402,7 @@ components:
           type: string
           format: date-time
           description: 响应时间
-          example: "2025-08-14T14:30:00Z"
-
+          example: '2025-08-14T14:30:00Z'
     ErrorResponse:
       type: object
       properties:
@@ -1412,17 +1413,16 @@ components:
         message:
           type: string
           description: 错误消息
-          example: "请求参数错误"
+          example: 请求参数错误
         error_code:
           type: string
           description: 错误代码
-          example: "INVALID_PARAMETER"
+          example: INVALID_PARAMETER
         timestamp:
           type: string
           format: date-time
           description: 错误时间
-          example: "2025-08-14T14:30:00Z"
-
+          example: '2025-08-14T14:30:00Z'
     ClientTheme:
       type: object
       description: 甲方主题配置
@@ -1435,60 +1435,59 @@ components:
         company_name:
           type: string
           description: 公司名称
-          example: "ABC科技有限公司"
+          example: ABC科技有限公司
         logo_url:
           type: string
           format: uri
           description: 公司Logo URL
-          example: "https://cdn.example.com/logos/abc-tech.png"
+          example: https://cdn.example.com/logos/abc-tech.png
         primary_color:
           type: string
           description: 主题色
-          example: "#1890ff"
+          example: '#1890ff'
         secondary_color:
           type: string
           description: 辅助色
-          example: "#52c41a"
+          example: '#52c41a'
         background_color:
           type: string
           description: 背景色
-          example: "#f0f2f5"
+          example: '#f0f2f5'
         custom_css:
           type: string
           description: 自定义CSS样式
-          example: ".custom-header { background: linear-gradient(90deg, #1890ff, #52c41a); }"
+          example: '.custom-header { background: linear-gradient(90deg, #1890ff, #52c41a); }'
         favicon_url:
           type: string
           format: uri
           description: 网站图标URL
-          example: "https://cdn.example.com/favicons/abc-tech.ico"
+          example: https://cdn.example.com/favicons/abc-tech.ico
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-01-01T09:00:00Z"
+          example: '2024-01-01T09:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-14T14:30:00Z"
-
+          example: '2025-08-14T14:30:00Z'
     ClientLoginRequest:
       type: object
       description: 甲方用户登录请求
       required:
-        - username
-        - password
-        - tenant_id
+      - username
+      - password
+      - tenant_id
       properties:
         username:
           type: string
           description: 用户名或邮箱
-          example: "admin@abc-tech.com"
+          example: admin@abc-tech.com
         password:
           type: string
           description: 密码（加密传输）
-          example: "encrypted_password_hash"
+          example: encrypted_password_hash
         tenant_id:
           type: integer
           format: int64
@@ -1502,8 +1501,7 @@ components:
         captcha_code:
           type: string
           description: 验证码（如需要）
-          example: "ABCD"
-
+          example: ABCD
     ClientLoginResponse:
       type: object
       description: 甲方用户登录响应
@@ -1511,18 +1509,17 @@ components:
         access_token:
           type: string
           description: 访问令牌
-          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
         refresh_token:
           type: string
           description: 刷新令牌
-          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
         expires_in:
           type: integer
           description: 令牌有效期（秒）
           example: 7200
         user_info:
           $ref: '#/components/schemas/ClientUser'
-
     ClientUser:
       type: object
       description: 甲方用户信息
@@ -1540,32 +1537,37 @@ components:
         username:
           type: string
           description: 用户名
-          example: "admin@abc-tech.com"
+          example: admin@abc-tech.com
         full_name:
           type: string
           description: 真实姓名
-          example: "张三"
+          example: 张三
         department:
           type: string
           description: 部门
-          example: "IT部"
+          example: IT部
         role_type:
           type: string
-          enum: [admin, manager, user]
+          enum:
+          - admin
+          - manager
+          - user
           description: 角色类型
-          example: "admin"
+          example: admin
         permissions:
           type: array
           description: 权限列表
           items:
             type: string
-          example: ["report:read", "dashboard:write", "export:all"]
+          example:
+          - report:read
+          - dashboard:write
+          - export:all
         last_login_at:
           type: string
           format: date-time
           description: 最后登录时间
-          example: "2025-08-14T14:30:00Z"
-
+          example: '2025-08-14T14:30:00Z'
     ClientPermission:
       type: object
       description: 甲方权限信息
@@ -1628,13 +1630,16 @@ components:
               type: array
               items:
                 type: string
-              example: ["IT部", "运维部"]
+              example:
+              - IT部
+              - 运维部
             projects:
               type: array
               items:
                 type: string
-              example: ["项目A", "项目B"]
-
+              example:
+              - 项目A
+              - 项目B
     WorkspaceConfig:
       type: object
       description: 工作空间配置
@@ -1647,7 +1652,7 @@ components:
         workspace_name:
           type: string
           description: 工作空间名称
-          example: "ABC科技运维工作台"
+          example: ABC科技运维工作台
         layout_config:
           type: object
           description: 布局配置
@@ -1657,12 +1662,17 @@ components:
               example: false
             theme_mode:
               type: string
-              enum: [light, dark, auto]
-              example: "light"
+              enum:
+              - light
+              - dark
+              - auto
+              example: light
             language:
               type: string
-              enum: [zh-CN, en-US]
-              example: "zh-CN"
+              enum:
+              - zh-CN
+              - en-US
+              example: zh-CN
         default_dashboard_id:
           type: integer
           format: int64
@@ -1676,17 +1686,16 @@ components:
             properties:
               action_id:
                 type: string
-                example: "create_ticket"
+                example: create_ticket
               action_name:
                 type: string
-                example: "创建工单"
+                example: 创建工单
               icon:
                 type: string
-                example: "plus"
+                example: plus
               url:
                 type: string
-                example: "/tickets/create"
-
+                example: /tickets/create
     DashboardOverview:
       type: object
       description: 服务概览数据
@@ -1715,11 +1724,11 @@ components:
             avg_response_time:
               type: string
               description: 平均响应时间
-              example: "25分钟"
+              example: 25分钟
             avg_resolution_time:
               type: string
               description: 平均解决时间
-              example: "4.2小时"
+              example: 4.2小时
             satisfaction_score:
               type: number
               format: float
@@ -1738,7 +1747,7 @@ components:
                   date:
                     type: string
                     format: date
-                    example: "2025-08-01"
+                    example: '2025-08-01'
                   count:
                     type: integer
                     example: 15
@@ -1751,7 +1760,7 @@ components:
                   date:
                     type: string
                     format: date
-                    example: "2025-08-01"
+                    example: '2025-08-01'
                   compliance:
                     type: number
                     format: float
@@ -1764,25 +1773,31 @@ components:
             properties:
               type:
                 type: string
-                enum: [sla_violation, quality_issue, system_alert]
-                example: "sla_violation"
+                enum:
+                - sla_violation
+                - quality_issue
+                - system_alert
+                example: sla_violation
               message:
                 type: string
-                example: "工单TKT-001超出SLA时限"
+                example: 工单TKT-001超出SLA时限
               severity:
                 type: string
-                enum: [low, medium, high, critical]
-                example: "high"
+                enum:
+                - low
+                - medium
+                - high
+                - critical
+                example: high
               timestamp:
                 type: string
                 format: date-time
-                example: "2025-08-14T10:30:00Z"
+                example: '2025-08-14T10:30:00Z'
         last_updated:
           type: string
           format: date-time
           description: 最后更新时间
-          example: "2025-08-14T10:35:00Z"
-
+          example: '2025-08-14T10:35:00Z'
     DashboardConfig:
       type: object
       description: 仪表板配置
@@ -1805,7 +1820,7 @@ components:
         dashboard_name:
           type: string
           description: 仪表板名称
-          example: "运维概览"
+          example: 运维概览
         layout_config:
           type: object
           description: 布局配置
@@ -1826,11 +1841,15 @@ components:
                 properties:
                   id:
                     type: string
-                    example: "widget_1"
+                    example: widget_1
                   type:
                     type: string
-                    enum: [metric_card, chart, table, alert_list]
-                    example: "metric_card"
+                    enum:
+                    - metric_card
+                    - chart
+                    - table
+                    - alert_list
+                    example: metric_card
                   position:
                     type: object
                     properties:
@@ -1851,10 +1870,10 @@ components:
                     properties:
                       metric:
                         type: string
-                        example: "total_tickets"
+                        example: total_tickets
                       title:
                         type: string
-                        example: "总工单数"
+                        example: 总工单数
         is_default:
           type: boolean
           description: 是否默认仪表板
@@ -1867,28 +1886,31 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-01-01T00:00:00Z"
+          example: '2025-01-01T00:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-14T14:30:00Z"
-
+          example: '2025-08-14T14:30:00Z'
     DashboardConfigRequest:
       type: object
       description: 仪表板配置请求
       required:
-        - dashboard_name
-        - layout_config
+      - dashboard_name
+      - layout_config
       properties:
         dashboard_name:
           type: string
           description: 仪表板名称
-          example: "运维概览"
+          example: 运维概览
         layout_config:
           type: object
           description: 布局配置
-          example: {"grid": {"cols": 12, "rows": 8}, "widgets": []}
+          example:
+            grid:
+              cols: 12
+              rows: 8
+            widgets: []
         is_default:
           type: boolean
           description: 是否设为默认
@@ -1899,7 +1921,6 @@ components:
           description: 是否共享
           default: false
           example: false
-
     ClientTicket:
       type: object
       description: 甲方工单信息
@@ -1907,7 +1928,7 @@ components:
         ticket_id:
           type: string
           description: 工单ID
-          example: "TCK-20250814-0001"
+          example: TCK-20250814-0001
         tenant_id:
           type: integer
           format: int64
@@ -1916,25 +1937,33 @@ components:
         title:
           type: string
           description: 工单标题
-          example: "服务器CPU使用率过高"
+          example: 服务器CPU使用率过高
         description:
           type: string
           description: 问题描述
-          example: "生产服务器CPU使用率持续超过90%，影响业务正常运行"
+          example: 生产服务器CPU使用率持续超过90%，影响业务正常运行
         priority:
           type: string
-          enum: [low, medium, high, urgent]
+          enum:
+          - low
+          - medium
+          - high
+          - urgent
           description: 优先级
-          example: "high"
+          example: high
         status:
           type: string
-          enum: [pending, processing, completed, closed]
+          enum:
+          - pending
+          - processing
+          - completed
+          - closed
           description: 工单状态
-          example: "processing"
+          example: processing
         category:
           type: string
           description: 工单分类
-          example: "performance"
+          example: performance
         customer_id:
           type: integer
           format: int64
@@ -1943,7 +1972,7 @@ components:
         customer_name:
           type: string
           description: 客户名称
-          example: "ABC科技有限公司"
+          example: ABC科技有限公司
         assigned_engineer_id:
           type: integer
           format: int64
@@ -1952,33 +1981,32 @@ components:
         assigned_engineer_name:
           type: string
           description: 分配工程师姓名
-          example: "张三"
+          example: 张三
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-14T10:00:00Z"
+          example: '2025-08-14T10:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-14T14:30:00Z"
+          example: '2025-08-14T14:30:00Z'
         due_date:
           type: string
           format: date-time
           description: 截止时间
-          example: "2025-08-14T18:00:00Z"
+          example: '2025-08-14T18:00:00Z'
         resolved_at:
           type: string
           format: date-time
           description: 解决时间
-          example: "2025-08-14T16:30:00Z"
+          example: '2025-08-14T16:30:00Z'
         satisfaction_score:
           type: number
           format: float
           description: 满意度评分
           example: 4.5
-
     TicketStatistics:
       type: object
       description: 工单统计数据
@@ -1994,11 +2022,11 @@ components:
             start:
               type: string
               format: date
-              example: "2025-07-15"
+              example: '2025-07-15'
             end:
               type: string
               format: date
-              example: "2025-08-14"
+              example: '2025-08-14'
         by_status:
           type: array
           description: 按状态统计
@@ -2007,7 +2035,7 @@ components:
             properties:
               status:
                 type: string
-                example: "processing"
+                example: processing
               count:
                 type: integer
                 example: 12
@@ -2023,7 +2051,7 @@ components:
             properties:
               priority:
                 type: string
-                example: "high"
+                example: high
               count:
                 type: integer
                 example: 25
@@ -2040,7 +2068,7 @@ components:
               date:
                 type: string
                 format: date
-                example: "2025-08-01"
+                example: '2025-08-01'
               count:
                 type: integer
                 example: 15
@@ -2054,7 +2082,6 @@ components:
           format: float
           description: 一次解决率（%）
           example: 85.0
-
     SLACompliance:
       type: object
       description: SLA达成情况
@@ -2071,11 +2098,11 @@ components:
             start:
               type: string
               format: date
-              example: "2024-12-15"
+              example: '2024-12-15'
             end:
               type: string
               format: date
-              example: "2025-08-14"
+              example: '2025-08-14'
         by_service_type:
           type: array
           description: 按服务类型统计
@@ -2084,7 +2111,7 @@ components:
             properties:
               service_type:
                 type: string
-                example: "incident"
+                example: incident
               compliance_rate:
                 type: number
                 format: float
@@ -2097,16 +2124,15 @@ components:
                 example: 5
               avg_response_time:
                 type: string
-                example: "22分钟"
+                example: 22分钟
               avg_resolution_time:
                 type: string
-                example: "3.8小时"
+                example: 3.8小时
         violations:
           type: array
           description: 违约记录
           items:
             $ref: '#/components/schemas/SLAViolation'
-
     SLAViolation:
       type: object
       description: SLA违约记录
@@ -2119,17 +2145,23 @@ components:
         ticket_id:
           type: string
           description: 工单ID
-          example: "TCK-001"
+          example: TCK-001
         service_type:
           type: string
-          enum: [incident, request, change]
+          enum:
+          - incident
+          - request
+          - change
           description: 服务类型
-          example: "incident"
+          example: incident
         violation_type:
           type: string
-          enum: [response_time, resolution_time, quality]
+          enum:
+          - response_time
+          - resolution_time
+          - quality
           description: 违约类型
-          example: "response_time"
+          example: response_time
         target_value:
           type: integer
           description: 目标值（分钟）
@@ -2144,22 +2176,25 @@ components:
           example: 15
         severity:
           type: string
-          enum: [low, medium, high, critical]
+          enum:
+          - low
+          - medium
+          - high
+          - critical
           description: 严重程度
-          example: "medium"
+          example: medium
         created_at:
           type: string
           format: date-time
           description: 违约时间
-          example: "2025-08-13T14:30:00Z"
-
+          example: '2025-08-13T14:30:00Z'
     ReportGenerateRequest:
       type: object
       description: 报表生成请求
       required:
-        - template_id
-        - parameters
-        - output_format
+      - template_id
+      - parameters
+      - output_format
       properties:
         template_id:
           type: integer
@@ -2173,20 +2208,28 @@ components:
             period_start:
               type: string
               format: date
-              example: "2025-08-01"
+              example: '2025-08-01'
             period_end:
               type: string
               format: date
-              example: "2025-08-31"
+              example: '2025-08-31'
             report_type:
               type: string
-              enum: [daily, weekly, monthly, quarterly, yearly]
-              example: "monthly"
+              enum:
+              - daily
+              - weekly
+              - monthly
+              - quarterly
+              - yearly
+              example: monthly
             include_sections:
               type: array
               items:
                 type: string
-              example: ["summary", "sla_analysis", "cost_analysis"]
+              example:
+              - summary
+              - sla_analysis
+              - cost_analysis
             filters:
               type: object
               properties:
@@ -2194,36 +2237,48 @@ components:
                   type: array
                   items:
                     type: string
-                  example: ["incident", "request"]
+                  example:
+                  - incident
+                  - request
                 priorities:
                   type: array
                   items:
                     type: string
-                  example: ["high", "medium"]
+                  example:
+                  - high
+                  - medium
                 departments:
                   type: array
                   items:
                     type: string
-                  example: ["IT部"]
+                  example:
+                  - IT部
         output_format:
           type: string
-          enum: [pdf, excel, csv, json]
+          enum:
+          - pdf
+          - excel
+          - csv
+          - json
           description: 输出格式
-          example: "pdf"
+          example: pdf
         delivery_method:
           type: string
-          enum: [download, email, system_notification]
+          enum:
+          - download
+          - email
+          - system_notification
           description: 交付方式
           default: download
-          example: "download"
+          example: download
         email_recipients:
           type: array
           description: 邮件收件人（当delivery_method为email时）
           items:
             type: string
             format: email
-          example: ["admin@abc-tech.com"]
-
+          example:
+          - admin@abc-tech.com
     ReportProgress:
       type: object
       description: 报表生成进度
@@ -2231,12 +2286,15 @@ components:
         task_id:
           type: string
           description: 任务ID
-          example: "RPT-20250814-001"
+          example: RPT-20250814-001
         status:
           type: string
-          enum: [processing, completed, failed]
+          enum:
+          - processing
+          - completed
+          - failed
           description: 生成状态
-          example: "processing"
+          example: processing
         progress:
           type: integer
           minimum: 0
@@ -2254,7 +2312,7 @@ components:
             file_url:
               type: string
               format: uri
-              example: "/api/v1/client/reports/download/RPT-20250814-001.pdf"
+              example: /api/v1/client/reports/download/RPT-20250814-001.pdf
             file_size:
               type: integer
               description: 文件大小（字节）
@@ -2270,18 +2328,17 @@ components:
         error_message:
           type: string
           description: 错误信息（失败时）
-          example: "数据查询超时"
+          example: 数据查询超时
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-14T10:40:00Z"
+          example: '2025-08-14T10:40:00Z'
         completed_at:
           type: string
           format: date-time
           description: 完成时间
-          example: "2025-08-14T10:42:35Z"
-
+          example: '2025-08-14T10:42:35Z'
     ReportHistory:
       type: object
       description: 报表历史记录
@@ -2299,7 +2356,7 @@ components:
         template_name:
           type: string
           description: 模板名称
-          example: "月度SLA报表"
+          example: 月度SLA报表
         generated_by:
           type: integer
           format: int64
@@ -2308,17 +2365,21 @@ components:
         generated_by_name:
           type: string
           description: 生成者姓名
-          example: "张三"
+          example: 张三
         file_url:
           type: string
           format: uri
           description: 文件URL
-          example: "/api/v1/client/files/download/FILE-20250814-001"
+          example: /api/v1/client/files/download/FILE-20250814-001
         file_format:
           type: string
-          enum: [pdf, excel, csv, json]
+          enum:
+          - pdf
+          - excel
+          - csv
+          - json
           description: 文件格式
-          example: "pdf"
+          example: pdf
         file_size:
           type: integer
           description: 文件大小（字节）
@@ -2329,24 +2390,28 @@ components:
           example: 95
         status:
           type: string
-          enum: [completed, failed, expired]
+          enum:
+          - completed
+          - failed
+          - expired
           description: 状态
-          example: "completed"
+          example: completed
         parameters:
           type: object
           description: 生成参数
-          example: {"period_start": "2025-08-01", "period_end": "2025-08-31"}
+          example:
+            period_start: '2025-08-01'
+            period_end: '2025-08-31'
         generated_at:
           type: string
           format: date-time
           description: 生成时间
-          example: "2025-08-14T10:42:35Z"
+          example: '2025-08-14T10:42:35Z'
         expires_at:
           type: string
           format: date-time
           description: 过期时间
-          example: "2025-08-21T10:42:35Z"
-
+          example: '2025-08-21T10:42:35Z'
     ReportTemplate:
       type: object
       description: 报表模板
@@ -2359,20 +2424,31 @@ components:
         name:
           type: string
           description: 模板名称
-          example: "月度SLA报表"
+          example: 月度SLA报表
         description:
           type: string
           description: 模板描述
-          example: "包含SLA达成率、违约分析、改进建议的月度报表"
+          example: 包含SLA达成率、违约分析、改进建议的月度报表
         category:
           type: string
-          enum: [ticket, sla, cost, satisfaction, custom]
+          enum:
+          - ticket
+          - sla
+          - cost
+          - satisfaction
+          - custom
           description: 模板分类
-          example: "sla"
+          example: sla
         config_json:
           type: object
           description: 模板配置
-          example: {"sections": ["summary", "details"], "charts": ["trend", "pie"]}
+          example:
+            sections:
+            - summary
+            - details
+            charts:
+            - trend
+            - pie
         is_public:
           type: boolean
           description: 是否公共模板
@@ -2385,36 +2461,42 @@ components:
         created_by_name:
           type: string
           description: 创建者姓名
-          example: "张三"
+          example: 张三
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-01-01T09:00:00Z"
+          example: '2025-01-01T09:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-14T14:30:00Z"
-
+          example: '2025-08-14T14:30:00Z'
     ExportRequest:
       type: object
       description: 数据导出请求
       required:
-        - export_type
-        - format
-        - parameters
+      - export_type
+      - format
+      - parameters
       properties:
         export_type:
           type: string
-          enum: [ticket_data, sla_data, cost_data, satisfaction_data]
+          enum:
+          - ticket_data
+          - sla_data
+          - cost_data
+          - satisfaction_data
           description: 导出数据类型
-          example: "ticket_data"
+          example: ticket_data
         format:
           type: string
-          enum: [excel, csv, json]
+          enum:
+          - excel
+          - csv
+          - json
           description: 导出格式
-          example: "excel"
+          example: excel
         parameters:
           type: object
           description: 导出参数
@@ -2424,12 +2506,20 @@ components:
               items:
                 type: string
                 format: date
-              example: ["2025-08-01", "2025-08-31"]
+              example:
+              - '2025-08-01'
+              - '2025-08-31'
             columns:
               type: array
               items:
                 type: string
-              example: ["ticket_id", "title", "status", "priority", "created_at", "resolved_at"]
+              example:
+              - ticket_id
+              - title
+              - status
+              - priority
+              - created_at
+              - resolved_at
             filters:
               type: object
               properties:
@@ -2437,12 +2527,16 @@ components:
                   type: array
                   items:
                     type: string
-                  example: ["resolved", "closed"]
+                  example:
+                  - resolved
+                  - closed
                 priority:
                   type: array
                   items:
                     type: string
-                  example: ["high", "medium"]
+                  example:
+                  - high
+                  - medium
         options:
           type: object
           description: 导出选项
@@ -2459,7 +2553,6 @@ components:
               type: boolean
               default: false
               example: true
-
     ExportProgress:
       type: object
       description: 导出进度
@@ -2467,12 +2560,15 @@ components:
         export_id:
           type: string
           description: 导出任务ID
-          example: "EXP-20250814-001"
+          example: EXP-20250814-001
         status:
           type: string
-          enum: [processing, completed, failed]
+          enum:
+          - processing
+          - completed
+          - failed
           description: 导出状态
-          example: "processing"
+          example: processing
         progress:
           type: integer
           minimum: 0
@@ -2482,7 +2578,7 @@ components:
         estimated_size:
           type: string
           description: 预估文件大小
-          example: "15MB"
+          example: 15MB
         estimated_time:
           type: integer
           description: 预估剩余时间（秒）
@@ -2491,7 +2587,7 @@ components:
           type: string
           format: uri
           description: 下载链接（完成时）
-          example: "/api/v1/client/files/download/EXP-20250814-001"
+          example: /api/v1/client/files/download/EXP-20250814-001
         file_size:
           type: integer
           description: 实际文件大小（字节）
@@ -2504,17 +2600,16 @@ components:
           type: string
           format: date-time
           description: 下载链接过期时间
-          example: "2025-08-21T10:45:00Z"
+          example: '2025-08-21T10:45:00Z'
         error_message:
           type: string
           description: 错误信息（失败时）
-          example: "数据量超出限制"
+          example: 数据量超出限制
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-14T10:45:00Z"
-
+          example: '2025-08-14T10:45:00Z'
     PushSubscription:
       type: object
       description: 推送订阅
@@ -2537,41 +2632,58 @@ components:
         subscription_name:
           type: string
           description: 订阅名称
-          example: "每日SLA报表推送"
+          example: 每日SLA报表推送
         subscription_type:
           type: string
-          enum: [report, alert, notification]
+          enum:
+          - report
+          - alert
+          - notification
           description: 订阅类型
-          example: "report"
+          example: report
         schedule:
           type: object
           description: 推送计划
           properties:
             frequency:
               type: string
-              enum: [daily, weekly, monthly, quarterly]
-              example: "daily"
+              enum:
+              - daily
+              - weekly
+              - monthly
+              - quarterly
+              example: daily
             time:
               type: string
               format: time
-              example: "09:00"
+              example: 09:00
             timezone:
               type: string
-              example: "Asia/Shanghai"
+              example: Asia/Shanghai
             weekdays:
               type: array
               items:
                 type: integer
                 minimum: 1
                 maximum: 7
-              example: [1, 2, 3, 4, 5]
+              example:
+              - 1
+              - 2
+              - 3
+              - 4
+              - 5
         delivery_channels:
           type: array
           description: 推送渠道
           items:
             type: string
-            enum: [email, sms, system_notification]
-          example: ["email", "system_notification"]
+            enum:
+            - email
+            - sms
+            - system_notification
+          example:
+          - email
+          - system_notification
         recipients:
           type: array
           description: 收件人列表
@@ -2580,11 +2692,13 @@ components:
             properties:
               type:
                 type: string
-                enum: [email, phone]
-                example: "email"
+                enum:
+                - email
+                - phone
+                example: email
               address:
                 type: string
-                example: "admin@abc-tech.com"
+                example: admin@abc-tech.com
         template_id:
           type: integer
           format: int64
@@ -2593,7 +2707,12 @@ components:
         filters:
           type: object
           description: 推送过滤条件
-          example: {"priority": ["high", "urgent"], "status": ["processing"]}
+          example:
+            priority:
+            - high
+            - urgent
+            status:
+            - processing
         is_active:
           type: boolean
           description: 是否激活
@@ -2602,41 +2721,50 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-14T14:30:00Z"
+          example: '2025-08-14T14:30:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-14T14:30:00Z"
-
+          example: '2025-08-14T14:30:00Z'
     PushSubscriptionRequest:
       type: object
       description: 推送订阅请求
       required:
-        - subscription_name
-        - subscription_type
-        - schedule
-        - delivery_channels
+      - subscription_name
+      - subscription_type
+      - schedule
+      - delivery_channels
       properties:
         subscription_name:
           type: string
           description: 订阅名称
-          example: "每日SLA报表推送"
+          example: 每日SLA报表推送
         subscription_type:
           type: string
-          enum: [report, alert, notification]
+          enum:
+          - report
+          - alert
+          - notification
           description: 订阅类型
-          example: "report"
+          example: report
         schedule:
           type: object
           description: 推送计划
-          example: {"frequency": "daily", "time": "09:00", "timezone": "Asia/Shanghai"}
+          example:
+            frequency: daily
+            time: 09:00
+            timezone: Asia/Shanghai
         delivery_channels:
           type: array
           items:
             type: string
-            enum: [email, sms, system_notification]
-          example: ["email"]
+            enum:
+            - email
+            - sms
+            - system_notification
+          example:
+          - email
         recipients:
           type: array
           items:
@@ -2644,10 +2772,14 @@ components:
             properties:
               type:
                 type: string
-                enum: [email, phone]
+                enum:
+                - email
+                - phone
               address:
                 type: string
-          example: [{"type": "email", "address": "admin@abc-tech.com"}]
+          example:
+          - type: email
+            address: admin@abc-tech.com
         template_id:
           type: integer
           format: int64
@@ -2656,8 +2788,9 @@ components:
         filters:
           type: object
           description: 过滤条件
-          example: {"priority": ["high"]}
-
+          example:
+            priority:
+            - high
   securitySchemes:
     bearerAuth:
       type: http

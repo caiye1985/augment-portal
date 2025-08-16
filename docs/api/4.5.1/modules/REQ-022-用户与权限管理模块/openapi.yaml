@@ -3,86 +3,85 @@ info:
   title: 用户与权限管理模块 API
   version: 1.0.0
   description: REQ-022 用户与权限管理模块 API 规范 - 提供用户生命周期管理、身份认证、权限控制、组织架构管理、会话管理和审计日志等核心功能
-
 tags:
-  - name: User Management
-    description: 用户管理相关接口
-  - name: Role Management
-    description: 角色管理相关接口
-  - name: Permission Management
-    description: 权限管理相关接口
-  - name: Department Management
-    description: 部门管理相关接口
-  - name: Session Management
-    description: 会话管理相关接口
-  - name: Audit Management
-    description: 审计日志相关接口
-  - name: Authentication
-    description: 认证相关接口
-  - name: External Identity
-    description: 外部身份源相关接口
-  - name: Permission Template
-    description: 权限模板相关接口
-
+- name: User Management
+  description: 用户管理相关接口
+- name: Role Management
+  description: 角色管理相关接口
+- name: Permission Management
+  description: 权限管理相关接口
+- name: Department Management
+  description: 部门管理相关接口
+- name: Session Management
+  description: 会话管理相关接口
+- name: Audit Management
+  description: 审计日志相关接口
+- name: Authentication
+  description: 认证相关接口
+- name: External Identity
+  description: 外部身份源相关接口
+- name: Permission Template
+  description: 权限模板相关接口
 paths:
-  # 用户管理接口
   /api/v1/users:
     get:
-      tags: [User Management]
+      tags:
+      - User Management
       summary: 查询用户列表
       description: 分页查询租户内的用户列表，支持多条件筛选和搜索
       operationId: user_list
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: page
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-          example: 1
-        - name: size
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-          example: 20
-        - name: keyword
-          in: query
-          schema:
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        example: 1
+      - name: size
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        example: 20
+      - name: keyword
+        in: query
+        schema:
+          type: string
+        description: 搜索关键词（用户名、邮箱、真实姓名、员工编号）
+        example: 张三
+      - name: status
+        in: query
+        schema:
+          type: array
+          items: &id001
             type: string
-          description: 搜索关键词（用户名、邮箱、真实姓名、员工编号）
-          example: "张三"
-        - name: status
-          in: query
-          schema:
-            type: integer
-            enum: [1, 2, 3, 4]
-          description: 用户状态筛选：1-正常，2-禁用，3-锁定，4-过期
-          example: 1
-        - name: department_id
-          in: query
-          schema:
-            type: integer
-            format: int64
-          description: 部门ID筛选
-          example: 1001
-        - name: role_id
-          in: query
-          schema:
-            type: integer
-            format: int64
-          description: 角色ID筛选
-          example: 10
-        - name: external_source
-          in: query
-          schema:
-            type: string
-          description: 外部身份源筛选
-          example: "ldap"
+        description: 用户状态筛选：1-正常，2-禁用，3-锁定，4-过期
+        example: 1
+      - name: department_id
+        in: query
+        schema:
+          type: integer
+          format: int64
+        description: 部门ID筛选
+        example: 1001
+      - name: role_id
+        in: query
+        schema:
+          type: integer
+          format: int64
+        description: 角色ID筛选
+        example: 10
+      - name: external_source
+        in: query
+        schema:
+          type: string
+        description: 外部身份源筛选
+        example: ldap
       responses:
         '200':
           description: 查询成功
@@ -90,30 +89,30 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: '#/components/schemas/PagedResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/UserInfo'
+                            $ref: '#/components/schemas/UserInfo'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
-
     post:
-      tags: [User Management]
+      tags:
+      - User Management
       summary: 创建用户
       description: 在当前租户下创建新用户，支持设置初始角色和部门
       operationId: user_create
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -127,32 +126,32 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/UserDetailInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/UserDetailInfo'
         '400':
           $ref: '#/components/responses/BadRequest'
         '409':
           $ref: '#/components/responses/Conflict'
-
   /api/v1/users/{id}:
     get:
-      tags: [User Management]
+      tags:
+      - User Management
       summary: 查询用户详情
       description: 根据用户ID查询用户详细信息，包括角色、权限、部门等
       operationId: user_get
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       responses:
         '200':
           description: 查询成功
@@ -160,29 +159,29 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/UserDetailInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/UserDetailInfo'
         '404':
           $ref: '#/components/responses/NotFound'
-
     put:
-      tags: [User Management]
+      tags:
+      - User Management
       summary: 更新用户信息
       description: 更新指定用户的基本信息，不包括密码和状态
       operationId: user_update
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       requestBody:
         required: true
         content:
@@ -196,29 +195,29 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/UserDetailInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/UserDetailInfo'
         '404':
           $ref: '#/components/responses/NotFound'
-
     delete:
-      tags: [User Management]
+      tags:
+      - User Management
       summary: 删除用户
       description: 软删除指定用户，保留审计记录
       operationId: user_delete
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       responses:
         '200':
           description: 删除成功
@@ -228,23 +227,23 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
         '404':
           $ref: '#/components/responses/NotFound'
-
   /api/v1/users/{id}/status:
     put:
-      tags: [User Management]
+      tags:
+      - User Management
       summary: 更新用户状态
       description: 更新用户状态（启用、禁用、锁定、解锁）
       operationId: user_update_status
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       requestBody:
         required: true
         content:
@@ -258,30 +257,30 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/UserStatusInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/UserStatusInfo'
         '404':
           $ref: '#/components/responses/NotFound'
-
   /api/v1/users/{id}/reset-password:
     post:
-      tags: [User Management]
+      tags:
+      - User Management
       summary: 重置用户密码
       description: 管理员重置用户密码，可选择是否强制下次登录修改
       operationId: user_reset_password
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       requestBody:
         required: true
         content:
@@ -295,22 +294,22 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ResetPasswordResult'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ResetPasswordResult'
         '404':
           $ref: '#/components/responses/NotFound'
-
   /api/v1/users/batch-import:
     post:
-      tags: [User Management]
+      tags:
+      - User Management
       summary: 批量导入用户
       description: 通过Excel文件批量导入用户数据，支持设置默认角色和部门
       operationId: user_batch_import
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -325,7 +324,8 @@ paths:
                 options:
                   type: string
                   description: 导入选项（JSON格式）
-                  example: '{"default_role_ids": [3], "default_department_id": 1001, "send_welcome_email": true, "force_password_change": true}'
+                  example: '{"default_role_ids": [3], "default_department_id": 1001, "send_welcome_email": true, "force_password_change":
+                    true}'
       responses:
         '200':
           description: 导入完成
@@ -333,20 +333,20 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BatchImportResult'
-
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BatchImportResult'
   /api/v1/users/batch-status:
     put:
-      tags: [User Management]
+      tags:
+      - User Management
       summary: 批量更新用户状态
       description: 批量启用、禁用或锁定用户
       operationId: user_batch_update_status
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -360,28 +360,28 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BatchUpdateResult'
-
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BatchUpdateResult'
   /api/v1/users/{id}/roles:
     get:
-      tags: [User Management]
+      tags:
+      - User Management
       summary: 查询用户角色
       description: 查询指定用户的角色列表，包括直接分配和继承的角色
       operationId: user_get_roles
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       responses:
         '200':
           description: 查询成功
@@ -389,29 +389,29 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/UserRolesResponse'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/UserRolesResponse'
         '404':
           $ref: '#/components/responses/NotFound'
-
     post:
-      tags: [User Management]
+      tags:
+      - User Management
       summary: 分配角色给用户
       description: 为指定用户分配一个或多个角色
       operationId: user_assign_roles
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       requestBody:
         required: true
         content:
@@ -425,37 +425,37 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/RoleAssignResult'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/RoleAssignResult'
         '404':
           $ref: '#/components/responses/NotFound'
-
   /api/v1/users/{userId}/roles/{roleId}:
     delete:
-      tags: [User Management]
+      tags:
+      - User Management
       summary: 移除用户角色
       description: 移除用户的指定角色
       operationId: user_remove_role
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
-        - name: roleId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 10
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
+      - name: roleId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 10
       responses:
         '200':
           description: 角色移除成功
@@ -465,23 +465,23 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
         '404':
           $ref: '#/components/responses/NotFound'
-
   /api/v1/users/{id}/permissions:
     get:
-      tags: [User Management]
+      tags:
+      - User Management
       summary: 查询用户权限
       description: 查询指定用户的所有权限，包括角色权限和直接权限
       operationId: user_get_permissions
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       responses:
         '200':
           description: 查询成功
@@ -489,59 +489,57 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/UserPermissionsResponse'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/UserPermissionsResponse'
         '404':
           $ref: '#/components/responses/NotFound'
-
-  # 角色管理接口
   /api/v1/roles:
     get:
-      tags: [Role Management]
+      tags:
+      - Role Management
       summary: 查询角色列表
       description: 分页查询租户内的角色列表，支持搜索和筛选
       operationId: role_list
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: page
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-          example: 1
-        - name: size
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-          example: 20
-        - name: keyword
-          in: query
-          schema:
-            type: string
-          description: 搜索关键词（角色编码、角色名称）
-          example: "admin"
-        - name: role_type
-          in: query
-          schema:
-            type: integer
-            enum: [1, 2, 3]
-          description: 角色类型筛选：1-系统角色，2-业务角色，3-临时角色
-          example: 1
-        - name: status
-          in: query
-          schema:
-            type: integer
-            enum: [1, 2]
-          description: 角色状态筛选：1-启用，2-禁用
-          example: 1
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        example: 1
+      - name: size
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        example: 20
+      - name: keyword
+        in: query
+        schema:
+          type: string
+        description: 搜索关键词（角色编码、角色名称）
+        example: admin
+      - name: role_type
+        in: query
+        schema:
+          type: string
+        description: 角色类型筛选：1-系统角色，2-业务角色，3-临时角色
+        example: 1
+      - name: status
+        in: query
+        schema:
+          type: array
+          items: *id001
+        description: 角色状态筛选：1-启用，2-禁用
+        example: 1
       responses:
         '200':
           description: 查询成功
@@ -549,24 +547,24 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: '#/components/schemas/PagedResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/RoleInfo'
-
+                            $ref: '#/components/schemas/RoleInfo'
     post:
-      tags: [Role Management]
+      tags:
+      - Role Management
       summary: 创建角色
       description: 在当前租户下创建新角色，支持设置父角色和初始权限
       operationId: role_create
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -580,32 +578,32 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/RoleDetailInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/RoleDetailInfo'
         '400':
           $ref: '#/components/responses/BadRequest'
         '409':
           $ref: '#/components/responses/Conflict'
-
   /api/v1/roles/{id}:
     get:
-      tags: [Role Management]
+      tags:
+      - Role Management
       summary: 查询角色详情
       description: 根据角色ID查询角色详细信息，包括权限列表
       operationId: role_get
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 10
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 10
       responses:
         '200':
           description: 查询成功
@@ -613,29 +611,29 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/RoleDetailInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/RoleDetailInfo'
         '404':
           $ref: '#/components/responses/NotFound'
-
     put:
-      tags: [Role Management]
+      tags:
+      - Role Management
       summary: 更新角色信息
       description: 更新指定角色的基本信息，不包括权限
       operationId: role_update
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 10
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 10
       requestBody:
         required: true
         content:
@@ -649,29 +647,29 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/RoleDetailInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/RoleDetailInfo'
         '404':
           $ref: '#/components/responses/NotFound'
-
     delete:
-      tags: [Role Management]
+      tags:
+      - Role Management
       summary: 删除角色
       description: 删除指定角色，需要检查是否有用户关联
       operationId: role_delete
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 10
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 10
       responses:
         '200':
           description: 删除成功
@@ -683,23 +681,23 @@ paths:
           $ref: '#/components/responses/NotFound'
         '409':
           $ref: '#/components/responses/Conflict'
-
   /api/v1/roles/{id}/permissions:
     get:
-      tags: [Role Management]
+      tags:
+      - Role Management
       summary: 查询角色权限
       description: 查询指定角色的权限列表，包括直接权限和继承权限
       operationId: role_get_permissions
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 10
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 10
       responses:
         '200':
           description: 查询成功
@@ -707,29 +705,29 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/RolePermissionsResponse'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/RolePermissionsResponse'
         '404':
           $ref: '#/components/responses/NotFound'
-
     post:
-      tags: [Role Management]
+      tags:
+      - Role Management
       summary: 分配权限给角色
       description: 为指定角色分配或移除权限
       operationId: role_assign_permissions
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 10
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 10
       requestBody:
         required: true
         content:
@@ -743,37 +741,37 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PermissionAssignResult'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PermissionAssignResult'
         '404':
           $ref: '#/components/responses/NotFound'
-
   /api/v1/roles/{roleId}/permissions/{permissionId}:
     delete:
-      tags: [Role Management]
+      tags:
+      - Role Management
       summary: 移除角色权限
       description: 移除角色的指定权限
       operationId: role_remove_permission
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: roleId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 10
-        - name: permissionId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 100
+      - name: roleId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 10
+      - name: permissionId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 100
       responses:
         '200':
           description: 权限移除成功
@@ -783,52 +781,59 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
         '404':
           $ref: '#/components/responses/NotFound'
-
-  # 权限管理接口
   /api/v1/permissions:
     get:
-      tags: [Permission Management]
+      tags:
+      - Permission Management
       summary: 查询权限列表
       description: 分页查询系统权限列表，支持按资源类型和操作筛选
       operationId: permission_list
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: page
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-          example: 1
-        - name: size
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-          example: 20
-        - name: resource_type
-          in: query
-          schema:
-            type: string
-            enum: ["api", "menu", "button", "data"]
-          description: 资源类型筛选
-          example: "api"
-        - name: action
-          in: query
-          schema:
-            type: string
-            enum: ["read", "write", "delete", "execute"]
-          description: 操作动作筛选
-          example: "read"
-        - name: keyword
-          in: query
-          schema:
-            type: string
-          description: 搜索关键词（权限编码、权限名称）
-          example: "user"
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        example: 1
+      - name: size
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        example: 20
+      - name: resource_type
+        in: query
+        schema:
+          type: string
+          enum:
+          - api
+          - menu
+          - button
+          - data
+        description: 资源类型筛选
+        example: api
+      - name: action
+        in: query
+        schema:
+          type: string
+          enum:
+          - read
+          - write
+          - delete
+          - execute
+        description: 操作动作筛选
+        example: read
+      - name: keyword
+        in: query
+        schema:
+          type: string
+        description: 搜索关键词（权限编码、权限名称）
+        example: user
       responses:
         '200':
           description: 查询成功
@@ -836,24 +841,24 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: '#/components/schemas/PagedResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/PermissionInfo'
-
+                            $ref: '#/components/schemas/PermissionInfo'
     post:
-      tags: [Permission Management]
+      tags:
+      - Permission Management
       summary: 创建权限
       description: 创建新的系统权限
       operationId: permission_create
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -867,47 +872,46 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PermissionInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PermissionInfo'
         '400':
           $ref: '#/components/responses/BadRequest'
         '409':
           $ref: '#/components/responses/Conflict'
-
-  # 部门管理接口
   /api/v1/departments:
     get:
-      tags: [Department Management]
+      tags:
+      - Department Management
       summary: 查询部门列表
       description: 查询租户内的部门列表，支持树形结构和平铺列表
       operationId: department_list
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: tree_format
-          in: query
-          schema:
-            type: boolean
-            default: false
-          description: 是否返回树形结构
-          example: true
-        - name: parent_id
-          in: query
-          schema:
-            type: integer
-            format: int64
-          description: 父部门ID筛选
-          example: 1001
-        - name: status
-          in: query
-          schema:
-            type: integer
-            enum: [1, 2]
-          description: 部门状态筛选：1-正常，2-禁用
-          example: 1
+      - name: tree_format
+        in: query
+        schema:
+          type: boolean
+          default: false
+        description: 是否返回树形结构
+        example: true
+      - name: parent_id
+        in: query
+        schema:
+          type: integer
+          format: int64
+        description: 父部门ID筛选
+        example: 1001
+      - name: status
+        in: query
+        schema:
+          type: array
+          items: *id001
+        description: 部门状态筛选：1-正常，2-禁用
+        example: 1
       responses:
         '200':
           description: 查询成功
@@ -915,21 +919,21 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/DepartmentInfo'
-
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/DepartmentInfo'
     post:
-      tags: [Department Management]
+      tags:
+      - Department Management
       summary: 创建部门
       description: 在当前租户下创建新部门
       operationId: department_create
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -943,30 +947,30 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/DepartmentInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/DepartmentInfo'
         '400':
           $ref: '#/components/responses/BadRequest'
-
   /api/v1/departments/{id}:
     get:
-      tags: [Department Management]
+      tags:
+      - Department Management
       summary: 查询部门详情
       description: 根据部门ID查询部门详细信息，包括用户列表
       operationId: department_get
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       responses:
         '200':
           description: 查询成功
@@ -974,29 +978,29 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/DepartmentDetailInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/DepartmentDetailInfo'
         '404':
           $ref: '#/components/responses/NotFound'
-
     put:
-      tags: [Department Management]
+      tags:
+      - Department Management
       summary: 更新部门信息
       description: 更新指定部门的基本信息
       operationId: department_update
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       requestBody:
         required: true
         content:
@@ -1010,29 +1014,29 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/DepartmentInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/DepartmentInfo'
         '404':
           $ref: '#/components/responses/NotFound'
-
     delete:
-      tags: [Department Management]
+      tags:
+      - Department Management
       summary: 删除部门
       description: 删除指定部门，需要检查是否有子部门和用户
       operationId: department_delete
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       responses:
         '200':
           description: 删除成功
@@ -1044,30 +1048,30 @@ paths:
           $ref: '#/components/responses/NotFound'
         '409':
           $ref: '#/components/responses/Conflict'
-
   /api/v1/departments/{id}/users:
     get:
-      tags: [Department Management]
+      tags:
+      - Department Management
       summary: 查询部门用户
       description: 查询指定部门的用户列表
       operationId: department_get_users
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
-        - name: include_children
-          in: query
-          schema:
-            type: boolean
-            default: false
-          description: 是否包含子部门用户
-          example: true
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
+      - name: include_children
+        in: query
+        schema:
+          type: boolean
+          default: false
+        description: 是否包含子部门用户
+        example: true
       responses:
         '200':
           description: 查询成功
@@ -1075,62 +1079,64 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/UserInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/UserInfo'
         '404':
           $ref: '#/components/responses/NotFound'
-
-  # 会话管理接口
   /api/v1/sessions:
     get:
-      tags: [Session Management]
+      tags:
+      - Session Management
       summary: 查询在线用户会话
       description: 分页查询当前在线用户的会话列表
       operationId: session_list
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: page
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-          example: 1
-        - name: size
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-          example: 20
-        - name: user_id
-          in: query
-          schema:
-            type: integer
-            format: int64
-          description: 用户ID筛选
-          example: 1001
-        - name: device_type
-          in: query
-          schema:
-            type: string
-            enum: ["web", "mobile", "api"]
-          description: 设备类型筛选
-          example: "web"
-        - name: status
-          in: query
-          schema:
-            type: integer
-            enum: [1, 2, 3]
-          description: 会话状态筛选：1-活跃，2-过期，3-强制下线
-          example: 1
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        example: 1
+      - name: size
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        example: 20
+      - name: user_id
+        in: query
+        schema:
+          type: integer
+          format: int64
+        description: 用户ID筛选
+        example: 1001
+      - name: device_type
+        in: query
+        schema:
+          type: string
+          enum:
+          - web
+          - mobile
+          - api
+        description: 设备类型筛选
+        example: web
+      - name: status
+        in: query
+        schema:
+          type: array
+          items: *id001
+        description: 会话状态筛选：1-活跃，2-过期，3-强制下线
+        example: 1
       responses:
         '200':
           description: 查询成功
@@ -1138,32 +1144,32 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: '#/components/schemas/PagedResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/SessionInfo'
-
+                            $ref: '#/components/schemas/SessionInfo'
   /api/v1/sessions/{sessionId}:
     delete:
-      tags: [Session Management]
+      tags:
+      - Session Management
       summary: 强制下线会话
       description: 管理员强制下线指定会话
       operationId: session_force_logout
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: sessionId
-          in: path
-          required: true
-          schema:
-            type: string
-          example: "sess_1234567890abcdef"
+      - name: sessionId
+        in: path
+        required: true
+        schema:
+          type: string
+        example: sess_1234567890abcdef
       responses:
         '200':
           description: 下线成功
@@ -1173,15 +1179,15 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
         '404':
           $ref: '#/components/responses/NotFound'
-
   /api/v1/sessions/batch-logout:
     post:
-      tags: [Session Management]
+      tags:
+      - Session Management
       summary: 批量强制下线
       description: 批量强制下线多个会话
       operationId: session_batch_logout
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -1195,28 +1201,28 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BatchLogoutResult'
-
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BatchLogoutResult'
   /api/v1/users/{id}/sessions:
     get:
-      tags: [Session Management]
+      tags:
+      - Session Management
       summary: 查询用户会话列表
       description: 查询指定用户的所有会话
       operationId: user_get_sessions
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       responses:
         '200':
           description: 查询成功
@@ -1224,81 +1230,79 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/SessionInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/SessionInfo'
         '404':
           $ref: '#/components/responses/NotFound'
-
-  # 审计日志接口
   /api/v1/audit-logs:
     get:
-      tags: [Audit Management]
+      tags:
+      - Audit Management
       summary: 查询审计日志
       description: 分页查询审计日志，支持多条件筛选
       operationId: audit_log_list
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: page
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-          example: 1
-        - name: size
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-          example: 20
-        - name: start_time
-          in: query
-          schema:
-            type: string
-            format: date-time
-          description: 开始时间
-          example: "2024-08-14T00:00:00Z"
-        - name: end_time
-          in: query
-          schema:
-            type: string
-            format: date-time
-          description: 结束时间
-          example: "2024-08-14T23:59:59Z"
-        - name: action_type
-          in: query
-          schema:
-            type: string
-          description: 操作类型筛选
-          example: "user_create"
-        - name: user_id
-          in: query
-          schema:
-            type: integer
-            format: int64
-          description: 用户ID筛选
-          example: 1001
-        - name: resource_type
-          in: query
-          schema:
-            type: string
-          description: 资源类型筛选
-          example: "user"
-        - name: result
-          in: query
-          schema:
-            type: integer
-            enum: [1, 2]
-          description: 操作结果筛选：1-成功，2-失败
-          example: 1
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        example: 1
+      - name: size
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        example: 20
+      - name: start_time
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: 开始时间
+        example: '2024-08-14T00:00:00Z'
+      - name: end_time
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: 结束时间
+        example: '2024-08-14T23:59:59Z'
+      - name: action_type
+        in: query
+        schema:
+          type: string
+        description: 操作类型筛选
+        example: user_create
+      - name: user_id
+        in: query
+        schema:
+          type: integer
+          format: int64
+        description: 用户ID筛选
+        example: 1001
+      - name: resource_type
+        in: query
+        schema:
+          type: string
+        description: 资源类型筛选
+        example: user
+      - name: result
+        in: query
+        schema:
+          type: string
+        description: 操作结果筛选：1-成功，2-失败
+        example: 1
       responses:
         '200':
           description: 查询成功
@@ -1306,25 +1310,25 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: '#/components/schemas/PagedResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/AuditLogInfo'
-
+                            $ref: '#/components/schemas/AuditLogInfo'
   /api/v1/audit-logs/export:
     post:
-      tags: [Audit Management]
+      tags:
+      - Audit Management
       summary: 导出审计日志
       description: 导出指定条件的审计日志为Excel文件
       operationId: audit_log_export
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -1338,21 +1342,20 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ExportResult'
-
-  # 认证相关接口
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ExportResult'
   /api/v1/auth/check-permission:
     post:
-      tags: [Authentication]
+      tags:
+      - Authentication
       summary: 权限验证
       description: 验证用户是否具有指定资源的访问权限
       operationId: auth_check_permission
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -1366,20 +1369,20 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PermissionCheckResponse'
-
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PermissionCheckResponse'
   /api/v1/auth/batch-check-permissions:
     post:
-      tags: [Authentication]
+      tags:
+      - Authentication
       summary: 批量权限验证
       description: 批量验证用户对多个资源的访问权限
       operationId: auth_batch_check_permissions
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -1393,20 +1396,20 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/BatchPermissionCheckResponse'
-
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BatchPermissionCheckResponse'
   /api/v1/auth/mfa/verify:
     post:
-      tags: [Authentication]
+      tags:
+      - Authentication
       summary: 多因子认证验证
       description: 验证用户的多因子认证码
       operationId: auth_mfa_verify
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -1420,37 +1423,41 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/MfaVerifyResponse'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/MfaVerifyResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
-
-  # 外部身份源管理接口
   /api/v1/external-identity-sources:
     get:
-      tags: [External Identity]
+      tags:
+      - External Identity
       summary: 查询外部身份源列表
       description: 查询租户配置的外部身份源列表
       operationId: external_identity_source_list
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: source_type
-          in: query
-          schema:
-            type: string
-            enum: ["ldap", "ad", "oauth2", "oidc", "saml"]
-          description: 身份源类型筛选
-          example: "ldap"
-        - name: is_enabled
-          in: query
-          schema:
-            type: boolean
-          description: 是否启用筛选
-          example: true
+      - name: source_type
+        in: query
+        schema:
+          type: string
+          enum:
+          - ldap
+          - ad
+          - oauth2
+          - oidc
+          - saml
+        description: 身份源类型筛选
+        example: ldap
+      - name: is_enabled
+        in: query
+        schema:
+          type: boolean
+        description: 是否启用筛选
+        example: true
       responses:
         '200':
           description: 查询成功
@@ -1458,21 +1465,21 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/ExternalIdentitySourceInfo'
-
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ExternalIdentitySourceInfo'
     post:
-      tags: [External Identity]
+      tags:
+      - External Identity
       summary: 创建外部身份源
       description: 配置新的外部身份源
       operationId: external_identity_source_create
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -1486,30 +1493,29 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ExternalIdentitySourceInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ExternalIdentitySourceInfo'
         '400':
           $ref: '#/components/responses/BadRequest'
-
-  # 权限模板管理接口
   /api/v1/permission-templates:
     get:
-      tags: [Permission Template]
+      tags:
+      - Permission Template
       summary: 查询权限模板列表
       description: 查询租户的权限模板列表
       operationId: permission_template_list
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: is_system
-          in: query
-          schema:
-            type: boolean
-          description: 是否系统模板筛选
-          example: false
+      - name: is_system
+        in: query
+        schema:
+          type: boolean
+        description: 是否系统模板筛选
+        example: false
       responses:
         '200':
           description: 查询成功
@@ -1517,21 +1523,21 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/PermissionTemplateInfo'
-
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/PermissionTemplateInfo'
     post:
-      tags: [Permission Template]
+      tags:
+      - Permission Template
       summary: 创建权限模板
       description: 创建新的权限模板
       operationId: permission_template_create
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -1545,30 +1551,30 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/PermissionTemplateInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PermissionTemplateInfo'
         '400':
           $ref: '#/components/responses/BadRequest'
-
   /api/v1/permission-templates/{id}/apply:
     post:
-      tags: [Permission Template]
+      tags:
+      - Permission Template
       summary: 应用权限模板
       description: 将权限模板应用到指定角色
       operationId: permission_template_apply
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 2001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 2001
       requestBody:
         required: true
         content:
@@ -1582,23 +1588,20 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ApplyTemplateResult'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ApplyTemplateResult'
         '404':
           $ref: '#/components/responses/NotFound'
-
 components:
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-
   schemas:
-    # 用户管理相关Schema
     UserInfo:
       type: object
       properties:
@@ -1615,24 +1618,24 @@ components:
         username:
           type: string
           description: 用户名
-          example: "zhangsan"
+          example: zhangsan
         email:
           type: string
           format: email
           description: 邮箱
-          example: "zhangsan@company.com"
+          example: zhangsan@company.com
         phone:
           type: string
           description: 手机号
-          example: "13800138000"
+          example: '13800138000'
         real_name:
           type: string
           description: 真实姓名
-          example: "张三"
+          example: 张三
         employee_id:
           type: string
           description: 员工编号
-          example: "EMP001"
+          example: EMP001
         department_id:
           type: integer
           format: int64
@@ -1641,26 +1644,30 @@ components:
         department_name:
           type: string
           description: 部门名称
-          example: "运维部"
+          example: 运维部
         position:
           type: string
           description: 职位
-          example: "高级运维工程师"
+          example: 高级运维工程师
         avatar_url:
           type: string
           format: uri
           description: 头像URL
-          example: "https://cdn.example.com/avatars/zhangsan.png"
+          example: https://cdn.example.com/avatars/zhangsan.png
         status:
           type: integer
-          enum: [1, 2, 3, 4]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
           description: 状态：1-正常，2-禁用，3-锁定，4-过期
           example: 1
         last_login_time:
           type: string
           format: date-time
           description: 最后登录时间
-          example: "2024-08-14T14:30:00Z"
+          example: '2024-08-14T14:30:00Z'
         login_count:
           type: integer
           description: 登录次数
@@ -1672,75 +1679,80 @@ components:
         external_source:
           type: string
           description: 外部身份源
-          example: "ldap"
+          example: ldap
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-01T09:00:00Z"
+          example: '2024-08-01T09:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-14T14:30:00Z"
-
+          example: '2024-08-14T14:30:00Z'
     UserDetailInfo:
       allOf:
-        - $ref: '#/components/schemas/UserInfo'
-        - type: object
-          properties:
-            roles:
-              type: array
-              description: 用户角色列表
-              items:
-                $ref: '#/components/schemas/RoleInfo'
-            permissions:
-              type: array
-              description: 用户权限列表
-              items:
-                type: string
-              example: ["user:read", "user:write", "role:read"]
-            password_updated_at:
+      - $ref: '#/components/schemas/UserInfo'
+      - type: object
+        properties:
+          roles:
+            type: array
+            description: 用户角色列表
+            items:
+              $ref: '#/components/schemas/RoleInfo'
+          permissions:
+            type: array
+            description: 用户权限列表
+            items:
               type: string
-              format: date-time
-              description: 密码更新时间
-              example: "2024-08-01T09:00:00Z"
-            locked_until:
-              type: string
-              format: date-time
-              nullable: true
-              description: 锁定到期时间
-              example: null
-            failed_login_count:
-              type: integer
-              description: 失败登录次数
-              example: 0
-
+            example:
+            - user:read
+            - user:write
+            - role:read
+          password_updated_at:
+            type: string
+            format: date-time
+            description: 密码更新时间
+            example: '2024-08-01T09:00:00Z'
+          locked_until:
+            type: string
+            format: date-time
+            nullable: true
+            description: 锁定到期时间
+            example: null
+          failed_login_count:
+            type: integer
+            description: 失败登录次数
+            example: 0
     CreateUserRequest:
       type: object
-      required: [username, email, real_name, password]
+      required:
+      - username
+      - email
+      - real_name
+      - password
       properties:
         username:
           type: string
           description: 用户名
-          example: "lisi"
+          example: lisi
         email:
           type: string
           format: email
           description: 邮箱
-          example: "lisi@company.com"
+          example: lisi@company.com
         phone:
           type: string
           description: 手机号
-          example: "13900139000"
+          example: '13900139000'
         real_name:
           type: string
           description: 真实姓名
-          example: "李四"
+          example: 李四
         employee_id:
           type: string
           description: 员工编号
-          example: "EMP002"
+          example: EMP002
         department_id:
           type: integer
           format: int64
@@ -1749,18 +1761,20 @@ components:
         position:
           type: string
           description: 职位
-          example: "初级运维工程师"
+          example: 初级运维工程师
         password:
           type: string
           description: 初始密码
-          example: "TempPassword123!"
+          example: TempPassword123!
         role_ids:
           type: array
           description: 角色ID列表
           items:
             type: integer
             format: int64
-          example: [2, 3]
+          example:
+          - 2
+          - 3
         force_password_change:
           type: boolean
           description: 是否强制首次登录修改密码
@@ -1773,7 +1787,6 @@ components:
           type: boolean
           description: 是否启用多因子认证
           example: false
-
     UpdateUserRequest:
       type: object
       properties:
@@ -1781,19 +1794,19 @@ components:
           type: string
           format: email
           description: 邮箱
-          example: "lisi.updated@company.com"
+          example: lisi.updated@company.com
         phone:
           type: string
           description: 手机号
-          example: "13900139001"
+          example: '13900139001'
         real_name:
           type: string
           description: 真实姓名
-          example: "李四（更新）"
+          example: 李四（更新）
         employee_id:
           type: string
           description: 员工编号
-          example: "EMP002-UPD"
+          example: EMP002-UPD
         department_id:
           type: integer
           format: int64
@@ -1802,35 +1815,37 @@ components:
         position:
           type: string
           description: 职位
-          example: "中级运维工程师"
+          example: 中级运维工程师
         avatar_url:
           type: string
           format: uri
           description: 头像URL
-          example: "https://cdn.example.com/avatars/lisi_updated.png"
+          example: https://cdn.example.com/avatars/lisi_updated.png
         timezone:
           type: string
           description: 时区
-          example: "Asia/Shanghai"
+          example: Asia/Shanghai
         language:
           type: string
           description: 语言
-          example: "zh-CN"
-
+          example: zh-CN
     UpdateUserStatusRequest:
       type: object
-      required: [status]
+      required:
+      - status
       properties:
         status:
           type: integer
-          enum: [1, 2, 3]
+          enum:
+          - 1
+          - 2
+          - 3
           description: 用户状态：1-正常，2-禁用，3-锁定
           example: 1
         reason:
           type: string
           description: 状态变更原因
-          example: "管理员手动启用"
-
+          example: 管理员手动启用
     UserStatusInfo:
       type: object
       properties:
@@ -1841,26 +1856,29 @@ components:
           example: 1001
         status:
           type: integer
-          enum: [1, 2, 3, 4]
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
           description: 用户状态
           example: 1
         status_name:
           type: string
           description: 状态名称
-          example: "正常"
+          example: 正常
         updated_at:
           type: string
           format: date-time
           description: 状态更新时间
-          example: "2024-08-14T14:30:00Z"
-
+          example: '2024-08-14T14:30:00Z'
     ResetPasswordRequest:
       type: object
       properties:
         new_password:
           type: string
           description: 新密码（可选，不提供则自动生成）
-          example: "NewPassword123!"
+          example: NewPassword123!
         force_change:
           type: boolean
           description: 是否强制下次登录修改密码
@@ -1869,7 +1887,6 @@ components:
           type: boolean
           description: 是否发送通知
           example: true
-
     ResetPasswordResult:
       type: object
       properties:
@@ -1885,12 +1902,11 @@ components:
         temp_password:
           type: string
           description: 临时密码（仅在未发送时返回）
-          example: "TempPass789!"
+          example: TempPass789!
         force_change_required:
           type: boolean
           description: 是否需要强制修改
           example: true
-
     BatchImportResult:
       type: object
       properties:
@@ -1909,7 +1925,7 @@ components:
         task_id:
           type: string
           description: 导入任务ID
-          example: "import_task_20240814_001"
+          example: import_task_20240814_001
         failed_records:
           type: array
           description: 失败记录详情
@@ -1923,15 +1939,16 @@ components:
               username:
                 type: string
                 description: 用户名
-                example: "duplicate_user"
+                example: duplicate_user
               error:
                 type: string
                 description: 错误信息
-                example: "用户名已存在"
-
+                example: 用户名已存在
     BatchUpdateStatusRequest:
       type: object
-      required: [user_ids, status]
+      required:
+      - user_ids
+      - status
       properties:
         user_ids:
           type: array
@@ -1939,17 +1956,22 @@ components:
           items:
             type: integer
             format: int64
-          example: [1001, 1002, 1003]
+          example:
+          - 1001
+          - 1002
+          - 1003
         status:
           type: integer
-          enum: [1, 2, 3]
+          enum:
+          - 1
+          - 2
+          - 3
           description: 目标状态：1-正常，2-禁用，3-锁定
           example: 2
         reason:
           type: string
           description: 批量操作原因
-          example: "批量禁用违规用户"
-
+          example: 批量禁用违规用户
     BatchUpdateResult:
       type: object
       properties:
@@ -1977,8 +1999,7 @@ components:
                 example: 1003
               error:
                 type: string
-                example: "用户不存在"
-
+                example: 用户不存在
     UserRolesResponse:
       type: object
       properties:
@@ -1994,17 +2015,17 @@ components:
           description: 继承的角色
           items:
             allOf:
-              - $ref: '#/components/schemas/RoleInfo'
-              - type: object
-                properties:
-                  inherited_from:
-                    type: string
-                    description: 继承来源
-                    example: "部门默认角色"
-
+            - $ref: '#/components/schemas/RoleInfo'
+            - type: object
+              properties:
+                inherited_from:
+                  type: string
+                  description: 继承来源
+                  example: 部门默认角色
     AssignRolesRequest:
       type: object
-      required: [role_ids]
+      required:
+      - role_ids
       properties:
         role_ids:
           type: array
@@ -2012,18 +2033,20 @@ components:
           items:
             type: integer
             format: int64
-          example: [10, 11, 12]
+          example:
+          - 10
+          - 11
+          - 12
         valid_from:
           type: string
           format: date-time
           description: 生效时间
-          example: "2024-08-14T15:00:00Z"
+          example: '2024-08-14T15:00:00Z'
         valid_to:
           type: string
           format: date-time
           description: 失效时间
-          example: "2025-08-14T15:00:00Z"
-
+          example: '2025-08-14T15:00:00Z'
     RoleAssignResult:
       type: object
       properties:
@@ -2035,7 +2058,6 @@ components:
           type: integer
           description: 用户总角色数
           example: 5
-
     UserPermissionsResponse:
       type: object
       properties:
@@ -2049,7 +2071,7 @@ components:
             properties:
               role_name:
                 type: string
-                example: "系统管理员"
+                example: 系统管理员
               permissions:
                 type: array
                 items:
@@ -2064,9 +2086,11 @@ components:
           description: 有效权限列表
           items:
             type: string
-          example: ["user:read", "user:write", "role:read", "system:config"]
-
-    # 角色管理相关Schema
+          example:
+          - user:read
+          - user:write
+          - role:read
+          - system:config
     RoleInfo:
       type: object
       properties:
@@ -2083,14 +2107,17 @@ components:
         role_code:
           type: string
           description: 角色编码
-          example: "senior_engineer"
+          example: senior_engineer
         role_name:
           type: string
           description: 角色名称
-          example: "高级工程师"
+          example: 高级工程师
         role_type:
           type: integer
-          enum: [1, 2, 3]
+          enum:
+          - 1
+          - 2
+          - 3
           description: 角色类型：1-系统角色，2-业务角色，3-临时角色
           example: 2
         parent_id:
@@ -2102,7 +2129,7 @@ components:
         description:
           type: string
           description: 角色描述
-          example: "具有高级运维权限的工程师角色"
+          example: 具有高级运维权限的工程师角色
         is_default:
           type: boolean
           description: 是否默认角色
@@ -2113,12 +2140,17 @@ components:
           example: false
         data_scope:
           type: integer
-          enum: [1, 2, 3]
+          enum:
+          - 1
+          - 2
+          - 3
           description: 数据范围：1-全部，2-部门，3-个人
           example: 2
         status:
           type: integer
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           description: 状态：1-启用，2-禁用
           example: 1
         user_count:
@@ -2129,48 +2161,51 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-01T09:00:00Z"
+          example: '2024-08-01T09:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-14T14:30:00Z"
-
+          example: '2024-08-14T14:30:00Z'
     RoleDetailInfo:
       allOf:
-        - $ref: '#/components/schemas/RoleInfo'
-        - type: object
-          properties:
-            permissions:
-              type: array
-              description: 角色权限列表
-              items:
-                $ref: '#/components/schemas/PermissionInfo'
-            parent_role:
+      - $ref: '#/components/schemas/RoleInfo'
+      - type: object
+        properties:
+          permissions:
+            type: array
+            description: 角色权限列表
+            items:
+              $ref: '#/components/schemas/PermissionInfo'
+          parent_role:
+            $ref: '#/components/schemas/RoleInfo'
+            nullable: true
+            description: 父角色信息
+          child_roles:
+            type: array
+            description: 子角色列表
+            items:
               $ref: '#/components/schemas/RoleInfo'
-              nullable: true
-              description: 父角色信息
-            child_roles:
-              type: array
-              description: 子角色列表
-              items:
-                $ref: '#/components/schemas/RoleInfo'
-
     CreateRoleRequest:
       type: object
-      required: [role_code, role_name]
+      required:
+      - role_code
+      - role_name
       properties:
         role_code:
           type: string
           description: 角色编码
-          example: "project_manager"
+          example: project_manager
         role_name:
           type: string
           description: 角色名称
-          example: "项目经理"
+          example: 项目经理
         role_type:
           type: integer
-          enum: [1, 2, 3]
+          enum:
+          - 1
+          - 2
+          - 3
           description: 角色类型：1-系统角色，2-业务角色，3-临时角色
           example: 2
         parent_id:
@@ -2182,10 +2217,13 @@ components:
         description:
           type: string
           description: 角色描述
-          example: "负责项目管理和团队协调"
+          example: 负责项目管理和团队协调
         data_scope:
           type: integer
-          enum: [1, 2, 3]
+          enum:
+          - 1
+          - 2
+          - 3
           description: 数据范围：1-全部，2-部门，3-个人
           example: 2
         permission_ids:
@@ -2194,40 +2232,47 @@ components:
           items:
             type: integer
             format: int64
-          example: [1, 2, 5, 8]
+          example:
+          - 1
+          - 2
+          - 5
+          - 8
         valid_from:
           type: string
           format: date-time
           description: 生效时间
-          example: "2024-08-14T15:00:00Z"
+          example: '2024-08-14T15:00:00Z'
         valid_to:
           type: string
           format: date-time
           description: 失效时间
-          example: "2025-08-14T15:00:00Z"
-
+          example: '2025-08-14T15:00:00Z'
     UpdateRoleRequest:
       type: object
       properties:
         role_name:
           type: string
           description: 角色名称
-          example: "高级项目经理"
+          example: 高级项目经理
         description:
           type: string
           description: 角色描述
-          example: "负责多个项目的管理和协调"
+          example: 负责多个项目的管理和协调
         data_scope:
           type: integer
-          enum: [1, 2, 3]
+          enum:
+          - 1
+          - 2
+          - 3
           description: 数据范围
           example: 1
         status:
           type: integer
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           description: 角色状态
           example: 1
-
     RolePermissionsResponse:
       type: object
       properties:
@@ -2243,17 +2288,18 @@ components:
           description: 继承的权限
           items:
             allOf:
-              - $ref: '#/components/schemas/PermissionInfo'
-              - type: object
-                properties:
-                  inherited_from:
-                    type: string
-                    description: 继承来源角色
-                    example: "基础用户角色"
-
+            - $ref: '#/components/schemas/PermissionInfo'
+            - type: object
+              properties:
+                inherited_from:
+                  type: string
+                  description: 继承来源角色
+                  example: 基础用户角色
     AssignPermissionsRequest:
       type: object
-      required: [permission_ids, action]
+      required:
+      - permission_ids
+      - action
       properties:
         permission_ids:
           type: array
@@ -2261,13 +2307,17 @@ components:
           items:
             type: integer
             format: int64
-          example: [10, 11, 12]
+          example:
+          - 10
+          - 11
+          - 12
         action:
           type: string
-          enum: ["grant", "revoke"]
+          enum:
+          - grant
+          - revoke
           description: 操作类型：grant-授权，revoke-撤销
-          example: "grant"
-
+          example: grant
     PermissionAssignResult:
       type: object
       properties:
@@ -2283,8 +2333,6 @@ components:
           type: integer
           description: 角色总权限数
           example: 15
-
-    # 权限管理相关Schema
     PermissionInfo:
       type: object
       properties:
@@ -2296,29 +2344,37 @@ components:
         permission_code:
           type: string
           description: 权限编码
-          example: "user:read"
+          example: user:read
         permission_name:
           type: string
           description: 权限名称
-          example: "查看用户"
+          example: 查看用户
         resource_type:
           type: string
-          enum: ["api", "menu", "button", "data"]
+          enum:
+          - api
+          - menu
+          - button
+          - data
           description: 资源类型
-          example: "api"
+          example: api
         resource_path:
           type: string
           description: 资源路径
-          example: "/api/v1/users"
+          example: /api/v1/users
         action:
           type: string
-          enum: ["read", "write", "delete", "execute"]
+          enum:
+          - read
+          - write
+          - delete
+          - execute
           description: 操作动作
-          example: "read"
+          example: read
         description:
           type: string
           description: 权限描述
-          example: "允许查看用户列表和详情"
+          example: 允许查看用户列表和详情
         is_system:
           type: boolean
           description: 是否系统权限
@@ -2327,40 +2383,49 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-01T09:00:00Z"
-
+          example: '2024-08-01T09:00:00Z'
     CreatePermissionRequest:
       type: object
-      required: [permission_code, permission_name, resource_type, action]
+      required:
+      - permission_code
+      - permission_name
+      - resource_type
+      - action
       properties:
         permission_code:
           type: string
           description: 权限编码
-          example: "ticket:assign"
+          example: ticket:assign
         permission_name:
           type: string
           description: 权限名称
-          example: "分配工单"
+          example: 分配工单
         resource_type:
           type: string
-          enum: ["api", "menu", "button", "data"]
+          enum:
+          - api
+          - menu
+          - button
+          - data
           description: 资源类型
-          example: "api"
+          example: api
         resource_path:
           type: string
           description: 资源路径
-          example: "/api/v1/tickets/assign"
+          example: /api/v1/tickets/assign
         action:
           type: string
-          enum: ["read", "write", "delete", "execute"]
+          enum:
+          - read
+          - write
+          - delete
+          - execute
           description: 操作动作
-          example: "write"
+          example: write
         description:
           type: string
           description: 权限描述
-          example: "允许分配工单给工程师"
-
-    # 部门管理相关Schema
+          example: 允许分配工单给工程师
     DepartmentInfo:
       type: object
       properties:
@@ -2377,11 +2442,11 @@ components:
         dept_code:
           type: string
           description: 部门编码
-          example: "IT-OPS"
+          example: IT-OPS
         dept_name:
           type: string
           description: 部门名称
-          example: "运维部"
+          example: 运维部
         parent_id:
           type: integer
           format: int64
@@ -2395,7 +2460,7 @@ components:
         dept_path:
           type: string
           description: 部门路径
-          example: "/公司/技术部/运维部"
+          example: /公司/技术部/运维部
         manager_id:
           type: integer
           format: int64
@@ -2405,18 +2470,20 @@ components:
         manager_name:
           type: string
           description: 部门经理姓名
-          example: "张三"
+          example: 张三
         description:
           type: string
           description: 部门描述
-          example: "负责系统运维和技术支持"
+          example: 负责系统运维和技术支持
         sort_order:
           type: integer
           description: 排序
           example: 1
         status:
           type: integer
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           description: 状态：1-正常，2-禁用
           example: 1
         user_count:
@@ -2432,40 +2499,40 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-01T09:00:00Z"
+          example: '2024-08-01T09:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-14T14:30:00Z"
-
+          example: '2024-08-14T14:30:00Z'
     DepartmentDetailInfo:
       allOf:
-        - $ref: '#/components/schemas/DepartmentInfo'
-        - type: object
-          properties:
-            parent_department:
-              $ref: '#/components/schemas/DepartmentInfo'
-              nullable: true
-              description: 父部门信息
-            users:
-              type: array
-              description: 部门用户列表
-              items:
-                $ref: '#/components/schemas/UserInfo'
-
+      - $ref: '#/components/schemas/DepartmentInfo'
+      - type: object
+        properties:
+          parent_department:
+            $ref: '#/components/schemas/DepartmentInfo'
+            nullable: true
+            description: 父部门信息
+          users:
+            type: array
+            description: 部门用户列表
+            items:
+              $ref: '#/components/schemas/UserInfo'
     CreateDepartmentRequest:
       type: object
-      required: [dept_code, dept_name]
+      required:
+      - dept_code
+      - dept_name
       properties:
         dept_code:
           type: string
           description: 部门编码
-          example: "IT-DEV"
+          example: IT-DEV
         dept_name:
           type: string
           description: 部门名称
-          example: "开发部"
+          example: 开发部
         parent_id:
           type: integer
           format: int64
@@ -2481,19 +2548,18 @@ components:
         description:
           type: string
           description: 部门描述
-          example: "负责软件开发和维护"
+          example: 负责软件开发和维护
         sort_order:
           type: integer
           description: 排序
           example: 2
-
     UpdateDepartmentRequest:
       type: object
       properties:
         dept_name:
           type: string
           description: 部门名称
-          example: "软件开发部"
+          example: 软件开发部
         manager_id:
           type: integer
           format: int64
@@ -2503,25 +2569,25 @@ components:
         description:
           type: string
           description: 部门描述
-          example: "负责软件产品的开发和技术创新"
+          example: 负责软件产品的开发和技术创新
         sort_order:
           type: integer
           description: 排序
           example: 1
         status:
           type: integer
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           description: 部门状态
           example: 1
-
-    # 会话管理相关Schema
     SessionInfo:
       type: object
       properties:
         session_id:
           type: string
           description: 会话ID
-          example: "sess_1234567890abcdef"
+          example: sess_1234567890abcdef
         tenant_id:
           type: integer
           format: int64
@@ -2535,68 +2601,75 @@ components:
         username:
           type: string
           description: 用户名
-          example: "zhangsan"
+          example: zhangsan
         real_name:
           type: string
           description: 真实姓名
-          example: "张三"
+          example: 张三
         device_type:
           type: string
-          enum: ["web", "mobile", "api"]
+          enum:
+          - web
+          - mobile
+          - api
           description: 设备类型
-          example: "web"
+          example: web
         device_info:
           type: string
           description: 设备信息
-          example: "Chrome 120.0 on Windows 11"
+          example: Chrome 120.0 on Windows 11
         ip_address:
           type: string
           description: IP地址
-          example: "192.168.1.100"
+          example: 192.168.1.100
         location:
           type: string
           description: 登录地点
-          example: "北京市"
+          example: 北京市
         user_agent:
           type: string
           description: 用户代理
-          example: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+          example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
         login_time:
           type: string
           format: date-time
           description: 登录时间
-          example: "2024-08-14T10:00:00Z"
+          example: '2024-08-14T10:00:00Z'
         last_activity:
           type: string
           format: date-time
           description: 最后活动时间
-          example: "2024-08-14T14:30:00Z"
+          example: '2024-08-14T14:30:00Z'
         expires_at:
           type: string
           format: date-time
           description: 过期时间
-          example: "2024-08-14T18:00:00Z"
+          example: '2024-08-14T18:00:00Z'
         status:
           type: integer
-          enum: [1, 2, 3]
+          enum:
+          - 1
+          - 2
+          - 3
           description: 状态：1-活跃，2-过期，3-强制下线
           example: 1
-
     BatchLogoutRequest:
       type: object
-      required: [session_ids]
+      required:
+      - session_ids
       properties:
         session_ids:
           type: array
           description: 会话ID列表
           items:
             type: string
-          example: ["sess_1234567890abcdef", "sess_fedcba0987654321"]
+          example:
+          - sess_1234567890abcdef
+          - sess_fedcba0987654321
         reason:
           type: string
           description: 下线原因
-          example: "管理员批量下线"
-
+          example: 管理员批量下线
     BatchLogoutResult:
       type: object
       properties:
@@ -2620,12 +2693,10 @@ components:
             properties:
               session_id:
                 type: string
-                example: "sess_invalid"
+                example: sess_invalid
               error:
                 type: string
-                example: "会话不存在"
-
-    # 审计日志相关Schema
+                example: 会话不存在
     AuditLogInfo:
       type: object
       properties:
@@ -2648,51 +2719,57 @@ components:
         username:
           type: string
           description: 用户名
-          example: "zhangsan"
+          example: zhangsan
         real_name:
           type: string
           description: 真实姓名
-          example: "张三"
+          example: 张三
         session_id:
           type: string
           nullable: true
           description: 会话ID
-          example: "sess_1234567890abcdef"
+          example: sess_1234567890abcdef
         action_type:
           type: string
           description: 操作类型
-          example: "user_create"
+          example: user_create
         resource_type:
           type: string
           description: 资源类型
-          example: "user"
+          example: user
         resource_id:
           type: string
           description: 资源ID
-          example: "1002"
+          example: '1002'
         action_detail:
           type: string
           description: 操作详情
-          example: "创建用户：李四"
+          example: 创建用户：李四
         ip_address:
           type: string
           description: IP地址
-          example: "192.168.1.100"
+          example: 192.168.1.100
         user_agent:
           type: string
           description: 用户代理
-          example: "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+          example: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
         request_data:
           type: object
           description: 请求数据
-          example: {"username": "lisi", "real_name": "李四"}
+          example:
+            username: lisi
+            real_name: 李四
         response_data:
           type: object
           description: 响应数据
-          example: {"user_id": 1002, "status": "success"}
+          example:
+            user_id: 1002
+            status: success
         result:
           type: integer
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           description: 结果：1-成功，2-失败
           example: 1
         error_message:
@@ -2704,8 +2781,7 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-14T15:00:00Z"
-
+          example: '2024-08-14T15:00:00Z'
     ExportAuditLogRequest:
       type: object
       properties:
@@ -2713,16 +2789,16 @@ components:
           type: string
           format: date-time
           description: 开始时间
-          example: "2024-08-01T00:00:00Z"
+          example: '2024-08-01T00:00:00Z'
         end_time:
           type: string
           format: date-time
           description: 结束时间
-          example: "2024-08-31T23:59:59Z"
+          example: '2024-08-31T23:59:59Z'
         action_type:
           type: string
           description: 操作类型筛选
-          example: "user_create"
+          example: user_create
         user_id:
           type: integer
           format: int64
@@ -2731,30 +2807,33 @@ components:
         resource_type:
           type: string
           description: 资源类型筛选
-          example: "user"
+          example: user
         result:
           type: integer
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           description: 操作结果筛选
           example: 1
         format:
           type: string
-          enum: ["excel", "csv"]
+          enum:
+          - excel
+          - csv
           description: 导出格式
-          example: "excel"
-
+          example: excel
     ExportResult:
       type: object
       properties:
         task_id:
           type: string
           description: 导出任务ID
-          example: "export_task_20240814_001"
+          example: export_task_20240814_001
         file_url:
           type: string
           format: uri
           description: 文件下载URL
-          example: "https://cdn.example.com/exports/audit_logs_20240814.xlsx"
+          example: https://cdn.example.com/exports/audit_logs_20240814.xlsx
         file_size:
           type: integer
           description: 文件大小（字节）
@@ -2767,27 +2846,36 @@ components:
           type: string
           format: date-time
           description: 文件过期时间
-          example: "2024-08-21T15:00:00Z"
-
-    # 认证相关Schema
+          example: '2024-08-21T15:00:00Z'
     PermissionCheckRequest:
       type: object
-      required: [resource_type, resource_path, action]
+      required:
+      - resource_type
+      - resource_path
+      - action
       properties:
         resource_type:
           type: string
-          enum: ["api", "menu", "button", "data"]
+          enum:
+          - api
+          - menu
+          - button
+          - data
           description: 资源类型
-          example: "api"
+          example: api
         resource_path:
           type: string
           description: 资源路径
-          example: "/api/v1/users"
+          example: /api/v1/users
         action:
           type: string
-          enum: ["read", "write", "delete", "execute"]
+          enum:
+          - read
+          - write
+          - delete
+          - execute
           description: 操作动作
-          example: "read"
+          example: read
         context:
           type: object
           description: 上下文信息
@@ -2798,8 +2886,7 @@ components:
               example: 1001
             data_scope:
               type: string
-              example: "department"
-
+              example: department
     PermissionCheckResponse:
       type: object
       properties:
@@ -2810,17 +2897,19 @@ components:
         permission_code:
           type: string
           description: 权限编码
-          example: "user:read"
+          example: user:read
         granted_by_roles:
           type: array
           description: 授权角色列表
           items:
             type: string
-          example: ["admin", "user_manager"]
+          example:
+          - admin
+          - user_manager
         data_scope:
           type: string
           description: 数据范围
-          example: "department"
+          example: department
         conditions:
           type: object
           description: 权限条件
@@ -2830,25 +2919,26 @@ components:
               items:
                 type: integer
                 format: int64
-              example: [1001, 1002]
-
+              example:
+              - 1001
+              - 1002
     BatchPermissionCheckRequest:
       type: object
-      required: [checks]
+      required:
+      - checks
       properties:
         checks:
           type: array
           description: 权限检查列表
           items:
             allOf:
-              - $ref: '#/components/schemas/PermissionCheckRequest'
-              - type: object
-                properties:
-                  check_id:
-                    type: string
-                    description: 检查ID
-                    example: "check_1"
-
+            - $ref: '#/components/schemas/PermissionCheckRequest'
+            - type: object
+              properties:
+                check_id:
+                  type: string
+                  description: 检查ID
+                  example: check_1
     BatchPermissionCheckResponse:
       type: object
       properties:
@@ -2857,28 +2947,31 @@ components:
           description: 检查结果列表
           items:
             allOf:
-              - $ref: '#/components/schemas/PermissionCheckResponse'
-              - type: object
-                properties:
-                  check_id:
-                    type: string
-                    description: 检查ID
-                    example: "check_1"
-
+            - $ref: '#/components/schemas/PermissionCheckResponse'
+            - type: object
+              properties:
+                check_id:
+                  type: string
+                  description: 检查ID
+                  example: check_1
     MfaVerifyRequest:
       type: object
-      required: [mfa_type, mfa_code]
+      required:
+      - mfa_type
+      - mfa_code
       properties:
         mfa_type:
           type: string
-          enum: ["totp", "sms", "email"]
+          enum:
+          - totp
+          - sms
+          - email
           description: MFA类型
-          example: "totp"
+          example: totp
         mfa_code:
           type: string
           description: MFA验证码
-          example: "123456"
-
+          example: '123456'
     MfaVerifyResponse:
       type: object
       properties:
@@ -2890,8 +2983,6 @@ components:
           type: integer
           description: 剩余尝试次数
           example: 2
-
-    # 外部身份源相关Schema
     ExternalIdentitySourceInfo:
       type: object
       properties:
@@ -2908,38 +2999,43 @@ components:
         source_name:
           type: string
           description: 身份源名称
-          example: "公司LDAP"
+          example: 公司LDAP
         source_type:
           type: string
-          enum: ["ldap", "ad", "oauth2", "oidc", "saml"]
+          enum:
+          - ldap
+          - ad
+          - oauth2
+          - oidc
+          - saml
           description: 身份源类型
-          example: "ldap"
+          example: ldap
         config:
           type: object
           description: 配置信息
           properties:
             server_url:
               type: string
-              example: "ldap://ldap.company.com:389"
+              example: ldap://ldap.company.com:389
             base_dn:
               type: string
-              example: "dc=company,dc=com"
+              example: dc=company,dc=com
             bind_dn:
               type: string
-              example: "cn=admin,dc=company,dc=com"
+              example: cn=admin,dc=company,dc=com
         mapping_rules:
           type: object
           description: 字段映射规则
           properties:
             username:
               type: string
-              example: "uid"
+              example: uid
             email:
               type: string
-              example: "mail"
+              example: mail
             real_name:
               type: string
-              example: "cn"
+              example: cn
         is_enabled:
           type: boolean
           description: 是否启用
@@ -2956,61 +3052,66 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-01T09:00:00Z"
+          example: '2024-08-01T09:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-14T14:30:00Z"
-
+          example: '2024-08-14T14:30:00Z'
     CreateExternalIdentitySourceRequest:
       type: object
-      required: [source_name, source_type, config]
+      required:
+      - source_name
+      - source_type
+      - config
       properties:
         source_name:
           type: string
           description: 身份源名称
-          example: "企业AD"
+          example: 企业AD
         source_type:
           type: string
-          enum: ["ldap", "ad", "oauth2", "oidc", "saml"]
+          enum:
+          - ldap
+          - ad
+          - oauth2
+          - oidc
+          - saml
           description: 身份源类型
-          example: "ad"
+          example: ad
         config:
           type: object
           description: 配置信息
           properties:
             server_url:
               type: string
-              example: "ldap://ad.company.com:389"
+              example: ldap://ad.company.com:389
             base_dn:
               type: string
-              example: "dc=company,dc=local"
+              example: dc=company,dc=local
             bind_dn:
               type: string
-              example: "cn=service,cn=users,dc=company,dc=local"
+              example: cn=service,cn=users,dc=company,dc=local
             bind_password:
               type: string
-              example: "service_password"
+              example: service_password
         mapping_rules:
           type: object
           description: 字段映射规则
           properties:
             username:
               type: string
-              example: "sAMAccountName"
+              example: sAMAccountName
             email:
               type: string
-              example: "userPrincipalName"
+              example: userPrincipalName
             real_name:
               type: string
-              example: "displayName"
+              example: displayName
         priority:
           type: integer
           description: 优先级
           example: 2
-
-    # 权限模板相关Schema
     PermissionTemplateInfo:
       type: object
       properties:
@@ -3027,22 +3128,27 @@ components:
         template_name:
           type: string
           description: 模板名称
-          example: "运维工程师权限模板"
+          example: 运维工程师权限模板
         template_code:
           type: string
           description: 模板编码
-          example: "ops_engineer_template"
+          example: ops_engineer_template
         description:
           type: string
           description: 模板描述
-          example: "包含运维工程师常用权限的模板"
+          example: 包含运维工程师常用权限的模板
         permission_ids:
           type: array
           description: 权限ID列表
           items:
             type: integer
             format: int64
-          example: [1, 2, 5, 8, 10]
+          example:
+          - 1
+          - 2
+          - 5
+          - 8
+          - 10
         permissions:
           type: array
           description: 权限详情列表
@@ -3064,45 +3170,53 @@ components:
         created_by_name:
           type: string
           description: 创建人姓名
-          example: "张三"
+          example: 张三
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-01T09:00:00Z"
+          example: '2024-08-01T09:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-14T14:30:00Z"
-
+          example: '2024-08-14T14:30:00Z'
     CreatePermissionTemplateRequest:
       type: object
-      required: [template_name, template_code, permission_ids]
+      required:
+      - template_name
+      - template_code
+      - permission_ids
       properties:
         template_name:
           type: string
           description: 模板名称
-          example: "项目经理权限模板"
+          example: 项目经理权限模板
         template_code:
           type: string
           description: 模板编码
-          example: "project_manager_template"
+          example: project_manager_template
         description:
           type: string
           description: 模板描述
-          example: "包含项目管理相关权限的模板"
+          example: 包含项目管理相关权限的模板
         permission_ids:
           type: array
           description: 权限ID列表
           items:
             type: integer
             format: int64
-          example: [1, 3, 5, 7, 9, 11]
-
+          example:
+          - 1
+          - 3
+          - 5
+          - 7
+          - 9
+          - 11
     ApplyPermissionTemplateRequest:
       type: object
-      required: [role_ids]
+      required:
+      - role_ids
       properties:
         role_ids:
           type: array
@@ -3110,12 +3224,13 @@ components:
           items:
             type: integer
             format: int64
-          example: [10, 11]
+          example:
+          - 10
+          - 11
         replace_existing:
           type: boolean
           description: 是否替换现有权限
           example: false
-
     ApplyTemplateResult:
       type: object
       properties:
@@ -3143,12 +3258,10 @@ components:
                 example: 10
               role_name:
                 type: string
-                example: "项目经理"
+                example: 项目经理
               added_permissions:
                 type: integer
                 example: 3
-
-    # 通用响应Schema
     ApiResponse:
       type: object
       properties:
@@ -3159,7 +3272,7 @@ components:
         message:
           type: string
           description: 响应消息
-          example: "操作成功"
+          example: 操作成功
         data:
           type: object
           description: 响应数据
@@ -3167,42 +3280,40 @@ components:
           type: string
           format: date-time
           description: 响应时间
-          example: "2024-08-14T15:30:00Z"
+          example: '2024-08-14T15:30:00Z'
         trace_id:
           type: string
           description: 请求追踪ID
-          example: "req_123456789"
-
+          example: req_123456789
     PagedResponse:
       allOf:
-        - $ref: '#/components/schemas/ApiResponse'
-        - type: object
-          properties:
-            data:
-              type: object
-              properties:
-                total:
-                  type: integer
-                  description: 总记录数
-                  example: 100
-                page:
-                  type: integer
-                  description: 当前页码
-                  example: 1
-                size:
-                  type: integer
-                  description: 每页大小
-                  example: 20
-                pages:
-                  type: integer
-                  description: 总页数
-                  example: 5
+      - $ref: '#/components/schemas/ApiResponse'
+      - type: object
+        properties:
+          data:
+            type: object
+            properties:
+              total:
+                type: integer
+                description: 总记录数
+                example: 100
+              page:
+                type: integer
+                description: 当前页码
+                example: 1
+              size:
+                type: integer
+                description: 每页大小
+                example: 20
+              pages:
+                type: integer
+                description: 总页数
+                example: 5
+              items:
+                type: array
+                description: 数据列表
                 items:
-                  type: array
-                  description: 数据列表
-                  items:
-                    type: object
-
+                  type: object
     ErrorResponse:
       type: object
       properties:
@@ -3213,21 +3324,20 @@ components:
         message:
           type: string
           description: 错误消息
-          example: "请求参数错误"
+          example: 请求参数错误
         error:
           type: string
           description: 错误详情
-          example: "用户名不能为空"
+          example: 用户名不能为空
         timestamp:
           type: string
           format: date-time
           description: 错误时间
-          example: "2024-08-14T15:30:00Z"
+          example: '2024-08-14T15:30:00Z'
         trace_id:
           type: string
           description: 请求追踪ID
-          example: "req_123456789"
-
+          example: req_123456789
   responses:
     BadRequest:
       description: 请求参数错误

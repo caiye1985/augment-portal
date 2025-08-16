@@ -3,30 +3,28 @@ info:
   title: 移动端应用模块 API
   version: 1.0.0
   description: REQ-020 移动端应用模块 API 规范 - 基于Flutter跨平台框架的原生移动应用，支持工程师移动办公和客户自助服务
-
 tags:
-  - name: mobile-auth
-    description: 移动端认证管理
-  - name: mobile-devices
-    description: 移动设备管理
-  - name: mobile-tickets
-    description: 移动端工单管理
-  - name: mobile-sync
-    description: 离线数据同步
-  - name: mobile-push
-    description: 推送通知管理
-  - name: mobile-location
-    description: 地理位置服务
-  - name: mobile-config
-    description: 移动端配置管理
-  - name: mobile-files
-    description: 移动端文件管理
-
+- name: mobile-auth
+  description: 移动端认证管理
+- name: mobile-devices
+  description: 移动设备管理
+- name: mobile-tickets
+  description: 移动端工单管理
+- name: mobile-sync
+  description: 离线数据同步
+- name: mobile-push
+  description: 推送通知管理
+- name: mobile-location
+  description: 地理位置服务
+- name: mobile-config
+  description: 移动端配置管理
+- name: mobile-files
+  description: 移动端文件管理
 paths:
   /api/v1/mobile/auth/login:
     post:
       tags:
-        - mobile-auth
+      - mobile-auth
       summary: 移动端用户登录
       description: 移动端用户登录，支持设备信息注册和生物识别认证
       operationId: mobile_auth_login
@@ -43,22 +41,21 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/MobileLoginResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/MobileLoginResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/auth/logout:
     post:
       tags:
-        - mobile-auth
+      - mobile-auth
       summary: 移动端用户登出
       description: 移动端用户登出，清理设备认证信息
       operationId: mobile_auth_logout
@@ -72,25 +69,24 @@ paths:
                 device_id:
                   type: string
                   description: 设备唯一标识
-                  example: "iPhone_12345"
+                  example: iPhone_12345
               required:
-                - device_id
+              - device_id
       responses:
         '200':
           description: 登出成功
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/auth/refresh:
     post:
       tags:
-        - mobile-auth
+      - mobile-auth
       summary: 刷新访问令牌
       description: 使用刷新令牌获取新的访问令牌
       operationId: mobile_auth_refresh
@@ -104,14 +100,14 @@ paths:
                 refresh_token:
                   type: string
                   description: 刷新令牌
-                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
                 device_id:
                   type: string
                   description: 设备唯一标识
-                  example: "iPhone_12345"
+                  example: iPhone_12345
               required:
-                - refresh_token
-                - device_id
+              - refresh_token
+              - device_id
       responses:
         '200':
           description: 刷新成功
@@ -119,29 +115,28 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          access_token:
-                            type: string
-                            description: 新的访问令牌
-                            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                          expires_in:
-                            type: integer
-                            description: 令牌有效期（秒）
-                            example: 7200
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        access_token:
+                          type: string
+                          description: 新的访问令牌
+                          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                        expires_in:
+                          type: integer
+                          description: 令牌有效期（秒）
+                          example: 7200
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/devices/register:
     post:
       tags:
-        - mobile-devices
+      - mobile-devices
       summary: 注册移动设备
       description: 注册新的移动设备，绑定用户账号
       operationId: mobile_device_register
@@ -158,35 +153,34 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/MobileDeviceInfo'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/MobileDeviceInfo'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/devices/{deviceId}:
     get:
       tags:
-        - mobile-devices
+      - mobile-devices
       summary: 获取设备信息
       description: 获取指定设备的详细信息
       operationId: mobile_device_get
       parameters:
-        - name: deviceId
-          in: path
-          required: true
-          description: 设备唯一标识
-          schema:
-            type: string
-            example: "iPhone_12345"
+      - name: deviceId
+        in: path
+        required: true
+        description: 设备唯一标识
+        schema:
+          type: string
+          example: iPhone_12345
       responses:
         '200':
           description: 获取成功
@@ -194,32 +188,31 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/MobileDeviceInfo'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/MobileDeviceInfo'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     put:
       tags:
-        - mobile-devices
+      - mobile-devices
       summary: 更新设备信息
       description: 更新设备的配置信息和状态
       operationId: mobile_device_update
       parameters:
-        - name: deviceId
-          in: path
-          required: true
-          description: 设备唯一标识
-          schema:
-            type: string
-            example: "iPhone_12345"
+      - name: deviceId
+        in: path
+        required: true
+        description: 设备唯一标识
+        schema:
+          type: string
+          example: iPhone_12345
       requestBody:
         required: true
         content:
@@ -233,63 +226,61 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/MobileDeviceInfo'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/MobileDeviceInfo'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     delete:
       tags:
-        - mobile-devices
+      - mobile-devices
       summary: 注销设备
       description: 注销设备，清理相关数据和权限
       operationId: mobile_device_unregister
       parameters:
-        - name: deviceId
-          in: path
-          required: true
-          description: 设备唯一标识
-          schema:
-            type: string
-            example: "iPhone_12345"
+      - name: deviceId
+        in: path
+        required: true
+        description: 设备唯一标识
+        schema:
+          type: string
+          example: iPhone_12345
       responses:
         '200':
           description: 注销成功
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/tickets/{id}:
     get:
       tags:
-        - mobile-tickets
+      - mobile-tickets
       summary: 获取移动端工单详情
       description: 获取工单的详细信息，包含附件和处理记录
       operationId: mobile_ticket_get
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: integer
+          example: 12345
       responses:
         '200':
           description: 获取成功
@@ -297,33 +288,32 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/MobileTicketDetail'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/MobileTicketDetail'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/tickets/{id}/status:
     put:
       tags:
-        - mobile-tickets
+      - mobile-tickets
       summary: 更新工单状态
       description: 更新工单状态，支持离线操作
       operationId: mobile_ticket_update_status
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: integer
+          example: 12345
       requestBody:
         required: true
         content:
@@ -336,31 +326,30 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/tickets/{id}/attachments:
     post:
       tags:
-        - mobile-tickets
+      - mobile-tickets
       summary: 上传工单附件
       description: 上传工单相关的图片、视频或文档附件
       operationId: mobile_ticket_upload_attachment
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: integer
+          example: 12345
       requestBody:
         required: true
         content:
@@ -374,20 +363,24 @@ paths:
                   description: 附件文件
                 attachment_type:
                   type: string
-                  enum: [image, video, document, audio]
+                  enum:
+                  - image
+                  - video
+                  - document
+                  - audio
                   description: 附件类型
-                  example: "image"
+                  example: image
                 description:
                   type: string
                   description: 附件描述
-                  example: "故障现象照片"
+                  example: 故障现象照片
                 location:
                   type: string
                   description: 拍摄位置信息（JSON格式）
                   example: '{"latitude": 39.9042, "longitude": 116.4074, "address": "北京市朝阳区"}'
               required:
-                - file
-                - attachment_type
+              - file
+              - attachment_type
       responses:
         '200':
           description: 上传成功
@@ -395,35 +388,34 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/AttachmentInfo'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AttachmentInfo'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/tickets/{id}/checkin:
     post:
       tags:
-        - mobile-tickets
+      - mobile-tickets
       summary: 工程师签到
       description: 工程师到达现场后进行签到，记录位置和时间
       operationId: mobile_ticket_checkin
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 工单ID
-          schema:
-            type: integer
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 工单ID
+        schema:
+          type: integer
+          example: 12345
       requestBody:
         required: true
         content:
@@ -436,20 +428,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/sync/upload:
     post:
       tags:
-        - mobile-sync
+      - mobile-sync
       summary: 上传离线数据
       description: 将离线操作的数据同步到服务器
       operationId: mobile_sync_upload
@@ -466,50 +457,55 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/SyncUploadResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/SyncUploadResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/sync/download:
     get:
       tags:
-        - mobile-sync
+      - mobile-sync
       summary: 下载服务端更新
       description: 获取服务端的数据更新，支持增量同步
       operationId: mobile_sync_download
       parameters:
-        - name: last_sync_time
-          in: query
-          description: 最后同步时间
-          schema:
+      - name: last_sync_time
+        in: query
+        description: 最后同步时间
+        schema:
+          type: string
+          format: date-time
+          example: '2025-08-14T14:30:00Z'
+      - name: sync_token
+        in: query
+        description: 同步令牌
+        schema:
+          type: string
+          example: sync_token_abc123
+      - name: entity_types
+        in: query
+        description: 需要同步的实体类型
+        schema:
+          type: array
+          items:
             type: string
-            format: date-time
-            example: "2025-08-14T14:30:00Z"
-        - name: sync_token
-          in: query
-          description: 同步令牌
-          schema:
-            type: string
-            example: "sync_token_abc123"
-        - name: entity_types
-          in: query
-          description: 需要同步的实体类型
-          schema:
-            type: array
-            items:
-              type: string
-              enum: [tickets, attachments, configs, notifications]
-            example: ["tickets", "attachments"]
+            enum:
+            - tickets
+            - attachments
+            - configs
+            - notifications
+          example:
+          - tickets
+          - attachments
       responses:
         '200':
           description: 下载成功
@@ -517,31 +513,30 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/SyncDownloadResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/SyncDownloadResponse'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/sync/status:
     get:
       tags:
-        - mobile-sync
+      - mobile-sync
       summary: 获取同步状态
       description: 获取当前设备的同步状态和统计信息
       operationId: mobile_sync_status
       parameters:
-        - name: device_id
-          in: query
-          required: true
-          description: 设备ID
-          schema:
-            type: string
-            example: "iPhone_12345"
+      - name: device_id
+        in: query
+        required: true
+        description: 设备ID
+        schema:
+          type: string
+          example: iPhone_12345
       responses:
         '200':
           description: 获取成功
@@ -549,20 +544,19 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/SyncStatus'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/SyncStatus'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/push/register:
     post:
       tags:
-        - mobile-push
+      - mobile-push
       summary: 注册推送服务
       description: 注册设备的推送服务，配置推送设置
       operationId: mobile_push_register
@@ -579,31 +573,30 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          registration_id:
-                            type: string
-                            description: 注册ID
-                            example: "reg_12345"
-                          status:
-                            type: string
-                            description: 注册状态
-                            example: "active"
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        registration_id:
+                          type: string
+                          description: 注册ID
+                          example: reg_12345
+                        status:
+                          type: string
+                          description: 注册状态
+                          example: active
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/push/settings:
     put:
       tags:
-        - mobile-push
+      - mobile-push
       summary: 更新推送设置
       description: 更新设备的推送通知设置
       operationId: mobile_push_update_settings
@@ -619,18 +612,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/location/update:
     post:
       tags:
-        - mobile-location
+      - mobile-location
       summary: 更新位置信息
       description: 更新工程师的当前位置信息
       operationId: mobile_location_update
@@ -646,50 +638,49 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/location/nearby-tickets:
     get:
       tags:
-        - mobile-location
+      - mobile-location
       summary: 获取附近工单
       description: 根据当前位置获取附近的工单
       operationId: mobile_location_nearby_tickets
       parameters:
-        - name: latitude
-          in: query
-          required: true
-          description: 纬度
-          schema:
-            type: number
-            example: 39.9042
-        - name: longitude
-          in: query
-          required: true
-          description: 经度
-          schema:
-            type: number
-            example: 116.4074
-        - name: radius
-          in: query
-          description: 搜索半径（公里）
-          schema:
-            type: number
-            default: 10
-            example: 5
-        - name: limit
-          in: query
-          description: 返回数量限制
-          schema:
-            type: integer
-            default: 20
-            example: 10
+      - name: latitude
+        in: query
+        required: true
+        description: 纬度
+        schema:
+          type: number
+          example: 39.9042
+      - name: longitude
+        in: query
+        required: true
+        description: 经度
+        schema:
+          type: number
+          example: 116.4074
+      - name: radius
+        in: query
+        description: 搜索半径（公里）
+        schema:
+          type: number
+          default: 10
+          example: 5
+      - name: limit
+        in: query
+        description: 返回数量限制
+        schema:
+          type: integer
+          default: 20
+          example: 10
       responses:
         '200':
           description: 获取成功
@@ -697,42 +688,44 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/NearbyTicket'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/NearbyTicket'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/config:
     get:
       tags:
-        - mobile-config
+      - mobile-config
       summary: 获取移动端配置
       description: 获取移动端应用的配置信息
       operationId: mobile_config_get
       parameters:
-        - name: platform
-          in: query
-          description: 平台类型
-          schema:
-            type: string
-            enum: [ios, android, all]
-            default: "all"
-            example: "ios"
-        - name: app_version
-          in: query
-          description: 应用版本
-          schema:
-            type: string
-            example: "1.0.0"
+      - name: platform
+        in: query
+        description: 平台类型
+        schema:
+          type: string
+          enum:
+          - ios
+          - android
+          - all
+          default: all
+          example: ios
+      - name: app_version
+        in: query
+        description: 应用版本
+        schema:
+          type: string
+          example: 1.0.0
       responses:
         '200':
           description: 获取成功
@@ -740,20 +733,19 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/MobileAppConfig'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/MobileAppConfig'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/files/upload:
     post:
       tags:
-        - mobile-files
+      - mobile-files
       summary: 移动端文件上传
       description: 移动端优化的文件上传，支持断点续传和压缩
       operationId: mobile_file_upload
@@ -770,9 +762,13 @@ paths:
                   description: 文件内容
                 file_type:
                   type: string
-                  enum: [image, video, document, audio]
+                  enum:
+                  - image
+                  - video
+                  - document
+                  - audio
                   description: 文件类型
-                  example: "image"
+                  example: image
                 compress:
                   type: boolean
                   description: 是否压缩
@@ -796,10 +792,10 @@ paths:
                 upload_id:
                   type: string
                   description: 上传ID（断点续传）
-                  example: "upload_123456"
+                  example: upload_123456
               required:
-                - file
-                - file_type
+              - file
+              - file_type
       responses:
         '200':
           description: 上传成功
@@ -807,72 +803,70 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/FileUploadResponse'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/FileUploadResponse'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/mobile/tickets:
     get:
       tags:
-        - mobile-tickets
+      - mobile-tickets
       summary: 获取移动端工单列表
       description: 获取适合移动端显示的工单列表，支持离线缓存
       operationId: mobile_ticket_list
       parameters:
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页大小
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 50
-            default: 20
-            example: 20
-        - name: status
-          in: query
-          description: 工单状态
-          schema:
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页大小
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 20
+          example: 20
+      - name: status
+        in: query
+        description: 工单状态
+        schema:
+          type: array
+          items:
             type: string
-            enum: [NEW, PENDING, ASSIGNED, IN_PROGRESS, SUSPENDED, ESCALATED, PENDING_VERIFICATION, RESOLVED, CLOSED, CANCELLED]
-            example: "IN_PROGRESS"
-        - name: assigned_to_me
-          in: query
-          description: 只显示分配给我的工单
-          schema:
-            type: boolean
-            default: false
-            example: true
-        - name: priority
-          in: query
-          description: 优先级
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 4
-            example: 2
-        - name: last_sync_time
-          in: query
-          description: 最后同步时间，用于增量同步
-          schema:
+      - name: assigned_to_me
+        in: query
+        description: 只显示分配给我的工单
+        schema:
+          type: boolean
+          default: false
+          example: true
+      - name: priority
+        in: query
+        description: 优先级
+        schema:
+          type: array
+          items:
             type: string
-            format: date-time
-            example: "2025-08-14T14:30:00Z"
+      - name: last_sync_time
+        in: query
+        description: 最后同步时间，用于增量同步
+        schema:
+          type: string
+          format: date-time
+          example: '2025-08-14T14:30:00Z'
       responses:
         '200':
           description: 获取成功
@@ -880,21 +874,20 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/MobileTicketInfo'
+                            $ref: '#/components/schemas/MobileTicketInfo'
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
 components:
   schemas:
     MobileLoginRequest:
@@ -903,68 +896,68 @@ components:
         username:
           type: string
           description: 用户名
-          example: "engineer001"
+          example: engineer001
         password:
           type: string
           description: 密码
-          example: "password123"
+          example: password123
         device_info:
           $ref: '#/components/schemas/DeviceInfo'
       required:
-        - username
-        - password
-        - device_info
-
+      - username
+      - password
+      - device_info
     DeviceInfo:
       type: object
       properties:
         device_id:
           type: string
           description: 设备唯一标识
-          example: "iPhone_12345"
+          example: iPhone_12345
         device_type:
           type: string
-          enum: [ios, android]
+          enum:
+          - ios
+          - android
           description: 设备类型
-          example: "ios"
+          example: ios
         device_model:
           type: string
           description: 设备型号
-          example: "iPhone 13"
+          example: iPhone 13
         os_version:
           type: string
           description: 系统版本
-          example: "iOS 15.0"
+          example: iOS 15.0
         app_version:
           type: string
           description: 应用版本
-          example: "1.0.0"
+          example: 1.0.0
         push_token:
           type: string
           description: 推送令牌
-          example: "abc123def456"
+          example: abc123def456
         biometric_enabled:
           type: boolean
           description: 是否启用生物识别
           example: true
       required:
-        - device_id
-        - device_type
-        - device_model
-        - os_version
-        - app_version
-
+      - device_id
+      - device_type
+      - device_model
+      - os_version
+      - app_version
     MobileLoginResponse:
       type: object
       properties:
         access_token:
           type: string
           description: 访问令牌
-          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
         refresh_token:
           type: string
           description: 刷新令牌
-          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
         expires_in:
           type: integer
           description: 令牌有效期（秒）
@@ -979,22 +972,21 @@ components:
             username:
               type: string
               description: 用户名
-              example: "engineer001"
+              example: engineer001
             real_name:
               type: string
               description: 真实姓名
-              example: "张工程师"
+              example: 张工程师
             role:
               type: string
               description: 用户角色
-              example: "engineer"
+              example: engineer
             avatar_url:
               type: string
               description: 头像URL
-              example: "https://cdn.example.com/avatar.jpg"
+              example: https://cdn.example.com/avatar.jpg
         app_config:
           $ref: '#/components/schemas/MobileAppConfig'
-
     MobileAppConfig:
       type: object
       properties:
@@ -1026,7 +1018,6 @@ components:
           type: boolean
           description: 是否启用生物识别登录
           example: true
-
     DeviceRegistrationRequest:
       type: object
       properties:
@@ -1045,15 +1036,14 @@ components:
           description: 是否授权相机权限
           example: true
       required:
-        - device_info
-
+      - device_info
     DeviceUpdateRequest:
       type: object
       properties:
         push_token:
           type: string
           description: 推送令牌
-          example: "new_push_token_xyz789"
+          example: new_push_token_xyz789
         location_enabled:
           type: boolean
           description: 是否启用位置服务
@@ -1069,8 +1059,7 @@ components:
         app_version:
           type: string
           description: 应用版本
-          example: "1.0.1"
-
+          example: 1.0.1
     MobileDeviceInfo:
       type: object
       properties:
@@ -1081,33 +1070,35 @@ components:
         device_id:
           type: string
           description: 设备唯一标识
-          example: "iPhone_12345"
+          example: iPhone_12345
         device_type:
           type: string
-          enum: [ios, android]
+          enum:
+          - ios
+          - android
           description: 设备类型
-          example: "ios"
+          example: ios
         device_model:
           type: string
           description: 设备型号
-          example: "iPhone 13"
+          example: iPhone 13
         os_version:
           type: string
           description: 系统版本
-          example: "iOS 15.0"
+          example: iOS 15.0
         app_version:
           type: string
           description: 应用版本
-          example: "1.0.0"
+          example: 1.0.0
         push_token:
           type: string
           description: 推送令牌
-          example: "abc123def456"
+          example: abc123def456
         last_active_time:
           type: string
           format: date-time
           description: 最后活跃时间
-          example: "2025-08-14T14:30:00Z"
+          example: '2025-08-14T14:30:00Z'
         location_enabled:
           type: boolean
           description: 是否启用位置服务
@@ -1128,13 +1119,12 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-14T09:00:00Z"
+          example: '2025-08-14T09:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-14T14:30:00Z"
-
+          example: '2025-08-14T14:30:00Z'
     MobileTicketInfo:
       type: object
       properties:
@@ -1145,15 +1135,15 @@ components:
         ticket_no:
           type: string
           description: 工单编号
-          example: "TCK-20250814-0001"
+          example: TCK-20250814-0001
         title:
           type: string
           description: 工单标题
-          example: "服务器CPU使用率过高"
+          example: 服务器CPU使用率过高
         description:
           type: string
           description: 工单描述
-          example: "生产服务器CPU使用率持续超过90%，影响业务正常运行"
+          example: 生产服务器CPU使用率持续超过90%，影响业务正常运行
         priority:
           type: integer
           description: 优先级：1-低，2-中，3-高，4-紧急
@@ -1161,16 +1151,26 @@ components:
         priority_name:
           type: string
           description: 优先级名称
-          example: "高"
+          example: 高
         status:
           type: string
-          enum: [NEW, PENDING, ASSIGNED, IN_PROGRESS, SUSPENDED, ESCALATED, PENDING_VERIFICATION, RESOLVED, CLOSED, CANCELLED]
+          enum:
+          - NEW
+          - PENDING
+          - ASSIGNED
+          - IN_PROGRESS
+          - SUSPENDED
+          - ESCALATED
+          - PENDING_VERIFICATION
+          - RESOLVED
+          - CLOSED
+          - CANCELLED
           description: 工单状态
-          example: "IN_PROGRESS"
+          example: IN_PROGRESS
         status_name:
           type: string
           description: 状态名称
-          example: "处理中"
+          example: 处理中
         customer_id:
           type: integer
           description: 客户ID
@@ -1178,7 +1178,7 @@ components:
         customer_name:
           type: string
           description: 客户名称
-          example: "ABC科技有限公司"
+          example: ABC科技有限公司
         assigned_engineer_id:
           type: integer
           description: 分配工程师ID
@@ -1186,22 +1186,22 @@ components:
         assigned_engineer_name:
           type: string
           description: 分配工程师姓名
-          example: "张三"
+          example: 张三
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-14T10:00:00Z"
+          example: '2025-08-14T10:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-14T14:30:00Z"
+          example: '2025-08-14T14:30:00Z'
         due_date:
           type: string
           format: date-time
           description: 截止时间
-          example: "2025-08-14T18:00:00Z"
+          example: '2025-08-14T18:00:00Z'
         location:
           $ref: '#/components/schemas/LocationInfo'
         attachment_count:
@@ -1216,8 +1216,7 @@ components:
           type: string
           format: date-time
           description: 最后同步时间
-          example: "2025-08-14T14:30:00Z"
-
+          example: '2025-08-14T14:30:00Z'
     LocationInfo:
       type: object
       properties:
@@ -1232,7 +1231,7 @@ components:
         address:
           type: string
           description: 地址
-          example: "北京市朝阳区"
+          example: 北京市朝阳区
         accuracy:
           type: number
           description: 定位精度（米）
@@ -1241,82 +1240,89 @@ components:
           type: string
           format: date-time
           description: 定位时间
-          example: "2025-08-14T14:30:00Z"
-
+          example: '2025-08-14T14:30:00Z'
     MobileTicketDetail:
       allOf:
-        - $ref: '#/components/schemas/MobileTicketInfo'
-        - type: object
-          properties:
-            attachments:
-              type: array
-              description: 附件列表
-              items:
-                $ref: '#/components/schemas/AttachmentInfo'
-            comments:
-              type: array
-              description: 处理记录
-              items:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    description: 记录ID
-                    example: 1001
-                  content:
-                    type: string
-                    description: 记录内容
-                    example: "已到达现场，开始排查问题"
-                  author_name:
-                    type: string
-                    description: 记录人姓名
-                    example: "张三"
-                  created_at:
-                    type: string
-                    format: date-time
-                    description: 记录时间
-                    example: "2025-08-14T14:30:00Z"
-            sla_info:
+      - $ref: '#/components/schemas/MobileTicketInfo'
+      - type: object
+        properties:
+          attachments:
+            type: array
+            description: 附件列表
+            items:
+              $ref: '#/components/schemas/AttachmentInfo'
+          comments:
+            type: array
+            description: 处理记录
+            items:
               type: object
-              description: SLA信息
               properties:
-                response_deadline:
+                id:
+                  type: integer
+                  description: 记录ID
+                  example: 1001
+                content:
+                  type: string
+                  description: 记录内容
+                  example: 已到达现场，开始排查问题
+                author_name:
+                  type: string
+                  description: 记录人姓名
+                  example: 张三
+                created_at:
                   type: string
                   format: date-time
-                  description: 响应截止时间
-                  example: "2025-08-14T16:00:00Z"
-                resolution_deadline:
-                  type: string
-                  format: date-time
-                  description: 解决截止时间
-                  example: "2025-08-14T18:00:00Z"
-                is_overdue:
-                  type: boolean
-                  description: 是否超期
-                  example: false
-
+                  description: 记录时间
+                  example: '2025-08-14T14:30:00Z'
+          sla_info:
+            type: object
+            description: SLA信息
+            properties:
+              response_deadline:
+                type: string
+                format: date-time
+                description: 响应截止时间
+                example: '2025-08-14T16:00:00Z'
+              resolution_deadline:
+                type: string
+                format: date-time
+                description: 解决截止时间
+                example: '2025-08-14T18:00:00Z'
+              is_overdue:
+                type: boolean
+                description: 是否超期
+                example: false
     TicketStatusUpdateRequest:
       type: object
       properties:
         status:
           type: string
-          enum: [NEW, PENDING, ASSIGNED, IN_PROGRESS, SUSPENDED, ESCALATED, PENDING_VERIFICATION, RESOLVED, CLOSED, CANCELLED]
+          enum:
+          - NEW
+          - PENDING
+          - ASSIGNED
+          - IN_PROGRESS
+          - SUSPENDED
+          - ESCALATED
+          - PENDING_VERIFICATION
+          - RESOLVED
+          - CLOSED
+          - CANCELLED
           description: 新状态
-          example: "IN_PROGRESS"
+          example: IN_PROGRESS
         notes:
           type: string
           description: 状态更新说明
-          example: "已到达现场，开始排查问题"
+          example: 已到达现场，开始排查问题
         location:
           $ref: '#/components/schemas/LocationInfo'
         estimated_completion_time:
           type: string
           format: date-time
           description: 预计完成时间
-          example: "2025-08-14T17:00:00Z"
+          example: '2025-08-14T17:00:00Z'
       required:
-        - status
-
+      - status
     AttachmentInfo:
       type: object
       properties:
@@ -1327,40 +1333,43 @@ components:
         file_name:
           type: string
           description: 文件名
-          example: "fault_image.jpg"
+          example: fault_image.jpg
         file_url:
           type: string
           description: 文件URL
-          example: "https://cdn.example.com/attachments/fault_image.jpg"
+          example: https://cdn.example.com/attachments/fault_image.jpg
         file_size:
           type: integer
           description: 文件大小（字节）
           example: 1024000
         file_type:
           type: string
-          enum: [image, video, document, audio]
+          enum:
+          - image
+          - video
+          - document
+          - audio
           description: 文件类型
-          example: "image"
+          example: image
         mime_type:
           type: string
           description: MIME类型
-          example: "image/jpeg"
+          example: image/jpeg
         description:
           type: string
           description: 附件描述
-          example: "故障现象照片"
+          example: 故障现象照片
         location:
           $ref: '#/components/schemas/LocationInfo'
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-14T14:30:00Z"
+          example: '2025-08-14T14:30:00Z'
         uploaded_by:
           type: string
           description: 上传人
-          example: "张三"
-
+          example: 张三
     CheckinRequest:
       type: object
       properties:
@@ -1369,47 +1378,52 @@ components:
         notes:
           type: string
           description: 签到备注
-          example: "已到达客户现场"
+          example: 已到达客户现场
         photo_url:
           type: string
           description: 签到照片URL
-          example: "https://cdn.example.com/checkin/photo.jpg"
+          example: https://cdn.example.com/checkin/photo.jpg
       required:
-        - location
-
+      - location
     SyncUploadRequest:
       type: object
       properties:
         device_id:
           type: string
           description: 设备ID
-          example: "iPhone_12345"
+          example: iPhone_12345
         sync_data:
           type: array
           description: 同步数据列表
           items:
             $ref: '#/components/schemas/OfflineSyncData'
       required:
-        - device_id
-        - sync_data
-
+      - device_id
+      - sync_data
     OfflineSyncData:
       type: object
       properties:
         operation_id:
           type: string
           description: 操作ID
-          example: "local_op_001"
+          example: local_op_001
         operation_type:
           type: string
-          enum: [CREATE, UPDATE, DELETE]
+          enum:
+          - CREATE
+          - UPDATE
+          - DELETE
           description: 操作类型
-          example: "UPDATE"
+          example: UPDATE
         entity_type:
           type: string
-          enum: [ticket, attachment, comment, location]
+          enum:
+          - ticket
+          - attachment
+          - comment
+          - location
           description: 实体类型
-          example: "ticket"
+          example: ticket
         entity_id:
           type: integer
           description: 实体ID
@@ -1417,27 +1431,24 @@ components:
         operation_data:
           type: object
           description: 操作数据
-          example: {
-            "status": "in_progress",
-            "notes": "已到达现场，开始排查问题",
-            "location": {
-              "latitude": 39.9042,
-              "longitude": 116.4074,
-              "address": "北京市朝阳区"
-            }
-          }
+          example:
+            status: in_progress
+            notes: 已到达现场，开始排查问题
+            location:
+              latitude: 39.9042
+              longitude: 116.4074
+              address: 北京市朝阳区
         local_timestamp:
           type: string
           format: date-time
           description: 本地时间戳
-          example: "2025-08-14T14:30:00Z"
+          example: '2025-08-14T14:30:00Z'
       required:
-        - operation_id
-        - operation_type
-        - entity_type
-        - operation_data
-        - local_timestamp
-
+      - operation_id
+      - operation_type
+      - entity_type
+      - operation_data
+      - local_timestamp
     SyncUploadResponse:
       type: object
       properties:
@@ -1458,32 +1469,34 @@ components:
           type: string
           format: date-time
           description: 服务器时间戳
-          example: "2025-08-14T14:30:15Z"
+          example: '2025-08-14T14:30:15Z'
         next_sync_token:
           type: string
           description: 下次同步令牌
-          example: "sync_token_abc123"
-
+          example: sync_token_abc123
     ConflictInfo:
       type: object
       properties:
         operation_id:
           type: string
           description: 操作ID
-          example: "local_op_001"
+          example: local_op_001
         entity_type:
           type: string
           description: 实体类型
-          example: "ticket"
+          example: ticket
         entity_id:
           type: integer
           description: 实体ID
           example: 12345
         conflict_type:
           type: string
-          enum: [version_conflict, data_conflict, permission_conflict]
+          enum:
+          - version_conflict
+          - data_conflict
+          - permission_conflict
           description: 冲突类型
-          example: "version_conflict"
+          example: version_conflict
         local_data:
           type: object
           description: 本地数据
@@ -1492,10 +1505,13 @@ components:
           description: 服务器数据
         suggested_resolution:
           type: string
-          enum: [use_local, use_server, merge, manual]
+          enum:
+          - use_local
+          - use_server
+          - merge
+          - manual
           description: 建议解决方案
-          example: "use_server"
-
+          example: use_server
     SyncDownloadResponse:
       type: object
       properties:
@@ -1531,33 +1547,35 @@ components:
           type: string
           format: date-time
           description: 服务器时间戳
-          example: "2025-08-14T14:30:15Z"
+          example: '2025-08-14T14:30:15Z'
         next_sync_token:
           type: string
           description: 下次同步令牌
-          example: "sync_token_def456"
-
+          example: sync_token_def456
     SyncStatus:
       type: object
       properties:
         device_id:
           type: string
           description: 设备ID
-          example: "iPhone_12345"
+          example: iPhone_12345
         last_sync_time:
           type: string
           format: date-time
           description: 最后同步时间
-          example: "2025-08-14T14:30:00Z"
+          example: '2025-08-14T14:30:00Z'
         pending_operations:
           type: integer
           description: 待同步操作数
           example: 3
         sync_status:
           type: string
-          enum: [idle, syncing, error]
+          enum:
+          - idle
+          - syncing
+          - error
           description: 同步状态
-          example: "idle"
+          example: idle
         last_error:
           type: string
           description: 最后错误信息
@@ -1578,30 +1596,30 @@ components:
               type: number
               description: 平均同步时间（秒）
               example: 2.5
-
     PushRegistrationRequest:
       type: object
       properties:
         device_id:
           type: string
           description: 设备ID
-          example: "iPhone_12345"
+          example: iPhone_12345
         push_token:
           type: string
           description: 推送令牌
-          example: "new_push_token_xyz789"
+          example: new_push_token_xyz789
         platform:
           type: string
-          enum: [ios, android]
+          enum:
+          - ios
+          - android
           description: 平台类型
-          example: "ios"
+          example: ios
         notification_settings:
           $ref: '#/components/schemas/PushSettings'
       required:
-        - device_id
-        - push_token
-        - platform
-
+      - device_id
+      - push_token
+      - platform
     PushSettings:
       type: object
       properties:
@@ -1628,11 +1646,11 @@ components:
             start_time:
               type: string
               description: 开始时间
-              example: "22:00"
+              example: '22:00'
             end_time:
               type: string
               description: 结束时间
-              example: "08:00"
+              example: 08:00
         sound_enabled:
           type: boolean
           description: 是否启用声音
@@ -1641,7 +1659,6 @@ components:
           type: boolean
           description: 是否启用震动
           example: true
-
     LocationUpdateRequest:
       type: object
       properties:
@@ -1649,16 +1666,19 @@ components:
           $ref: '#/components/schemas/LocationInfo'
         activity_type:
           type: string
-          enum: [working, traveling, break, offline]
+          enum:
+          - working
+          - traveling
+          - break
+          - offline
           description: 活动类型
-          example: "working"
+          example: working
         notes:
           type: string
           description: 位置备注
-          example: "在客户现场处理工单"
+          example: 在客户现场处理工单
       required:
-        - location
-
+      - location
     NearbyTicket:
       type: object
       properties:
@@ -1669,11 +1689,11 @@ components:
         ticket_no:
           type: string
           description: 工单编号
-          example: "TCK-20250814-0001"
+          example: TCK-20250814-0001
         title:
           type: string
           description: 工单标题
-          example: "服务器CPU使用率过高"
+          example: 服务器CPU使用率过高
         priority:
           type: integer
           description: 优先级
@@ -1681,11 +1701,11 @@ components:
         status:
           type: string
           description: 工单状态
-          example: "NEW"
+          example: NEW
         customer_name:
           type: string
           description: 客户名称
-          example: "ABC科技有限公司"
+          example: ABC科技有限公司
         location:
           $ref: '#/components/schemas/LocationInfo'
         distance:
@@ -1700,23 +1720,22 @@ components:
           type: string
           format: date-time
           description: 截止时间
-          example: "2025-08-14T18:00:00Z"
-
+          example: '2025-08-14T18:00:00Z'
     FileUploadResponse:
       type: object
       properties:
         file_id:
           type: string
           description: 文件ID
-          example: "file_123456"
+          example: file_123456
         file_url:
           type: string
           description: 文件URL
-          example: "https://cdn.example.com/files/image.jpg"
+          example: https://cdn.example.com/files/image.jpg
         file_name:
           type: string
           description: 文件名
-          example: "compressed_image.jpg"
+          example: compressed_image.jpg
         file_size:
           type: integer
           description: 文件大小（字节）
@@ -1724,12 +1743,15 @@ components:
         mime_type:
           type: string
           description: MIME类型
-          example: "image/jpeg"
+          example: image/jpeg
         upload_status:
           type: string
-          enum: [completed, partial, failed]
+          enum:
+          - completed
+          - partial
+          - failed
           description: 上传状态
-          example: "completed"
+          example: completed
         compression_ratio:
           type: number
           description: 压缩比例

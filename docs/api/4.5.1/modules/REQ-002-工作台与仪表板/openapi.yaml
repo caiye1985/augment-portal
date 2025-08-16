@@ -3,65 +3,65 @@ info:
   title: IT运维门户系统 API
   version: 1.0.0
   description: REQ-002 工作台与仪表板模块 API 规范 - 提供个性化工作台、实时数据仪表板、任务中心等核心功能
-
 tags:
-  - name: Dashboard Configuration
-    description: 工作台配置管理相关接口
-  - name: Widget Management
-    description: 组件管理相关接口
-  - name: User Preferences
-    description: 用户偏好设置相关接口
-  - name: Real-time Data
-    description: 实时数据相关接口
-  - name: Task Center
-    description: 任务中心相关接口
-  - name: Notifications
-    description: 通知管理相关接口
-  - name: Statistics
-    description: 数据统计相关接口
-  - name: Data Export
-    description: 数据导出相关接口
-  - name: Access Logs
-    description: 访问日志相关接口
-
+- name: Dashboard Configuration
+  description: 工作台配置管理相关接口
+- name: Widget Management
+  description: 组件管理相关接口
+- name: User Preferences
+  description: 用户偏好设置相关接口
+- name: Real-time Data
+  description: 实时数据相关接口
+- name: Task Center
+  description: 任务中心相关接口
+- name: Notifications
+  description: 通知管理相关接口
+- name: Statistics
+  description: 数据统计相关接口
+- name: Data Export
+  description: 数据导出相关接口
+- name: Access Logs
+  description: 访问日志相关接口
 paths:
-  /api/v1/dashboard/configs:
+  /api/v1/dashboards/configs:
     get:
-      tags: [Dashboard Configuration]
+      tags:
+      - Dashboard Configuration
       summary: 获取用户工作台配置列表
       description: 分页查询当前用户的工作台配置列表，支持按名称搜索和状态筛选
       operationId: dashboard_config_list
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: page
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-          example: 1
-        - name: size
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-          example: 20
-        - name: keyword
-          in: query
-          schema:
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        example: 1
+      - name: size
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        example: 20
+      - name: keyword
+        in: query
+        schema:
+          type: string
+        description: 搜索关键词（配置名称）
+        example: 运维工作台
+      - name: status
+        in: query
+        schema:
+          type: array
+          items: &id001
             type: string
-          description: 搜索关键词（配置名称）
-          example: "运维工作台"
-        - name: status
-          in: query
-          schema:
-            type: integer
-            enum: [1, 2]
-          description: 状态筛选：1-启用，2-禁用
-          example: 1
+        description: 状态筛选：1-启用，2-禁用
+        example: 1
       responses:
         '200':
           description: 查询成功
@@ -69,28 +69,28 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: '#/components/schemas/PagedResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/DashboardConfigInfo'
+                            $ref: '#/components/schemas/DashboardConfigInfo'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
-
     post:
-      tags: [Dashboard Configuration]
+      tags:
+      - Dashboard Configuration
       summary: 创建工作台配置
       description: 为当前用户创建新的工作台配置
       operationId: dashboard_config_create
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -104,32 +104,32 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/DashboardConfigInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/DashboardConfigInfo'
         '400':
           $ref: '#/components/responses/BadRequest'
         '409':
           $ref: '#/components/responses/Conflict'
-
-  /api/v1/dashboard/configs/{id}:
+  /api/v1/dashboards/configs/{id}:
     get:
-      tags: [Dashboard Configuration]
+      tags:
+      - Dashboard Configuration
       summary: 获取工作台配置详情
       description: 根据配置ID获取工作台配置的详细信息，包括布局和组件配置
       operationId: dashboard_config_get
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       responses:
         '200':
           description: 查询成功
@@ -137,29 +137,29 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/DashboardConfigDetail'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/DashboardConfigDetail'
         '404':
           $ref: '#/components/responses/NotFound'
-
     put:
-      tags: [Dashboard Configuration]
+      tags:
+      - Dashboard Configuration
       summary: 更新工作台配置
       description: 更新指定的工作台配置信息，包括布局、组件等
       operationId: dashboard_config_update
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       requestBody:
         required: true
         content:
@@ -173,29 +173,29 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/DashboardConfigInfo'
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/DashboardConfigInfo'
         '404':
           $ref: '#/components/responses/NotFound'
-
     delete:
-      tags: [Dashboard Configuration]
+      tags:
+      - Dashboard Configuration
       summary: 删除工作台配置
       description: 软删除指定的工作台配置（设置deleted_at字段）
       operationId: dashboard_config_delete
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       responses:
         '200':
           description: 删除成功
@@ -205,35 +205,36 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
         '404':
           $ref: '#/components/responses/NotFound'
-
-  /api/v1/dashboard/configs/{id}/clone:
+  /api/v1/dashboards/configs/{id}/clone:
     post:
-      tags: [Dashboard Configuration]
+      tags:
+      - Dashboard Configuration
       summary: 克隆工作台配置
       description: 基于现有配置创建一个副本，用户可以在此基础上进行个性化修改
       operationId: dashboard_config_clone
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [config_name]
+              required:
+              - config_name
               properties:
                 config_name:
                   type: string
                   description: 新配置名称
-                  example: "我的运维工作台 - 副本"
+                  example: 我的运维工作台 - 副本
       responses:
         '200':
           description: 克隆成功
@@ -241,28 +242,28 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/DashboardConfigInfo'
-
-  /api/v1/dashboard/configs/{id}/share:
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/DashboardConfigInfo'
+  /api/v1/dashboards/configs/{id}/share:
     post:
-      tags: [Dashboard Configuration]
+      tags:
+      - Dashboard Configuration
       summary: 共享工作台配置
       description: 将工作台配置共享给其他用户，支持设置共享权限
       operationId: dashboard_config_share
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1001
       requestBody:
         required: true
         content:
@@ -276,30 +277,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-
-  /api/v1/dashboard/widgets:
+  /api/v1/dashboards/widgets:
     get:
-      tags: [Widget Management]
+      tags:
+      - Widget Management
       summary: 获取可用组件列表
       description: 查询系统中所有可用的仪表板组件，支持按分类筛选
       operationId: dashboard_widget_list
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: category
-          in: query
-          schema:
-            type: string
-            enum: [ticket, performance, system, custom]
-          description: 组件分类筛选
-          example: "ticket"
-        - name: widget_type
-          in: query
-          schema:
-            type: string
-            enum: [chart, table, metric, text]
-          description: 组件类型筛选
-          example: "chart"
+      - name: category
+        in: query
+        schema:
+          type: string
+          enum:
+          - ticket
+          - performance
+          - system
+          - custom
+        description: 组件分类筛选
+        example: ticket
+      - name: widget_type
+        in: query
+        schema:
+          type: string
+          enum:
+          - chart
+          - table
+          - metric
+          - text
+        description: 组件类型筛选
+        example: chart
       responses:
         '200':
           description: 查询成功
@@ -307,29 +316,29 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/WidgetInfo'
-
-  /api/v1/dashboard/widgets/{code}:
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/WidgetInfo'
+  /api/v1/dashboards/widgets/{code}:
     get:
-      tags: [Widget Management]
+      tags:
+      - Widget Management
       summary: 获取组件详情
       description: 根据组件编码获取组件的详细信息和配置选项
       operationId: dashboard_widget_get
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: code
-          in: path
-          required: true
-          schema:
-            type: string
-          example: "ticket_overview"
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: ticket_overview
       responses:
         '200':
           description: 查询成功
@@ -337,40 +346,39 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/WidgetDetail'
-
-  /api/v1/dashboard/widgets/{code}/data:
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/WidgetDetail'
+  /api/v1/dashboards/widgets/{code}/data:
     get:
-      tags: [Widget Management]
+      tags:
+      - Widget Management
       summary: 获取组件数据
       description: 获取指定组件的实时数据，支持参数化查询
       operationId: dashboard_widget_get_data
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: code
-          in: path
-          required: true
-          schema:
-            type: string
-          example: "ticket_overview"
-        - name: time_range
-          in: query
-          schema:
-            type: string
-            enum: ["1h", "6h", "24h", "7d", "30d"]
-          description: 时间范围
-          example: "24h"
-        - name: filters
-          in: query
-          schema:
-            type: string
-          description: 过滤条件（JSON格式）
-          example: '{"status": "processing", "priority": "high"}'
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: ticket_overview
+      - name: time_range
+        in: query
+        schema:
+          type: string
+        description: 时间范围
+        example: 24h
+      - name: filters
+        in: query
+        schema:
+          type: string
+        description: 过滤条件（JSON格式）
+        example: '{"status": "processing", "priority": "high"}'
       responses:
         '200':
           description: 查询成功
@@ -378,20 +386,20 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/WidgetDataResponse'
-
-  /api/v1/dashboard/preferences:
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/WidgetDataResponse'
+  /api/v1/dashboards/preferences:
     get:
-      tags: [User Preferences]
+      tags:
+      - User Preferences
       summary: 获取用户偏好设置
       description: 获取当前用户的个性化偏好设置
       operationId: dashboard_preferences_get
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       responses:
         '200':
           description: 查询成功
@@ -399,19 +407,19 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/UserPreferences'
-
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/UserPreferences'
     put:
-      tags: [User Preferences]
+      tags:
+      - User Preferences
       summary: 更新用户偏好设置
       description: 更新当前用户的个性化偏好设置
       operationId: dashboard_preferences_update
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -425,50 +433,51 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/UserPreferences'
-
-  /api/v1/dashboard/tasks:
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/UserPreferences'
+  /api/v1/dashboards/tasks:
     get:
-      tags: [Task Center]
+      tags:
+      - Task Center
       summary: 获取待办任务列表
       description: 获取当前用户的待办任务列表，支持按优先级和状态筛选
       operationId: dashboard_tasks_list
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: page
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-          example: 1
-        - name: size
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-          example: 20
-        - name: priority
-          in: query
-          schema:
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        example: 1
+      - name: size
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        example: 20
+      - name: priority
+        in: query
+        schema:
+          type: array
+          items:
             type: string
-            enum: [urgent, high, medium, low]
-          description: 优先级筛选
-          example: "high"
-        - name: status
-          in: query
-          schema:
-            type: string
-            enum: [pending, processing, completed]
-          description: 状态筛选
-          example: "pending"
+        description: 优先级筛选
+        example: high
+      - name: status
+        in: query
+        schema:
+          type: array
+          items: *id001
+        description: 状态筛选
+        example: pending
       responses:
         '200':
           description: 查询成功
@@ -476,54 +485,58 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: '#/components/schemas/PagedResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/TaskInfo'
-
-  /api/v1/dashboard/notifications:
+                            $ref: '#/components/schemas/TaskInfo'
+  /api/v1/dashboards/notifications:
     get:
-      tags: [Notifications]
+      tags:
+      - Notifications
       summary: 获取通知消息列表
       description: 获取当前用户的通知消息，支持按类型和状态筛选
       operationId: dashboard_notifications_list
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: page
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-          example: 1
-        - name: size
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-          example: 20
-        - name: type
-          in: query
-          schema:
-            type: string
-            enum: [system, ticket, alert, announcement]
-          description: 通知类型筛选
-          example: "ticket"
-        - name: is_read
-          in: query
-          schema:
-            type: boolean
-          description: 是否已读筛选
-          example: false
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        example: 1
+      - name: size
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        example: 20
+      - name: type
+        in: query
+        schema:
+          type: string
+          enum:
+          - system
+          - ticket
+          - alert
+          - announcement
+        description: 通知类型筛选
+        example: ticket
+      - name: is_read
+        in: query
+        schema:
+          type: boolean
+        description: 是否已读筛选
+        example: false
       responses:
         '200':
           description: 查询成功
@@ -531,33 +544,33 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: '#/components/schemas/PagedResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/NotificationInfo'
-
-  /api/v1/dashboard/notifications/{id}/read:
+                            $ref: '#/components/schemas/NotificationInfo'
+  /api/v1/dashboards/notifications/{id}/read:
     put:
-      tags: [Notifications]
+      tags:
+      - Notifications
       summary: 标记通知为已读
       description: 将指定通知标记为已读状态
       operationId: dashboard_notification_mark_read
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 5001
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 5001
       responses:
         '200':
           description: 标记成功
@@ -565,22 +578,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-
-  /api/v1/dashboard/notifications/batch-read:
+  /api/v1/dashboards/notifications/batch-read:
     post:
-      tags: [Notifications]
+      tags:
+      - Notifications
       summary: 批量标记通知为已读
       description: 批量将多个通知标记为已读状态
       operationId: dashboard_notifications_batch_read
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [notification_ids]
+              required:
+              - notification_ids
               properties:
                 notification_ids:
                   type: array
@@ -588,7 +602,10 @@ paths:
                   items:
                     type: integer
                     format: int64
-                  example: [5001, 5002, 5003]
+                  example:
+                  - 5001
+                  - 5002
+                  - 5003
       responses:
         '200':
           description: 批量标记成功
@@ -596,37 +613,36 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          success_count:
-                            type: integer
-                            description: 成功标记数量
-                            example: 3
-                          total_count:
-                            type: integer
-                            description: 总数量
-                            example: 3
-
-  /api/v1/dashboard/statistics/overview:
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        success_count:
+                          type: integer
+                          description: 成功标记数量
+                          example: 3
+                        total_count:
+                          type: integer
+                          description: 总数量
+                          example: 3
+  /api/v1/dashboards/statistics/overview:
     get:
-      tags: [Statistics]
+      tags:
+      - Statistics
       summary: 获取概览统计数据
       description: 获取工作台概览统计数据，包括工单、任务、绩效等关键指标
       operationId: dashboard_statistics_overview
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - name: time_range
-          in: query
-          schema:
-            type: string
-            enum: ["today", "week", "month", "quarter", "year"]
-          description: 统计时间范围
-          example: "month"
+      - name: time_range
+        in: query
+        schema:
+          type: string
+        description: 统计时间范围
+        example: month
       responses:
         '200':
           description: 查询成功
@@ -634,21 +650,18 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/OverviewStatistics'
-
+                - $ref: '#/components/schemas/ApiResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/OverviewStatistics'
 components:
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-
   schemas:
-    # 工作台配置相关Schema
     DashboardConfigInfo:
       type: object
       properties:
@@ -670,11 +683,11 @@ components:
         config_code:
           type: string
           description: 配置编码
-          example: "DSH-20250815-001"
+          example: DSH-20250815-001
         config_name:
           type: string
           description: 配置名称
-          example: "我的运维工作台"
+          example: 我的运维工作台
         is_default:
           type: boolean
           description: 是否默认配置
@@ -689,101 +702,107 @@ components:
           example: 1
         status:
           type: integer
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           description: 状态：1-启用，2-禁用
           example: 1
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-15T10:00:00Z"
+          example: '2025-08-15T10:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-15T14:30:00Z"
-
+          example: '2025-08-15T14:30:00Z'
     DashboardConfigDetail:
       allOf:
-        - $ref: '#/components/schemas/DashboardConfigInfo'
-        - type: object
-          properties:
-            layout_config:
+      - $ref: '#/components/schemas/DashboardConfigInfo'
+      - type: object
+        properties:
+          layout_config:
+            type: object
+            description: 布局配置（JSON格式）
+            properties:
+              grid_size:
+                type: integer
+                description: 网格大小
+                example: 12
+              row_height:
+                type: integer
+                description: 行高度（像素）
+                example: 60
+              widgets:
+                type: array
+                description: 组件布局配置
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: 组件实例ID
+                      example: widget_1
+                    x:
+                      type: integer
+                      description: X坐标
+                      example: 0
+                    y:
+                      type: integer
+                      description: Y坐标
+                      example: 0
+                    w:
+                      type: integer
+                      description: 宽度
+                      example: 6
+                    h:
+                      type: integer
+                      description: 高度
+                      example: 4
+                    widget_code:
+                      type: string
+                      description: 组件编码
+                      example: ticket_overview
+                    config:
+                      type: object
+                      description: 组件个性化配置
+                      example:
+                        title: 工单概览
+                        refresh_interval: 30
+          shared_users:
+            type: array
+            description: 共享用户列表
+            items:
               type: object
-              description: 布局配置（JSON格式）
               properties:
-                grid_size:
+                user_id:
                   type: integer
-                  description: 网格大小
-                  example: 12
-                row_height:
-                  type: integer
-                  description: 行高度（像素）
-                  example: 60
-                widgets:
-                  type: array
-                  description: 组件布局配置
-                  items:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                        description: 组件实例ID
-                        example: "widget_1"
-                      x:
-                        type: integer
-                        description: X坐标
-                        example: 0
-                      y:
-                        type: integer
-                        description: Y坐标
-                        example: 0
-                      w:
-                        type: integer
-                        description: 宽度
-                        example: 6
-                      h:
-                        type: integer
-                        description: 高度
-                        example: 4
-                      widget_code:
-                        type: string
-                        description: 组件编码
-                        example: "ticket_overview"
-                      config:
-                        type: object
-                        description: 组件个性化配置
-                        example: {"title": "工单概览", "refresh_interval": 30}
-            shared_users:
-              type: array
-              description: 共享用户列表
-              items:
-                type: object
-                properties:
-                  user_id:
-                    type: integer
-                    format: int64
-                    example: 2002
-                  username:
-                    type: string
-                    example: "john_doe"
-                  real_name:
-                    type: string
-                    example: "约翰·多伊"
-                  permission:
-                    type: string
-                    enum: ["read", "write"]
-                    description: 共享权限
-                    example: "read"
-
+                  format: int64
+                  example: 2002
+                username:
+                  type: string
+                  example: john_doe
+                real_name:
+                  type: string
+                  example: 约翰·多伊
+                permission:
+                  type: string
+                  enum:
+                  - read
+                  - write
+                  description: 共享权限
+                  example: read
     CreateDashboardConfigRequest:
       type: object
-      required: [config_name, layout_config]
+      required:
+      - config_name
+      - layout_config
       properties:
         config_name:
           type: string
           description: 配置名称
-          example: "我的运维工作台"
+          example: 我的运维工作台
         layout_config:
           type: object
           description: 布局配置
@@ -804,7 +823,7 @@ components:
                 properties:
                   id:
                     type: string
-                    example: "widget_1"
+                    example: widget_1
                   x:
                     type: integer
                     example: 0
@@ -819,10 +838,11 @@ components:
                     example: 4
                   widget_code:
                     type: string
-                    example: "ticket_overview"
+                    example: ticket_overview
                   config:
                     type: object
-                    example: {"title": "工单概览"}
+                    example:
+                      title: 工单概览
         is_default:
           type: boolean
           description: 是否设为默认配置
@@ -830,15 +850,14 @@ components:
         description:
           type: string
           description: 配置描述
-          example: "专为运维工程师设计的工作台"
-
+          example: 专为运维工程师设计的工作台
     UpdateDashboardConfigRequest:
       type: object
       properties:
         config_name:
           type: string
           description: 配置名称
-          example: "我的运维工作台（更新版）"
+          example: 我的运维工作台（更新版）
         layout_config:
           type: object
           description: 布局配置
@@ -848,24 +867,28 @@ components:
           example: true
         status:
           type: integer
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           description: 状态
           example: 1
         description:
           type: string
           description: 配置描述
-          example: "更新后的工作台配置"
-
+          example: 更新后的工作台配置
     ShareConfigRequest:
       type: object
-      required: [shared_users]
+      required:
+      - shared_users
       properties:
         shared_users:
           type: array
           description: 共享用户列表
           items:
             type: object
-            required: [user_id, permission]
+            required:
+            - user_id
+            - permission
             properties:
               user_id:
                 type: integer
@@ -874,51 +897,59 @@ components:
                 example: 2002
               permission:
                 type: string
-                enum: ["read", "write"]
+                enum:
+                - read
+                - write
                 description: 共享权限
-                example: "read"
+                example: read
         expire_time:
           type: string
           format: date-time
           description: 共享过期时间
-          example: "2025-12-31T23:59:59Z"
-
-    # 组件相关Schema
+          example: '2025-12-31T23:59:59Z'
     WidgetInfo:
       type: object
       properties:
         widget_code:
           type: string
           description: 组件编码
-          example: "ticket_overview"
+          example: ticket_overview
         widget_name:
           type: string
           description: 组件名称
-          example: "工单概览"
+          example: 工单概览
         widget_type:
           type: string
-          enum: [chart, table, metric, text]
+          enum:
+          - chart
+          - table
+          - metric
+          - text
           description: 组件类型
-          example: "chart"
+          example: chart
         category:
           type: string
-          enum: [ticket, performance, system, custom]
+          enum:
+          - ticket
+          - performance
+          - system
+          - custom
           description: 组件分类
-          example: "ticket"
+          example: ticket
         description:
           type: string
           description: 组件描述
-          example: "显示工单统计信息和趋势图表"
+          example: 显示工单统计信息和趋势图表
         icon_url:
           type: string
           format: uri
           description: 组件图标URL
-          example: "https://cdn.example.com/icons/ticket-overview.svg"
+          example: https://cdn.example.com/icons/ticket-overview.svg
         preview_url:
           type: string
           format: uri
           description: 组件预览图URL
-          example: "https://cdn.example.com/previews/ticket-overview.png"
+          example: https://cdn.example.com/previews/ticket-overview.png
         default_size:
           type: object
           description: 默认尺寸
@@ -935,62 +966,73 @@ components:
           example: 30
         status:
           type: integer
-          enum: [1, 2]
+          enum:
+          - 1
+          - 2
           description: 状态：1-启用，2-禁用
           example: 1
-
     WidgetDetail:
       allOf:
-        - $ref: '#/components/schemas/WidgetInfo'
-        - type: object
-          properties:
-            config_schema:
+      - $ref: '#/components/schemas/WidgetInfo'
+      - type: object
+        properties:
+          config_schema:
+            type: object
+            description: 配置项Schema（JSON Schema格式）
+            example:
               type: object
-              description: 配置项Schema（JSON Schema格式）
-              example:
-                type: "object"
-                properties:
-                  title:
-                    type: "string"
-                    description: "组件标题"
-                  show_legend:
-                    type: "boolean"
-                    description: "是否显示图例"
-                  chart_type:
-                    type: "string"
-                    enum: ["line", "bar", "pie"]
-                    description: "图表类型"
-            data_source_config:
-              type: object
-              description: 数据源配置
               properties:
-                source_type:
+                title:
                   type: string
-                  enum: ["api", "database", "static"]
-                  example: "api"
-                api_endpoint:
+                  description: 组件标题
+                show_legend:
+                  type: boolean
+                  description: 是否显示图例
+                chart_type:
                   type: string
-                  example: "/api/v1/tickets/statistics"
-                query_params:
-                  type: object
-                  example: {"time_range": "24h"}
-                cache_duration:
-                  type: integer
-                  description: 缓存时长（秒）
-                  example: 300
-
+                  enum:
+                  - line
+                  - bar
+                  - pie
+                  description: 图表类型
+          data_source_config:
+            type: object
+            description: 数据源配置
+            properties:
+              source_type:
+                type: string
+                enum:
+                - api
+                - database
+                - static
+                example: api
+              api_endpoint:
+                type: string
+                example: /api/v1/tickets/statistics
+              query_params:
+                type: object
+                example:
+                  time_range: 24h
+              cache_duration:
+                type: integer
+                description: 缓存时长（秒）
+                example: 300
     WidgetDataResponse:
       type: object
       properties:
         widget_code:
           type: string
           description: 组件编码
-          example: "ticket_overview"
+          example: ticket_overview
         data_type:
           type: string
-          enum: [chart, table, metric, text]
+          enum:
+          - chart
+          - table
+          - metric
+          - text
           description: 数据类型
-          example: "chart"
+          example: chart
         data:
           type: object
           description: 组件数据（格式根据组件类型而定）
@@ -1000,22 +1042,20 @@ components:
             processing_tickets: 45
             completed_tickets: 88
             chart_data:
-              - date: "2025-08-15"
-                count: 12
-              - date: "2025-08-14"
-                count: 18
+            - date: '2025-08-15'
+              count: 12
+            - date: '2025-08-14'
+              count: 18
         last_updated:
           type: string
           format: date-time
           description: 数据最后更新时间
-          example: "2025-08-15T14:30:00Z"
+          example: '2025-08-15T14:30:00Z'
         cache_expires:
           type: string
           format: date-time
           description: 缓存过期时间
-          example: "2025-08-15T14:35:00Z"
-
-    # 用户偏好相关Schema
+          example: '2025-08-15T14:35:00Z'
     UserPreferences:
       type: object
       properties:
@@ -1031,18 +1071,23 @@ components:
           example: 1
         theme:
           type: string
-          enum: [light, dark, auto]
+          enum:
+          - light
+          - dark
+          - auto
           description: 主题设置
-          example: "light"
+          example: light
         language:
           type: string
-          enum: ["zh-CN", "en-US"]
+          enum:
+          - zh-CN
+          - en-US
           description: 语言设置
-          example: "zh-CN"
+          example: zh-CN
         timezone:
           type: string
           description: 时区设置
-          example: "Asia/Shanghai"
+          example: Asia/Shanghai
         notification_settings:
           type: object
           description: 通知设置
@@ -1092,30 +1137,34 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-15T10:00:00Z"
+          example: '2025-08-15T10:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2025-08-15T14:30:00Z"
-
+          example: '2025-08-15T14:30:00Z'
     UpdateUserPreferencesRequest:
       type: object
       properties:
         theme:
           type: string
-          enum: [light, dark, auto]
+          enum:
+          - light
+          - dark
+          - auto
           description: 主题设置
-          example: "dark"
+          example: dark
         language:
           type: string
-          enum: ["zh-CN", "en-US"]
+          enum:
+          - zh-CN
+          - en-US
           description: 语言设置
-          example: "zh-CN"
+          example: zh-CN
         timezone:
           type: string
           description: 时区设置
-          example: "Asia/Shanghai"
+          example: Asia/Shanghai
         notification_settings:
           type: object
           description: 通知设置
@@ -1154,8 +1203,6 @@ components:
           format: int64
           description: 默认工作台ID
           example: 1002
-
-    # 任务中心相关Schema
     TaskInfo:
       type: object
       properties:
@@ -1166,47 +1213,57 @@ components:
           example: 3001
         task_type:
           type: string
-          enum: [ticket, maintenance, inspection, other]
+          enum:
+          - ticket
+          - maintenance
+          - inspection
+          - other
           description: 任务类型
-          example: "ticket"
+          example: ticket
         title:
           type: string
           description: 任务标题
-          example: "处理服务器CPU使用率过高问题"
+          example: 处理服务器CPU使用率过高问题
         description:
           type: string
           description: 任务描述
-          example: "生产服务器CPU使用率持续超过90%，需要紧急处理"
+          example: 生产服务器CPU使用率持续超过90%，需要紧急处理
         priority:
           type: string
-          enum: [urgent, high, medium, low]
+          enum:
+          - urgent
+          - high
+          - medium
+          - low
           description: 优先级
-          example: "high"
+          example: high
         status:
           type: string
-          enum: [pending, processing, completed, cancelled]
+          enum:
+          - pending
+          - processing
+          - completed
+          - cancelled
           description: 任务状态
-          example: "pending"
+          example: pending
         assigned_to:
           type: string
           description: 分配给
-          example: "张三"
+          example: 张三
         due_date:
           type: string
           format: date-time
           description: 截止时间
-          example: "2025-08-15T18:00:00Z"
+          example: '2025-08-15T18:00:00Z'
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-15T10:00:00Z"
+          example: '2025-08-15T10:00:00Z'
         source_id:
           type: string
           description: 来源ID（如工单ID）
-          example: "TCK-20250815-001"
-
-    # 通知相关Schema
+          example: TCK-20250815-001
     NotificationInfo:
       type: object
       properties:
@@ -1227,51 +1284,57 @@ components:
           example: 2001
         type:
           type: string
-          enum: [system, ticket, alert, announcement]
+          enum:
+          - system
+          - ticket
+          - alert
+          - announcement
           description: 通知类型
-          example: "ticket"
+          example: ticket
         title:
           type: string
           description: 通知标题
-          example: "新工单分配"
+          example: 新工单分配
         content:
           type: string
           description: 通知内容
-          example: "您有一个新的高优先级工单需要处理"
+          example: 您有一个新的高优先级工单需要处理
         action_url:
           type: string
           format: uri
           description: 操作链接
-          example: "/tickets/TCK-20250815-001"
+          example: /tickets/TCK-20250815-001
         is_read:
           type: boolean
           description: 是否已读
           example: false
         priority:
           type: string
-          enum: [urgent, high, medium, low]
+          enum:
+          - urgent
+          - high
+          - medium
+          - low
           description: 通知优先级
-          example: "high"
+          example: high
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2025-08-15T14:30:00Z"
+          example: '2025-08-15T14:30:00Z'
         read_at:
           type: string
           format: date-time
           nullable: true
           description: 阅读时间
           example: null
-
-    # 统计数据相关Schema
     OverviewStatistics:
       type: object
       properties:
         time_range:
           type: string
           description: 统计时间范围
-          example: "month"
+          example: month
         ticket_stats:
           type: object
           description: 工单统计
@@ -1343,7 +1406,7 @@ components:
                 type: string
                 format: date
                 description: 日期
-                example: "2025-08-15"
+                example: '2025-08-15'
               ticket_count:
                 type: integer
                 description: 工单数量
@@ -1357,9 +1420,7 @@ components:
           type: string
           format: date-time
           description: 数据最后更新时间
-          example: "2025-08-15T14:30:00Z"
-
-    # 通用响应Schema
+          example: '2025-08-15T14:30:00Z'
     ApiResponse:
       type: object
       properties:
@@ -1370,7 +1431,7 @@ components:
         message:
           type: string
           description: 响应消息
-          example: "操作成功"
+          example: 操作成功
         data:
           type: object
           description: 响应数据
@@ -1378,34 +1439,32 @@ components:
           type: string
           format: date-time
           description: 响应时间
-          example: "2025-08-15T15:30:00Z"
-
+          example: '2025-08-15T15:30:00Z'
     PagedResponse:
       allOf:
-        - $ref: '#/components/schemas/ApiResponse'
-        - type: object
-          properties:
-            data:
-              type: object
-              properties:
-                total:
-                  type: integer
-                  description: 总记录数
-                  example: 100
-                page:
-                  type: integer
-                  description: 当前页码
-                  example: 1
-                size:
-                  type: integer
-                  description: 每页大小
-                  example: 20
+      - $ref: '#/components/schemas/ApiResponse'
+      - type: object
+        properties:
+          data:
+            type: object
+            properties:
+              total:
+                type: integer
+                description: 总记录数
+                example: 100
+              page:
+                type: integer
+                description: 当前页码
+                example: 1
+              size:
+                type: integer
+                description: 每页大小
+                example: 20
+              items:
+                type: array
+                description: 数据列表
                 items:
-                  type: array
-                  description: 数据列表
-                  items:
-                    type: object
-
+                  type: object
     ErrorResponse:
       type: object
       properties:
@@ -1416,17 +1475,16 @@ components:
         message:
           type: string
           description: 错误消息
-          example: "请求参数错误"
+          example: 请求参数错误
         error:
           type: string
           description: 错误详情
-          example: "配置名称不能为空"
+          example: 配置名称不能为空
         timestamp:
           type: string
           format: date-time
           description: 错误时间
-          example: "2025-08-15T15:30:00Z"
-
+          example: '2025-08-15T15:30:00Z'
   responses:
     BadRequest:
       description: 请求参数错误

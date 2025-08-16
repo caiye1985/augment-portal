@@ -3,114 +3,119 @@ info:
   title: IT运维门户系统 API
   version: 1.0.0
   description: 知识库管理系统模块API - 提供知识文档管理、版本控制、协作编辑、搜索推荐等功能
-
 tags:
-  - name: knowledge-articles
-    description: 知识文档管理
-  - name: knowledge-categories
-    description: 分类管理
-  - name: knowledge-versions
-    description: 版本管理
-  - name: knowledge-search
-    description: 搜索推荐
-  - name: knowledge-collaboration
-    description: 协作编辑
-  - name: knowledge-reviews
-    description: 审核流程
-  - name: knowledge-attachments
-    description: 附件管理
-  - name: knowledge-statistics
-    description: 统计分析
-
+- name: knowledge-articles
+  description: 知识文档管理
+- name: knowledge-categories
+  description: 分类管理
+- name: knowledge-versions
+  description: 版本管理
+- name: knowledge-search
+  description: 搜索推荐
+- name: knowledge-collaboration
+  description: 协作编辑
+- name: knowledge-reviews
+  description: 审核流程
+- name: knowledge-attachments
+  description: 附件管理
+- name: knowledge-statistics
+  description: 统计分析
 paths:
   /api/v1/knowledge/articles:
     get:
       tags:
-        - knowledge-articles
+      - knowledge-articles
       summary: 查询知识文档列表
       description: 分页查询知识文档列表，支持多种过滤条件
       operationId: knowledge_list_articles
       parameters:
-        - name: category_id
-          in: query
-          description: 分类ID
-          schema:
-            type: integer
-            format: int64
-            example: 101
-        - name: tags
-          in: query
-          description: 标签过滤（多个标签用逗号分隔）
-          schema:
+      - name: category_id
+        in: query
+        description: 分类ID
+        schema:
+          type: integer
+          format: int64
+          example: 101
+      - name: tags
+        in: query
+        description: 标签过滤（多个标签用逗号分隔）
+        schema:
+          type: string
+          example: Linux,性能优化
+      - name: status
+        in: query
+        description: 文档状态
+        schema:
+          type: array
+          items:
             type: string
-            example: "Linux,性能优化"
-        - name: status
-          in: query
-          description: 文档状态
-          schema:
-            type: integer
-            enum: [1, 2, 3, 4, 5]
-            example: 3
-        - name: author_id
-          in: query
-          description: 作者ID
-          schema:
-            type: integer
-            format: int64
-            example: 1001
-        - name: keyword
-          in: query
-          description: 关键词搜索
-          schema:
-            type: string
-            example: "服务器优化"
-        - name: date_from
-          in: query
-          description: 创建时间起始日期
-          schema:
-            type: string
-            format: date
-            example: "2024-01-01"
-        - name: date_to
-          in: query
-          description: 创建时间结束日期
-          schema:
-            type: string
-            format: date
-            example: "2024-12-31"
-        - name: sort
-          in: query
-          description: 排序方式
-          schema:
-            type: string
-            enum: ["created_at", "updated_at", "view_count", "rating", "title"]
-            default: "updated_at"
-            example: "updated_at"
-        - name: order
-          in: query
-          description: 排序方向
-          schema:
-            type: string
-            enum: ["asc", "desc"]
-            default: "desc"
-            example: "desc"
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页数量
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 10
-            example: 10
+      - name: author_id
+        in: query
+        description: 作者ID
+        schema:
+          type: integer
+          format: int64
+          example: 1001
+      - name: keyword
+        in: query
+        description: 关键词搜索
+        schema:
+          type: string
+          example: 服务器优化
+      - name: date_from
+        in: query
+        description: 创建时间起始日期
+        schema:
+          type: string
+          format: date
+          example: '2024-01-01'
+      - name: date_to
+        in: query
+        description: 创建时间结束日期
+        schema:
+          type: string
+          format: date
+          example: '2024-12-31'
+      - name: sort
+        in: query
+        description: 排序方式
+        schema:
+          type: string
+          enum:
+          - created_at
+          - updated_at
+          - view_count
+          - rating
+          - title
+          default: updated_at
+          example: updated_at
+      - name: order
+        in: query
+        description: 排序方向
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+          example: desc
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页数量
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          example: 10
       responses:
         '200':
           description: 查询成功
@@ -118,28 +123,27 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/KnowledgeArticleListItem'
+                            $ref: '#/components/schemas/KnowledgeArticleListItem'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     post:
       tags:
-        - knowledge-articles
+      - knowledge-articles
       summary: 创建知识文档
       description: 创建新的知识文档
       operationId: knowledge_create_article
@@ -156,52 +160,51 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/KnowledgeArticle'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/KnowledgeArticle'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '422':
-          $ref: '../../global-api-index.yaml#/components/responses/UnprocessableEntity'
+          $ref: ../../global-api-index.yaml#/components/responses/UnprocessableEntity
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/knowledge/articles/{id}:
     get:
       tags:
-        - knowledge-articles
+      - knowledge-articles
       summary: 获取知识文档详情
       description: 根据ID获取知识文档的详细信息
       operationId: knowledge_get_article
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 文档ID
-          schema:
-            type: integer
-            format: int64
-            example: 12345
-        - name: include_content
-          in: query
-          description: 是否包含文档内容
-          schema:
-            type: boolean
-            default: true
-            example: true
-        - name: track_view
-          in: query
-          description: 是否记录浏览次数
-          schema:
-            type: boolean
-            default: true
-            example: true
+      - name: id
+        in: path
+        required: true
+        description: 文档ID
+        schema:
+          type: integer
+          format: int64
+          example: 12345
+      - name: include_content
+        in: query
+        description: 是否包含文档内容
+        schema:
+          type: boolean
+          default: true
+          example: true
+      - name: track_view
+        in: query
+        description: 是否记录浏览次数
+        schema:
+          type: boolean
+          default: true
+          example: true
       responses:
         '200':
           description: 获取成功
@@ -209,37 +212,36 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/KnowledgeArticle'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/KnowledgeArticle'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     put:
       tags:
-        - knowledge-articles
+      - knowledge-articles
       summary: 更新知识文档
       description: 全量更新知识文档信息
       operationId: knowledge_update_article
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 文档ID
-          schema:
-            type: integer
-            format: int64
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 文档ID
+        schema:
+          type: integer
+          format: int64
+          example: 12345
       requestBody:
         required: true
         content:
@@ -253,41 +255,40 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/KnowledgeArticle'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/KnowledgeArticle'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '422':
-          $ref: '../../global-api-index.yaml#/components/responses/UnprocessableEntity'
+          $ref: ../../global-api-index.yaml#/components/responses/UnprocessableEntity
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     patch:
       tags:
-        - knowledge-articles
+      - knowledge-articles
       summary: 部分更新知识文档
       description: 部分更新知识文档的特定字段
       operationId: knowledge_patch_article
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 文档ID
-          schema:
-            type: integer
-            format: int64
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 文档ID
+        schema:
+          type: integer
+          format: int64
+          example: 12345
       requestBody:
         required: true
         content:
@@ -301,149 +302,152 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/KnowledgeArticle'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/KnowledgeArticle'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '422':
-          $ref: '../../global-api-index.yaml#/components/responses/UnprocessableEntity'
+          $ref: ../../global-api-index.yaml#/components/responses/UnprocessableEntity
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     delete:
       tags:
-        - knowledge-articles
+      - knowledge-articles
       summary: 删除知识文档
       description: 删除指定的知识文档（软删除）
       operationId: knowledge_delete_article
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 文档ID
-          schema:
-            type: integer
-            format: int64
-            example: 12345
-        - name: force
-          in: query
-          description: 是否强制删除（物理删除）
-          schema:
-            type: boolean
-            default: false
-            example: false
+      - name: id
+        in: path
+        required: true
+        description: 文档ID
+        schema:
+          type: integer
+          format: int64
+          example: 12345
+      - name: force
+        in: query
+        description: 是否强制删除（物理删除）
+        schema:
+          type: boolean
+          default: false
+          example: false
       responses:
         '200':
           description: 删除成功
           content:
             application/json:
               schema:
-                $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
+                $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '409':
-          $ref: '../../global-api-index.yaml#/components/responses/Conflict'
+          $ref: ../../global-api-index.yaml#/components/responses/Conflict
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/knowledge/search:
     get:
       tags:
-        - knowledge-search
+      - knowledge-search
       summary: 全文搜索知识文档
       description: 基于Elasticsearch的高性能全文搜索
       operationId: knowledge_search_articles
       parameters:
-        - name: q
-          in: query
-          required: true
-          description: 搜索关键词
-          schema:
-            type: string
-            example: "Linux性能优化"
-        - name: category_id
-          in: query
-          description: 分类ID过滤
-          schema:
-            type: integer
-            format: int64
-            example: 101
-        - name: tags
-          in: query
-          description: 标签过滤（多个标签用逗号分隔）
-          schema:
-            type: string
-            example: "Linux,性能优化"
-        - name: author_id
-          in: query
-          description: 作者ID过滤
-          schema:
-            type: integer
-            format: int64
-            example: 1001
-        - name: date_from
-          in: query
-          description: 创建时间起始日期
-          schema:
-            type: string
-            format: date
-            example: "2024-01-01"
-        - name: date_to
-          in: query
-          description: 创建时间结束日期
-          schema:
-            type: string
-            format: date
-            example: "2024-12-31"
-        - name: sort
-          in: query
-          description: 排序方式
-          schema:
-            type: string
-            enum: ["relevance", "created_at", "updated_at", "view_count", "rating"]
-            default: "relevance"
-            example: "relevance"
-        - name: highlight
-          in: query
-          description: 是否高亮显示搜索关键词
-          schema:
-            type: boolean
-            default: true
-            example: true
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页数量
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 50
-            default: 10
-            example: 10
+      - name: q
+        in: query
+        required: true
+        description: 搜索关键词
+        schema:
+          type: string
+          example: Linux性能优化
+      - name: category_id
+        in: query
+        description: 分类ID过滤
+        schema:
+          type: integer
+          format: int64
+          example: 101
+      - name: tags
+        in: query
+        description: 标签过滤（多个标签用逗号分隔）
+        schema:
+          type: string
+          example: Linux,性能优化
+      - name: author_id
+        in: query
+        description: 作者ID过滤
+        schema:
+          type: integer
+          format: int64
+          example: 1001
+      - name: date_from
+        in: query
+        description: 创建时间起始日期
+        schema:
+          type: string
+          format: date
+          example: '2024-01-01'
+      - name: date_to
+        in: query
+        description: 创建时间结束日期
+        schema:
+          type: string
+          format: date
+          example: '2024-12-31'
+      - name: sort
+        in: query
+        description: 排序方式
+        schema:
+          type: string
+          enum:
+          - relevance
+          - created_at
+          - updated_at
+          - view_count
+          - rating
+          default: relevance
+          example: relevance
+      - name: highlight
+        in: query
+        description: 是否高亮显示搜索关键词
+        schema:
+          type: boolean
+          default: true
+          example: true
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页数量
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 10
+          example: 10
       responses:
         '200':
           description: 搜索成功
@@ -451,58 +455,60 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/KnowledgeSearchResult'
-                          took:
-                            type: integer
-                            description: 搜索耗时（毫秒）
-                            example: 45
-                          aggregations:
-                            $ref: '#/components/schemas/SearchAggregations'
-                          suggestions:
-                            type: array
-                            items:
-                              type: string
-                            example: ["Linux系统优化", "服务器监控", "性能调优工具"]
+                            $ref: '#/components/schemas/KnowledgeSearchResult'
+                        took:
+                          type: integer
+                          description: 搜索耗时（毫秒）
+                          example: 45
+                        aggregations:
+                          $ref: '#/components/schemas/SearchAggregations'
+                        suggestions:
+                          type: array
+                          items:
+                            type: string
+                          example:
+                          - Linux系统优化
+                          - 服务器监控
+                          - 性能调优工具
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/knowledge/search/suggest:
     get:
       tags:
-        - knowledge-search
+      - knowledge-search
       summary: 搜索建议
       description: 获取搜索关键词建议和自动补全
       operationId: knowledge_search_suggest
       parameters:
-        - name: q
-          in: query
-          required: true
-          description: 搜索关键词前缀
-          schema:
-            type: string
-            example: "Linux"
-        - name: size
-          in: query
-          description: 建议数量
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 20
-            default: 10
-            example: 10
+      - name: q
+        in: query
+        required: true
+        description: 搜索关键词前缀
+        schema:
+          type: string
+          example: Linux
+      - name: size
+        in: query
+        description: 建议数量
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 20
+          default: 10
+          example: 10
       responses:
         '200':
           description: 获取建议成功
@@ -510,60 +516,58 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
-                          suggestions:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/SearchSuggestion'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        suggestions:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/SearchSuggestion'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/knowledge/categories:
     get:
       tags:
-        - knowledge-categories
+      - knowledge-categories
       summary: 获取分类列表
       description: 获取知识分类列表，支持树形结构
       operationId: knowledge_list_categories
       parameters:
-        - name: parent_id
-          in: query
-          description: 父分类ID（获取子分类）
-          schema:
-            type: integer
-            format: int64
-            example: 100
-        - name: level
-          in: query
-          description: 分类层级
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 5
-            example: 1
-        - name: include_stats
-          in: query
-          description: 是否包含统计信息
-          schema:
-            type: boolean
-            default: false
-            example: true
-        - name: tree_format
-          in: query
-          description: 是否返回树形结构
-          schema:
-            type: boolean
-            default: false
-            example: true
+      - name: parent_id
+        in: query
+        description: 父分类ID（获取子分类）
+        schema:
+          type: integer
+          format: int64
+          example: 100
+      - name: level
+        in: query
+        description: 分类层级
+        schema:
+          type: array
+          items:
+            type: string
+      - name: include_stats
+        in: query
+        description: 是否包含统计信息
+        schema:
+          type: boolean
+          default: false
+          example: true
+      - name: tree_format
+        in: query
+        description: 是否返回树形结构
+        schema:
+          type: boolean
+          default: false
+          example: true
       responses:
         '200':
           description: 获取成功
@@ -571,23 +575,22 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/KnowledgeCategory'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/KnowledgeCategory'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     post:
       tags:
-        - knowledge-categories
+      - knowledge-categories
       summary: 创建分类
       description: 创建新的知识分类
       operationId: knowledge_create_category
@@ -604,55 +607,54 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/KnowledgeCategory'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/KnowledgeCategory'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '422':
-          $ref: '../../global-api-index.yaml#/components/responses/UnprocessableEntity'
+          $ref: ../../global-api-index.yaml#/components/responses/UnprocessableEntity
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
   /api/v1/knowledge/articles/{id}/versions:
     get:
       tags:
-        - knowledge-versions
+      - knowledge-versions
       summary: 获取文档版本列表
       description: 获取指定文档的所有版本信息
       operationId: knowledge_list_versions
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 文档ID
-          schema:
-            type: integer
-            format: int64
-            example: 12345
-        - name: page
-          in: query
-          description: 页码
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-            example: 1
-        - name: size
-          in: query
-          description: 每页数量
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 50
-            default: 20
-            example: 20
+      - name: id
+        in: path
+        required: true
+        description: 文档ID
+        schema:
+          type: integer
+          format: int64
+          example: 12345
+      - name: page
+        in: query
+        description: 页码
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 1
+      - name: size
+        in: query
+        description: 每页数量
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 20
+          example: 20
       responses:
         '200':
           description: 获取成功
@@ -660,42 +662,41 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/PagedResponse'
-                  - type: object
-                    properties:
-                      data:
-                        type: object
-                        properties:
+                - $ref: ../../global-api-index.yaml#/components/schemas/PagedResponse
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        items:
+                          type: array
                           items:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/KnowledgeVersion'
+                            $ref: '#/components/schemas/KnowledgeVersion'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
     post:
       tags:
-        - knowledge-versions
+      - knowledge-versions
       summary: 创建文档版本
       description: 为指定文档创建新版本
       operationId: knowledge_create_version
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: 文档ID
-          schema:
-            type: integer
-            format: int64
-            example: 12345
+      - name: id
+        in: path
+        required: true
+        description: 文档ID
+        schema:
+          type: integer
+          format: int64
+          example: 12345
       requestBody:
         required: true
         content:
@@ -709,24 +710,23 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '../../global-api-index.yaml#/components/schemas/ApiResponse'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/KnowledgeVersion'
+                - $ref: ../../global-api-index.yaml#/components/schemas/ApiResponse
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/KnowledgeVersion'
         '400':
-          $ref: '../../global-api-index.yaml#/components/responses/BadRequest'
+          $ref: ../../global-api-index.yaml#/components/responses/BadRequest
         '401':
-          $ref: '../../global-api-index.yaml#/components/responses/Unauthorized'
+          $ref: ../../global-api-index.yaml#/components/responses/Unauthorized
         '403':
-          $ref: '../../global-api-index.yaml#/components/responses/Forbidden'
+          $ref: ../../global-api-index.yaml#/components/responses/Forbidden
         '404':
-          $ref: '../../global-api-index.yaml#/components/responses/NotFound'
+          $ref: ../../global-api-index.yaml#/components/responses/NotFound
         '422':
-          $ref: '../../global-api-index.yaml#/components/responses/UnprocessableEntity'
+          $ref: ../../global-api-index.yaml#/components/responses/UnprocessableEntity
         '500':
-          $ref: '../../global-api-index.yaml#/components/responses/InternalServerError'
-
+          $ref: ../../global-api-index.yaml#/components/responses/InternalServerError
 components:
   schemas:
     KnowledgeArticle:
@@ -742,16 +742,16 @@ components:
           type: string
           maxLength: 200
           description: 文档标题
-          example: "Linux服务器性能优化完整指南"
+          example: Linux服务器性能优化完整指南
         content:
           type: string
           description: 富文本HTML内容
-          example: "<h1>性能优化概述</h1><p>本文档详细介绍Linux服务器性能优化的方法...</p>"
+          example: <h1>性能优化概述</h1><p>本文档详细介绍Linux服务器性能优化的方法...</p>
         summary:
           type: string
           maxLength: 500
           description: 文档摘要
-          example: "全面介绍Linux服务器性能优化的方法、工具和最佳实践"
+          example: 全面介绍Linux服务器性能优化的方法、工具和最佳实践
         category:
           $ref: '#/components/schemas/KnowledgeCategoryInfo'
         tags:
@@ -759,29 +759,41 @@ components:
           items:
             type: string
           description: 标签列表
-          example: ["Linux", "性能优化", "服务器", "运维"]
+          example:
+          - Linux
+          - 性能优化
+          - 服务器
+          - 运维
         keywords:
           type: string
           maxLength: 500
           description: 关键词
-          example: "Linux,性能优化,服务器,CPU,内存,磁盘,网络"
+          example: Linux,性能优化,服务器,CPU,内存,磁盘,网络
         author:
           $ref: '#/components/schemas/AuthorInfo'
         status:
           type: integer
-          enum: [1, 2, 3, 4, 5]
-          description: "状态：1-草稿，2-审核中，3-已发布，4-已下线，5-争议中"
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          description: 状态：1-草稿，2-审核中，3-已发布，4-已下线，5-争议中
           example: 3
         visibility:
           type: integer
-          enum: [1, 2, 3]
-          description: "可见性：1-公开，2-内部，3-私有"
+          enum:
+          - 1
+          - 2
+          - 3
+          description: 可见性：1-公开，2-内部，3-私有
           example: 1
         version_no:
           type: string
-          pattern: "^\\d+\\.\\d+\\.\\d+$"
+          pattern: ^\d+\.\d+\.\d+$
           description: 当前版本号
-          example: "1.2.0"
+          example: 1.2.0
         statistics:
           $ref: '#/components/schemas/ArticleStatistics'
         quality_metrics:
@@ -795,12 +807,11 @@ components:
         metadata:
           $ref: '#/components/schemas/ArticleMetadata'
       required:
-        - id
-        - title
-        - status
-        - author
-        - timestamps
-
+      - id
+      - title
+      - status
+      - author
+      - timestamps
     KnowledgeArticleListItem:
       type: object
       description: 知识文档列表项（简化信息）
@@ -813,29 +824,37 @@ components:
         title:
           type: string
           description: 文档标题
-          example: "Linux服务器性能优化完整指南"
+          example: Linux服务器性能优化完整指南
         summary:
           type: string
           description: 文档摘要
-          example: "全面介绍Linux服务器性能优化的方法、工具和最佳实践"
+          example: 全面介绍Linux服务器性能优化的方法、工具和最佳实践
         category_name:
           type: string
           description: 分类名称
-          example: "系统运维"
+          example: 系统运维
         tags:
           type: array
           items:
             type: string
           description: 标签列表
-          example: ["Linux", "性能优化", "服务器"]
+          example:
+          - Linux
+          - 性能优化
+          - 服务器
         author_name:
           type: string
           description: 作者姓名
-          example: "张工程师"
+          example: 张工程师
         status:
           type: integer
-          enum: [1, 2, 3, 4, 5]
-          description: "状态：1-草稿，2-审核中，3-已发布，4-已下线，5-争议中"
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          description: 状态：1-草稿，2-审核中，3-已发布，4-已下线，5-争议中
           example: 3
         view_count:
           type: integer
@@ -865,20 +884,19 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-01T10:00:00Z"
+          example: '2024-08-01T10:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-10T15:30:00Z"
+          example: '2024-08-10T15:30:00Z'
       required:
-        - id
-        - title
-        - status
-        - author_name
-        - created_at
-        - updated_at
-
+      - id
+      - title
+      - status
+      - author_name
+      - created_at
+      - updated_at
     CreateKnowledgeArticleRequest:
       type: object
       description: 创建知识文档请求
@@ -887,16 +905,16 @@ components:
           type: string
           maxLength: 200
           description: 文档标题
-          example: "Linux服务器性能优化完整指南"
+          example: Linux服务器性能优化完整指南
         content:
           type: string
           description: 富文本HTML内容
-          example: "<h1>性能优化概述</h1><p>本文档详细介绍Linux服务器性能优化的方法...</p>"
+          example: <h1>性能优化概述</h1><p>本文档详细介绍Linux服务器性能优化的方法...</p>
         summary:
           type: string
           maxLength: 500
           description: 文档摘要
-          example: "全面介绍Linux服务器性能优化的方法、工具和最佳实践"
+          example: 全面介绍Linux服务器性能优化的方法、工具和最佳实践
         category_id:
           type: integer
           format: int64
@@ -907,16 +925,23 @@ components:
           items:
             type: string
           description: 标签列表
-          example: ["Linux", "性能优化", "服务器", "运维"]
+          example:
+          - Linux
+          - 性能优化
+          - 服务器
+          - 运维
         keywords:
           type: string
           maxLength: 500
           description: 关键词
-          example: "Linux,性能优化,服务器,CPU,内存,磁盘,网络"
+          example: Linux,性能优化,服务器,CPU,内存,磁盘,网络
         visibility:
           type: integer
-          enum: [1, 2, 3]
-          description: "可见性：1-公开，2-内部，3-私有"
+          enum:
+          - 1
+          - 2
+          - 3
+          description: 可见性：1-公开，2-内部，3-私有
           default: 1
           example: 1
         is_template:
@@ -932,10 +957,9 @@ components:
         metadata:
           $ref: '#/components/schemas/ArticleMetadata'
       required:
-        - title
-        - content
-        - category_id
-
+      - title
+      - content
+      - category_id
     UpdateKnowledgeArticleRequest:
       type: object
       description: 更新知识文档请求
@@ -944,16 +968,16 @@ components:
           type: string
           maxLength: 200
           description: 文档标题
-          example: "Linux服务器性能优化完整指南"
+          example: Linux服务器性能优化完整指南
         content:
           type: string
           description: 富文本HTML内容
-          example: "<h1>性能优化概述</h1><p>本文档详细介绍Linux服务器性能优化的方法...</p>"
+          example: <h1>性能优化概述</h1><p>本文档详细介绍Linux服务器性能优化的方法...</p>
         summary:
           type: string
           maxLength: 500
           description: 文档摘要
-          example: "全面介绍Linux服务器性能优化的方法、工具和最佳实践"
+          example: 全面介绍Linux服务器性能优化的方法、工具和最佳实践
         category_id:
           type: integer
           format: int64
@@ -964,24 +988,30 @@ components:
           items:
             type: string
           description: 标签列表
-          example: ["Linux", "性能优化", "服务器", "运维"]
+          example:
+          - Linux
+          - 性能优化
+          - 服务器
+          - 运维
         keywords:
           type: string
           maxLength: 500
           description: 关键词
-          example: "Linux,性能优化,服务器,CPU,内存,磁盘,网络"
+          example: Linux,性能优化,服务器,CPU,内存,磁盘,网络
         visibility:
           type: integer
-          enum: [1, 2, 3]
-          description: "可见性：1-公开，2-内部，3-私有"
+          enum:
+          - 1
+          - 2
+          - 3
+          description: 可见性：1-公开，2-内部，3-私有
           example: 1
         metadata:
           $ref: '#/components/schemas/ArticleMetadata'
       required:
-        - title
-        - content
-        - category_id
-
+      - title
+      - content
+      - category_id
     PatchKnowledgeArticleRequest:
       type: object
       description: 部分更新知识文档请求
@@ -990,16 +1020,16 @@ components:
           type: string
           maxLength: 200
           description: 文档标题
-          example: "Linux服务器性能优化完整指南"
+          example: Linux服务器性能优化完整指南
         content:
           type: string
           description: 富文本HTML内容
-          example: "<h1>性能优化概述</h1><p>本文档详细介绍Linux服务器性能优化的方法...</p>"
+          example: <h1>性能优化概述</h1><p>本文档详细介绍Linux服务器性能优化的方法...</p>
         summary:
           type: string
           maxLength: 500
           description: 文档摘要
-          example: "全面介绍Linux服务器性能优化的方法、工具和最佳实践"
+          example: 全面介绍Linux服务器性能优化的方法、工具和最佳实践
         category_id:
           type: integer
           format: int64
@@ -1010,23 +1040,34 @@ components:
           items:
             type: string
           description: 标签列表
-          example: ["Linux", "性能优化", "服务器", "运维"]
+          example:
+          - Linux
+          - 性能优化
+          - 服务器
+          - 运维
         keywords:
           type: string
           maxLength: 500
           description: 关键词
-          example: "Linux,性能优化,服务器,CPU,内存,磁盘,网络"
+          example: Linux,性能优化,服务器,CPU,内存,磁盘,网络
         visibility:
           type: integer
-          enum: [1, 2, 3]
-          description: "可见性：1-公开，2-内部，3-私有"
+          enum:
+          - 1
+          - 2
+          - 3
+          description: 可见性：1-公开，2-内部，3-私有
           example: 1
         status:
           type: integer
-          enum: [1, 2, 3, 4, 5]
-          description: "状态：1-草稿，2-审核中，3-已发布，4-已下线，5-争议中"
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          description: 状态：1-草稿，2-审核中，3-已发布，4-已下线，5-争议中
           example: 3
-
     KnowledgeCategory:
       type: object
       description: 知识分类信息
@@ -1040,12 +1081,12 @@ components:
           type: string
           maxLength: 100
           description: 分类名称
-          example: "系统运维"
+          example: 系统运维
         category_code:
           type: string
           maxLength: 50
           description: 分类编码
-          example: "system_ops"
+          example: system_ops
         parent_id:
           type: integer
           format: int64
@@ -1055,17 +1096,17 @@ components:
         description:
           type: string
           description: 分类描述
-          example: "系统运维相关的技术文档和操作指南"
+          example: 系统运维相关的技术文档和操作指南
         icon:
           type: string
           maxLength: 100
           description: 分类图标
-          example: "icon-server"
+          example: icon-server
         color:
           type: string
           maxLength: 20
           description: 分类颜色
-          example: "#1890ff"
+          example: '#1890ff'
         level_depth:
           type: integer
           minimum: 1
@@ -1076,7 +1117,7 @@ components:
           type: string
           maxLength: 500
           description: 路径名称串
-          example: "技术文档/系统运维"
+          example: 技术文档/系统运维
         article_count:
           type: integer
           minimum: 0
@@ -1104,33 +1145,35 @@ components:
           example: true
         access_level:
           type: integer
-          enum: [1, 2, 3]
-          description: "访问级别：1-公开，2-内部，3-受限"
+          enum:
+          - 1
+          - 2
+          - 3
+          description: 访问级别：1-公开，2-内部，3-受限
           example: 1
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-01-01T09:00:00Z"
+          example: '2024-01-01T09:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-14T14:30:00Z"
+          example: '2024-08-14T14:30:00Z'
         children:
           type: array
           items:
             $ref: '#/components/schemas/KnowledgeCategory'
           description: 子分类列表（树形结构时使用）
       required:
-        - id
-        - category_name
-        - category_code
-        - level_depth
-        - is_active
-        - created_at
-        - updated_at
-
+      - id
+      - category_name
+      - category_code
+      - level_depth
+      - is_active
+      - created_at
+      - updated_at
     CreateKnowledgeCategoryRequest:
       type: object
       description: 创建知识分类请求
@@ -1139,12 +1182,12 @@ components:
           type: string
           maxLength: 100
           description: 分类名称
-          example: "系统运维"
+          example: 系统运维
         category_code:
           type: string
           maxLength: 50
           description: 分类编码
-          example: "system_ops"
+          example: system_ops
         parent_id:
           type: integer
           format: int64
@@ -1154,17 +1197,17 @@ components:
         description:
           type: string
           description: 分类描述
-          example: "系统运维相关的技术文档和操作指南"
+          example: 系统运维相关的技术文档和操作指南
         icon:
           type: string
           maxLength: 100
           description: 分类图标
-          example: "icon-server"
+          example: icon-server
         color:
           type: string
           maxLength: 20
           description: 分类颜色
-          example: "#1890ff"
+          example: '#1890ff'
         sort_order:
           type: integer
           description: 排序权重
@@ -1172,14 +1215,16 @@ components:
           example: 10
         access_level:
           type: integer
-          enum: [1, 2, 3]
-          description: "访问级别：1-公开，2-内部，3-受限"
+          enum:
+          - 1
+          - 2
+          - 3
+          description: 访问级别：1-公开，2-内部，3-受限
           default: 1
           example: 1
       required:
-        - category_name
-        - category_code
-
+      - category_name
+      - category_code
     KnowledgeVersion:
       type: object
       description: 知识文档版本信息
@@ -1196,32 +1241,35 @@ components:
           example: 12345
         version_no:
           type: string
-          pattern: "^\\d+\\.\\d+\\.\\d+$"
+          pattern: ^\d+\.\d+\.\d+$
           description: 版本号
-          example: "1.2.0"
+          example: 1.2.0
         version_type:
           type: integer
-          enum: [1, 2, 3]
-          description: "版本类型：1-主要，2-次要，3-修订"
+          enum:
+          - 1
+          - 2
+          - 3
+          description: 版本类型：1-主要，2-次要，3-修订
           example: 2
         title:
           type: string
           maxLength: 200
           description: 版本标题
-          example: "Linux服务器性能优化完整指南"
+          example: Linux服务器性能优化完整指南
         content:
           type: string
           description: 版本内容
-          example: "<h1>性能优化概述</h1><p>本文档详细介绍...</p>"
+          example: <h1>性能优化概述</h1><p>本文档详细介绍...</p>
         change_log:
           type: string
           description: 变更日志
-          example: "新增Docker容器性能优化章节，修复网络配置示例错误"
+          example: 新增Docker容器性能优化章节，修复网络配置示例错误
         change_summary:
           type: string
           maxLength: 500
           description: 变更摘要
-          example: "增加容器化环境优化内容，修复配置示例"
+          example: 增加容器化环境优化内容，修复配置示例
         file_size:
           type: integer
           format: int64
@@ -1243,68 +1291,73 @@ components:
         created_by_name:
           type: string
           description: 创建人姓名
-          example: "张工程师"
+          example: 张工程师
         created_at:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-10T15:30:00Z"
+          example: '2024-08-10T15:30:00Z'
         version_tags:
           type: array
           items:
             type: string
           description: 版本标签
-          example: ["stable", "reviewed"]
+          example:
+          - stable
+          - reviewed
         notes:
           type: string
           description: 版本备注
-          example: "经过专家审核的稳定版本"
+          example: 经过专家审核的稳定版本
       required:
-        - id
-        - article_id
-        - version_no
-        - version_type
-        - title
-        - created_by
-        - created_at
-
+      - id
+      - article_id
+      - version_no
+      - version_type
+      - title
+      - created_by
+      - created_at
     CreateKnowledgeVersionRequest:
       type: object
       description: 创建知识版本请求
       properties:
         version_type:
           type: integer
-          enum: [1, 2, 3]
-          description: "版本类型：1-主要，2-次要，3-修订"
+          enum:
+          - 1
+          - 2
+          - 3
+          description: 版本类型：1-主要，2-次要，3-修订
           default: 3
           example: 2
         change_log:
           type: string
           description: 变更日志
-          example: "新增Docker容器性能优化章节，修复网络配置示例错误"
+          example: 新增Docker容器性能优化章节，修复网络配置示例错误
         change_summary:
           type: string
           maxLength: 500
           description: 变更摘要
-          example: "增加容器化环境优化内容，修复配置示例"
+          example: 增加容器化环境优化内容，修复配置示例
         version_tags:
           type: array
           items:
             type: string
           description: 版本标签
-          example: ["stable", "reviewed"]
+          example:
+          - stable
+          - reviewed
         notes:
           type: string
           description: 版本备注
-          example: "经过专家审核的稳定版本"
+          example: 经过专家审核的稳定版本
         auto_increment:
           type: boolean
           description: 是否自动递增版本号
           default: true
           example: true
       required:
-        - change_log
-
+      - change_log
     KnowledgeSearchResult:
       type: object
       description: 知识搜索结果项
@@ -1317,33 +1370,36 @@ components:
         title:
           type: string
           description: 文档标题
-          example: "Linux服务器性能优化完整指南"
+          example: Linux服务器性能优化完整指南
         summary:
           type: string
           description: 文档摘要
-          example: "全面介绍Linux服务器性能优化的方法、工具和最佳实践"
+          example: 全面介绍Linux服务器性能优化的方法、工具和最佳实践
         category_name:
           type: string
           description: 分类名称
-          example: "系统运维"
+          example: 系统运维
         category_path:
           type: string
           description: 分类路径
-          example: "技术文档/系统运维"
+          example: 技术文档/系统运维
         tags:
           type: array
           items:
             type: string
           description: 标签列表
-          example: ["Linux", "性能优化", "服务器"]
+          example:
+          - Linux
+          - 性能优化
+          - 服务器
         author_name:
           type: string
           description: 作者姓名
-          example: "张工程师"
+          example: 张工程师
         author_avatar:
           type: string
           description: 作者头像URL
-          example: "https://cdn.example.com/avatar/1001.jpg"
+          example: https://cdn.example.com/avatar/1001.jpg
         view_count:
           type: integer
           minimum: 0
@@ -1379,7 +1435,7 @@ components:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-10T15:30:00Z"
+          example: '2024-08-10T15:30:00Z'
         highlights:
           type: object
           description: 高亮显示的搜索匹配内容
@@ -1389,27 +1445,29 @@ components:
               items:
                 type: string
               description: 标题中的高亮片段
-              example: ["<em>Linux</em>服务器<em>性能优化</em>完整指南"]
+              example:
+              - <em>Linux</em>服务器<em>性能优化</em>完整指南
             content:
               type: array
               items:
                 type: string
               description: 内容中的高亮片段
-              example: ["...CPU<em>性能优化</em>是<em>Linux</em>服务器调优的重要环节..."]
+              example:
+              - '...CPU<em>性能优化</em>是<em>Linux</em>服务器调优的重要环节...'
             summary:
               type: array
               items:
                 type: string
               description: 摘要中的高亮片段
-              example: ["全面介绍<em>Linux</em>服务器<em>性能优化</em>的方法..."]
+              example:
+              - 全面介绍<em>Linux</em>服务器<em>性能优化</em>的方法...
       required:
-        - id
-        - title
-        - category_name
-        - author_name
-        - relevance_score
-        - updated_at
-
+      - id
+      - title
+      - category_name
+      - author_name
+      - relevance_score
+      - updated_at
     SearchAggregations:
       type: object
       description: 搜索聚合统计信息
@@ -1422,7 +1480,7 @@ components:
               name:
                 type: string
                 description: 分类名称
-                example: "系统运维"
+                example: 系统运维
               count:
                 type: integer
                 description: 文档数量
@@ -1436,7 +1494,7 @@ components:
               name:
                 type: string
                 description: 标签名称
-                example: "Linux"
+                example: Linux
               count:
                 type: integer
                 description: 文档数量
@@ -1450,7 +1508,7 @@ components:
               name:
                 type: string
                 description: 作者姓名
-                example: "张工程师"
+                example: 张工程师
               count:
                 type: integer
                 description: 文档数量
@@ -1464,13 +1522,12 @@ components:
               range:
                 type: string
                 description: 时间范围
-                example: "最近一个月"
+                example: 最近一个月
               count:
                 type: integer
                 description: 文档数量
                 example: 45
           description: 时间范围统计
-
     SearchSuggestion:
       type: object
       description: 搜索建议项
@@ -1478,12 +1535,16 @@ components:
         text:
           type: string
           description: 建议文本
-          example: "Linux系统优化"
+          example: Linux系统优化
         type:
           type: string
-          enum: ["keyword", "title", "tag", "category"]
+          enum:
+          - keyword
+          - title
+          - tag
+          - category
           description: 建议类型
-          example: "keyword"
+          example: keyword
         score:
           type: number
           format: float
@@ -1496,13 +1557,11 @@ components:
         highlight:
           type: string
           description: 高亮显示的建议文本
-          example: "<em>Linux</em>系统优化"
+          example: <em>Linux</em>系统优化
       required:
-        - text
-        - type
-        - score
-
-    # 辅助Schema定义
+      - text
+      - type
+      - score
     KnowledgeCategoryInfo:
       type: object
       description: 知识分类基本信息
@@ -1515,15 +1574,14 @@ components:
         name:
           type: string
           description: 分类名称
-          example: "系统运维"
+          example: 系统运维
         path:
           type: string
           description: 分类路径
-          example: "技术文档/系统运维"
+          example: 技术文档/系统运维
       required:
-        - id
-        - name
-
+      - id
+      - name
     AuthorInfo:
       type: object
       description: 作者信息
@@ -1536,23 +1594,22 @@ components:
         name:
           type: string
           description: 作者姓名
-          example: "张工程师"
+          example: 张工程师
         avatar:
           type: string
           description: 作者头像URL
-          example: "https://cdn.example.com/avatar/1001.jpg"
+          example: https://cdn.example.com/avatar/1001.jpg
         title:
           type: string
           description: 作者职位
-          example: "高级运维工程师"
+          example: 高级运维工程师
         department:
           type: string
           description: 所属部门
-          example: "运维部"
+          example: 运维部
       required:
-        - id
-        - name
-
+      - id
+      - name
     ArticleStatistics:
       type: object
       description: 文档统计信息
@@ -1590,10 +1647,9 @@ components:
           description: 评分人数
           example: 156
       required:
-        - view_count
-        - like_count
-        - rating
-
+      - view_count
+      - like_count
+      - rating
     QualityMetrics:
       type: object
       description: 质量评估指标
@@ -1634,8 +1690,7 @@ components:
           description: 可用性评分
           example: 94.0
       required:
-        - quality_score
-
+      - quality_score
     ArticleTimestamps:
       type: object
       description: 文档时间信息
@@ -1644,28 +1699,27 @@ components:
           type: string
           format: date-time
           description: 创建时间
-          example: "2024-08-01T10:00:00Z"
+          example: '2024-08-01T10:00:00Z'
         updated_at:
           type: string
           format: date-time
           description: 更新时间
-          example: "2024-08-10T15:30:00Z"
+          example: '2024-08-10T15:30:00Z'
         published_at:
           type: string
           format: date-time
           nullable: true
           description: 发布时间
-          example: "2024-08-02T09:00:00Z"
+          example: '2024-08-02T09:00:00Z'
         last_reviewed_at:
           type: string
           format: date-time
           nullable: true
           description: 最后审核时间
-          example: "2024-08-09T14:00:00Z"
+          example: '2024-08-09T14:00:00Z'
       required:
-        - created_at
-        - updated_at
-
+      - created_at
+      - updated_at
     AttachmentInfo:
       type: object
       description: 附件信息
@@ -1678,11 +1732,11 @@ components:
         file_name:
           type: string
           description: 文件名
-          example: "performance_script.sh"
+          example: performance_script.sh
         file_type:
           type: string
           description: 文件类型
-          example: "application/x-sh"
+          example: application/x-sh
         file_size:
           type: integer
           format: int64
@@ -1691,19 +1745,18 @@ components:
         download_url:
           type: string
           description: 下载链接
-          example: "https://cdn.example.com/attachments/5001"
+          example: https://cdn.example.com/attachments/5001
         upload_time:
           type: string
           format: date-time
           description: 上传时间
-          example: "2024-08-01T10:30:00Z"
+          example: '2024-08-01T10:30:00Z'
       required:
-        - id
-        - file_name
-        - file_type
-        - file_size
-        - download_url
-
+      - id
+      - file_name
+      - file_type
+      - file_size
+      - download_url
     AttachmentUpload:
       type: object
       description: 附件上传信息
@@ -1711,11 +1764,11 @@ components:
         file_name:
           type: string
           description: 文件名
-          example: "performance_script.sh"
+          example: performance_script.sh
         file_type:
           type: string
           description: 文件类型
-          example: "application/x-sh"
+          example: application/x-sh
         file_size:
           type: integer
           format: int64
@@ -1725,22 +1778,25 @@ components:
           type: string
           format: byte
           description: Base64编码的文件内容
-          example: "IyEvYmluL2Jhc2gKZWNobyAiSGVsbG8gV29ybGQi"
+          example: IyEvYmluL2Jhc2gKZWNobyAiSGVsbG8gV29ybGQi
       required:
-        - file_name
-        - file_type
-        - file_size
-        - file_content
-
+      - file_name
+      - file_type
+      - file_size
+      - file_content
     ArticleMetadata:
       type: object
       description: 文档元数据
       properties:
         difficulty_level:
           type: string
-          enum: ["beginner", "intermediate", "advanced", "expert"]
+          enum:
+          - beginner
+          - intermediate
+          - advanced
+          - expert
           description: 难度级别
-          example: "intermediate"
+          example: intermediate
         estimated_read_time:
           type: integer
           minimum: 1
@@ -1751,21 +1807,34 @@ components:
           items:
             type: string
           description: 目标受众
-          example: ["运维工程师", "系统管理员"]
+          example:
+          - 运维工程师
+          - 系统管理员
         prerequisites:
           type: array
           items:
             type: string
           description: 前置知识要求
-          example: ["Linux基础", "Shell脚本"]
+          example:
+          - Linux基础
+          - Shell脚本
         related_tools:
           type: array
           items:
             type: string
           description: 相关工具
-          example: ["htop", "iotop", "netstat"]
+          example:
+          - htop
+          - iotop
+          - netstat
         update_frequency:
           type: string
-          enum: ["daily", "weekly", "monthly", "quarterly", "yearly", "as_needed"]
+          enum:
+          - daily
+          - weekly
+          - monthly
+          - quarterly
+          - yearly
+          - as_needed
           description: 更新频率
-          example: "monthly"
+          example: monthly

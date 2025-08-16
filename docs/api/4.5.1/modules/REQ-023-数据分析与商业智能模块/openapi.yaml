@@ -82,12 +82,16 @@ paths:
         in: query
         description: 任务类型筛选
         schema:
-          $ref: '#/components/schemas/TaskType'
+          type: array
+          items:
+            type: string
       - name: status
         in: query
         description: 任务状态筛选
         schema:
-          $ref: '#/components/schemas/TaskStatus'
+          type: array
+          items: &id001
+            type: string
       - name: created_start
         in: query
         description: 创建时间开始
@@ -438,13 +442,9 @@ paths:
         in: query
         description: 日志级别筛选
         schema:
-          type: string
-          enum:
-          - DEBUG
-          - INFO
-          - WARN
-          - ERROR
-          example: INFO
+          type: array
+          items:
+            type: string
       responses:
         '200':
           description: 查询成功
@@ -499,8 +499,7 @@ paths:
         in: query
         description: 任务ID筛选
         schema:
-          type: integer
-          example: 12345
+          type: string
       - name: result_type
         in: query
         description: 结果类型筛选
@@ -734,7 +733,8 @@ paths:
         in: query
         description: 模型状态筛选
         schema:
-          $ref: '#/components/schemas/ModelStatus'
+          type: array
+          items: *id001
       responses:
         '200':
           description: 查询成功
@@ -965,13 +965,8 @@ paths:
         in: query
         description: 状态筛选
         schema:
-          type: integer
-          enum:
-          - 1
-          - 2
-          - 3
-          - 4
-          example: 1
+          type: array
+          items: *id001
       responses:
         '200':
           description: 查询成功
