@@ -45,6 +45,76 @@ paths:
   /api/v1/permissions/statistics/usage:
     $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1permissions~1statistics~1usage'
 
+  # 认证业务域 API - 遗漏的API路径
+  /api/v1/admin/configs:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1admin~1configs'
+  /api/v1/admin/configs/{key}:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1admin~1configs~1{key}'
+  /api/v1/admin/tenants:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1admin~1tenants'
+  /api/v1/audit-logs:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1audit-logs'
+  /api/v1/audit-logs/export:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1audit-logs~1export'
+  /api/v1/audit/logs:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1audit~1logs'
+  /api/v1/auth/batch-check-permissions:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1auth~1batch-check-permissions'
+  /api/v1/auth/check-permission:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1auth~1check-permission'
+  /api/v1/auth/mfa/verify:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1auth~1mfa~1verify'
+  /api/v1/auth/sessions:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1auth~1sessions'
+  /api/v1/auth/sessions/{session_id}:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1auth~1sessions~1{session_id}'
+  /api/v1/departments:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1departments'
+  /api/v1/departments/{id}:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1departments~1{id}'
+  /api/v1/departments/{id}/users:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1departments~1{id}~1users'
+  /api/v1/external-identity-sources:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1external-identity-sources'
+  /api/v1/health:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1health'
+  /api/v1/internal/auth/verify:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1internal~1auth~1verify'
+  /api/v1/internal/tenants/{id}:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1internal~1tenants~1{id}'
+  /api/v1/permission-templates:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1permission-templates'
+  /api/v1/permission-templates/{id}/apply:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1permission-templates~1{id}~1apply'
+  /api/v1/roles/{id}:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1roles~1{id}'
+  /api/v1/roles/{id}/permissions:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1roles~1{id}~1permissions'
+  /api/v1/roles/{roleId}/permissions/{permissionId}:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1roles~1{roleId}~1permissions~1{permissionId}'
+  /api/v1/sessions:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1sessions'
+  /api/v1/sessions/batch-logout:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1sessions~1batch-logout'
+  /api/v1/sessions/{sessionId}:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1sessions~1{sessionId}'
+  /api/v1/users/batch-import:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1users~1batch-import'
+  /api/v1/users/batch-status:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1users~1batch-status'
+  /api/v1/users/{id}/permissions:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1users~1{id}~1permissions'
+  /api/v1/users/{id}/reset-password:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1users~1{id}~1reset-password'
+  /api/v1/users/{id}/roles:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1users~1{id}~1roles'
+  /api/v1/users/{id}/sessions:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1users~1{id}~1sessions'
+  /api/v1/users/{id}/status:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1users~1{id}~1status'
+  /api/v1/users/{userId}/roles/{roleId}:
+    $ref: './domains/auth-domain.yaml#/paths/~1api~1v1~1users~1{userId}~1roles~1{roleId}'
+
   # 工单业务域 API
   /api/v1/tickets:
     $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets'
@@ -82,6 +152,70 @@ paths:
     $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1communications'
   /api/v1/customers/{id}/service-records:
     $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1service-records'
+
+  # 客户业务域 API - 遗漏的API路径
+  /api/v1/client/auth/login:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1auth~1login'
+  /api/v1/client/auth/permissions:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1auth~1permissions'
+  /api/v1/client/dashboard/config:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1dashboard~1config'
+  /api/v1/client/dashboard/config/{config_id}:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1dashboard~1config~1{config_id}'
+  /api/v1/client/dashboard/overview:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1dashboard~1overview'
+  /api/v1/client/export/data:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1export~1data'
+  /api/v1/client/export/progress/{export_id}:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1export~1progress~1{export_id}'
+  /api/v1/client/files/download/{file_id}:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1files~1download~1{file_id}'
+  /api/v1/client/reports/generate:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1reports~1generate'
+  /api/v1/client/reports/history:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1reports~1history'
+  /api/v1/client/reports/progress/{task_id}:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1reports~1progress~1{task_id}'
+  /api/v1/client/reports/templates:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1reports~1templates'
+  /api/v1/client/sla/compliance:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1sla~1compliance'
+  /api/v1/client/sla/violations:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1sla~1violations'
+  /api/v1/client/subscriptions:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1subscriptions'
+  /api/v1/client/theme/{tenant_id}:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1theme~1{tenant_id}'
+  /api/v1/client/tickets:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1tickets'
+  /api/v1/client/tickets/statistics:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1tickets~1statistics'
+  /api/v1/client/tickets/{ticket_id}:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1tickets~1{ticket_id}'
+  /api/v1/client/workspace:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1client~1workspace'
+  /api/v1/contracts/expiring:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1contracts~1expiring'
+  /api/v1/contracts/{id}/renew:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1contracts~1{id}~1renew'
+  /api/v1/customers/success-tasks:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1success-tasks'
+  /api/v1/customers/{id}/analysis/behavior:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1analysis~1behavior'
+  /api/v1/customers/{id}/contacts/{contactId}:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1contacts~1{contactId}'
+  /api/v1/customers/{id}/contacts/{contactId}/primary:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1contacts~1{contactId}~1primary'
+  /api/v1/customers/{id}/health-score/calculate:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1health-score~1calculate'
+  /api/v1/customers/{id}/health-score/trend:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1health-score~1trend'
+  /api/v1/customers/{id}/satisfaction:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1satisfaction'
+  /api/v1/customers/{id}/success-tasks:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1success-tasks'
+  /api/v1/customers/{id}/tags/{tagId}:
+    $ref: './domains/customer-domain.yaml#/paths/~1api~1v1~1customers~1{id}~1tags~1{tagId}'
 
   # SLA业务域 API
   /api/v1/sla/definitions:
@@ -197,6 +331,36 @@ paths:
   /api/v1/settings:
     $ref: './domains/system-domain.yaml#/paths/~1api~1v1~1settings'
 
+  # 系统业务域 API - 遗漏的API路径
+  /api/v1/system/analytics/summary:
+    $ref: './domains/system-domain.yaml#/paths/~1api~1v1~1system~1analytics~1summary'
+  /api/v1/system/audit/logs:
+    $ref: './domains/system-domain.yaml#/paths/~1api~1v1~1system~1audit~1logs'
+  /api/v1/system/configs:
+    $ref: './domains/system-domain.yaml#/paths/~1api~1v1~1system~1configs'
+  /api/v1/system/configs/{key}:
+    $ref: './domains/system-domain.yaml#/paths/~1api~1v1~1system~1configs~1{key}'
+  /api/v1/system/modules/{code}/toggle:
+    $ref: './domains/system-domain.yaml#/paths/~1api~1v1~1system~1modules~1{code}~1toggle'
+  /api/v1/system/permissions:
+    $ref: './domains/system-domain.yaml#/paths/~1api~1v1~1system~1permissions'
+  /api/v1/system/roles:
+    $ref: './domains/system-domain.yaml#/paths/~1api~1v1~1system~1roles'
+  /api/v1/system/roles/{id}:
+    $ref: './domains/system-domain.yaml#/paths/~1api~1v1~1system~1roles~1{id}'
+  /api/v1/system/roles/{id}/permissions:
+    $ref: './domains/system-domain.yaml#/paths/~1api~1v1~1system~1roles~1{id}~1permissions'
+  /api/v1/system/users:
+    $ref: './domains/system-domain.yaml#/paths/~1api~1v1~1system~1users'
+  /api/v1/system/users/batch:
+    $ref: './domains/system-domain.yaml#/paths/~1api~1v1~1system~1users~1batch'
+  /api/v1/system/users/export:
+    $ref: './domains/system-domain.yaml#/paths/~1api~1v1~1system~1users~1export'
+  /api/v1/system/users/{id}:
+    $ref: './domains/system-domain.yaml#/paths/~1api~1v1~1system~1users~1{id}'
+  /api/v1/system/users/{id}/roles:
+    $ref: './domains/system-domain.yaml#/paths/~1api~1v1~1system~1users~1{id}~1roles'
+
   # 运维业务域 API
   /api/v1/ops/assets:
     $ref: './domains/ops-domain.yaml#/paths/~1api~1v1~1ops~1assets'
@@ -235,71 +399,111 @@ paths:
   /api/v1/ops/monitor-configs/{config_id}:
     $ref: './domains/ops-domain.yaml#/paths/~1api~1v1~1ops~1monitor-configs~1{config_id}'
 
-  # 智能分析与AI功能业务域 API
-  /api/v1/ai/diagnosis:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1diagnosis'
-  /api/v1/ai/diagnosis/{diagnosisId}:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1diagnosis~1{diagnosisId}'
-  /api/v1/ai/diagnosis/batch:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1diagnosis~1batch'
-  /api/v1/ai/prediction:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1prediction'
-  /api/v1/ai/prediction/{predictionId}:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1prediction~1{predictionId}'
-  /api/v1/ai/prediction/capacity-planning:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1prediction~1capacity-planning'
-  /api/v1/ai/chat:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1chat'
-  /api/v1/ai/chat/sessions:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1chat~1sessions'
-  /api/v1/ai/chat/sessions/{sessionId}:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1chat~1sessions~1{sessionId}'
-  /api/v1/ai/anomaly-detection:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1anomaly-detection'
-  /api/v1/ai/models:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1models'
-  /api/v1/ai/models/{modelId}:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1models~1{modelId}'
-  /api/v1/ai/training/jobs:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1training~1jobs'
-  /api/v1/ai/training/jobs/{jobId}:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1training~1jobs~1{jobId}'
-  /api/v1/ai/training/jobs/{jobId}/start:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1training~1jobs~1{jobId}~1start'
-  /api/v1/ai/monitoring/health:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1monitoring~1health'
-  /api/v1/ai/statistics/usage:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1ai~1statistics~1usage'
 
-  # 数据分析与商业智能业务域 API
+
+  # 数据分析与AI功能业务域 API
+  /api/v1/ai/diagnosis:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1diagnosis'
+  /api/v1/ai/diagnosis/{diagnosisId}:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1diagnosis~1{diagnosisId}'
+  /api/v1/ai/diagnosis/batch:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1diagnosis~1batch'
+  /api/v1/ai/prediction:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1prediction'
+  /api/v1/ai/prediction/{predictionId}:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1prediction~1{predictionId}'
+  /api/v1/ai/prediction/capacity-planning:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1prediction~1capacity-planning'
+  /api/v1/ai/chat:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1chat'
+  /api/v1/ai/chat/sessions:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1chat~1sessions'
+  /api/v1/ai/chat/sessions/{sessionId}:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1chat~1sessions~1{sessionId}'
+  /api/v1/ai/anomaly-detection:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1anomaly-detection'
+  /api/v1/ai/models:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1models'
+  /api/v1/ai/models/{modelId}:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1models~1{modelId}'
+  /api/v1/ai/training/jobs:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1training~1jobs'
+  /api/v1/ai/training/jobs/{jobId}:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1training~1jobs~1{jobId}'
+  /api/v1/ai/training/jobs/{jobId}/start:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1training~1jobs~1{jobId}~1start'
+  /api/v1/ai/monitoring/health:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1monitoring~1health'
+  /api/v1/ai/statistics/usage:
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1ai~1statistics~1usage'
   /api/v1/analytics/tasks:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1analytics~1tasks'
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1analytics~1tasks'
   /api/v1/analytics/tasks/{id}:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}'
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}'
   /api/v1/analytics/tasks/{id}/execute:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}~1execute'
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}~1execute'
   /api/v1/analytics/tasks/{id}/pause:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}~1pause'
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}~1pause'
   /api/v1/analytics/tasks/{id}/resume:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}~1resume'
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}~1resume'
   /api/v1/analytics/tasks/{id}/status:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}~1status'
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}~1status'
   /api/v1/analytics/tasks/{id}/logs:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}~1logs'
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}~1logs'
   /api/v1/analytics/results:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1analytics~1results'
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1analytics~1results'
   /api/v1/analytics/results/{id}:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1analytics~1results~1{id}'
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1analytics~1results~1{id}'
   /api/v1/analytics/results/{id}/export:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1analytics~1results~1{id}~1export'
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1analytics~1results~1{id}~1export'
   /api/v1/analytics/models:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1analytics~1models'
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1analytics~1models'
   /api/v1/analytics/models/{id}/train:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1analytics~1models~1{id}~1train'
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1analytics~1models~1{id}~1train'
   /api/v1/analytics/models/{id}/predict:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1analytics~1models~1{id}~1predict'
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1analytics~1models~1{id}~1predict'
   /api/v1/analytics/datasets:
-    $ref: './domains/analytics-domain.yaml#/paths/~1api~1v1~1analytics~1datasets'
+    $ref: './domains/data-domain.yaml#/paths/~1api~1v1~1analytics~1datasets'
+
+  # 客户端业务域 API
+  /api/v1/mobile/auth/login:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1auth~1login'
+  /api/v1/mobile/auth/logout:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1auth~1logout'
+  /api/v1/mobile/auth/refresh:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1auth~1refresh'
+  /api/v1/mobile/devices/register:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1devices~1register'
+  /api/v1/mobile/devices/{deviceId}:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1devices~1{deviceId}'
+  /api/v1/mobile/tickets:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1tickets'
+  /api/v1/mobile/tickets/{id}:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1tickets~1{id}'
+  /api/v1/mobile/tickets/{id}/status:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1tickets~1{id}~1status'
+  /api/v1/mobile/tickets/{id}/attachments:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1tickets~1{id}~1attachments'
+  /api/v1/mobile/tickets/{id}/checkin:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1tickets~1{id}~1checkin'
+  /api/v1/mobile/sync/upload:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1sync~1upload'
+  /api/v1/mobile/sync/download:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1sync~1download'
+  /api/v1/mobile/sync/status:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1sync~1status'
+  /api/v1/mobile/push/register:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1push~1register'
+  /api/v1/mobile/push/settings:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1push~1settings'
+  /api/v1/mobile/location/update:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1location~1update'
+  /api/v1/mobile/location/nearby-tickets:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1location~1nearby-tickets'
+  /api/v1/mobile/config:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1config'
+  /api/v1/mobile/files/upload:
+    $ref: './domains/client-domain.yaml#/paths/~1api~1v1~1mobile~1files~1upload'
 
   # Portal业务域 API
   /api/v1/dashboard/configs:
@@ -339,45 +543,267 @@ paths:
   /api/v1/customer-portal/faq/{id}:
     $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1customer-portal~1faq~1{id}'
 
-  # 移动端业务域 API
-  /api/v1/mobile/auth/login:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1auth~1login'
-  /api/v1/mobile/auth/logout:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1auth~1logout'
-  /api/v1/mobile/auth/refresh:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1auth~1refresh'
-  /api/v1/mobile/devices/register:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1devices~1register'
-  /api/v1/mobile/devices/{deviceId}:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1devices~1{deviceId}'
-  /api/v1/mobile/tickets:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1tickets'
-  /api/v1/mobile/tickets/{id}:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1tickets~1{id}'
-  /api/v1/mobile/tickets/{id}/status:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1tickets~1{id}~1status'
-  /api/v1/mobile/tickets/{id}/attachments:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1tickets~1{id}~1attachments'
-  /api/v1/mobile/tickets/{id}/checkin:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1tickets~1{id}~1checkin'
-  /api/v1/mobile/sync/upload:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1sync~1upload'
-  /api/v1/mobile/sync/download:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1sync~1download'
-  /api/v1/mobile/sync/status:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1sync~1status'
-  /api/v1/mobile/push/register:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1push~1register'
-  /api/v1/mobile/push/settings:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1push~1settings'
-  /api/v1/mobile/location/update:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1location~1update'
-  /api/v1/mobile/location/nearby-tickets:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1location~1nearby-tickets'
-  /api/v1/mobile/config:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1config'
-  /api/v1/mobile/files/upload:
-    $ref: './domains/mobile-domain.yaml#/paths/~1api~1v1~1mobile~1files~1upload'
+
+
+  # 工程师业务域 API
+  /api/v1/engineers:
+    $ref: './domains/engineer-domain.yaml#/paths/~1api~1v1~1engineers'
+  /api/v1/engineers/{id}:
+    $ref: './domains/engineer-domain.yaml#/paths/~1api~1v1~1engineers~1{id}'
+  /api/v1/engineers/{id}/status:
+    $ref: './domains/engineer-domain.yaml#/paths/~1api~1v1~1engineers~1{id}~1status'
+  /api/v1/engineers/batch:
+    $ref: './domains/engineer-domain.yaml#/paths/~1api~1v1~1engineers~1batch'
+  /api/v1/engineers/export:
+    $ref: './domains/engineer-domain.yaml#/paths/~1api~1v1~1engineers~1export'
+  /api/v1/engineers/{id}/skills:
+    $ref: './domains/engineer-domain.yaml#/paths/~1api~1v1~1engineers~1{id}~1skills'
+  /api/v1/engineers/skills/match:
+    $ref: './domains/engineer-domain.yaml#/paths/~1api~1v1~1engineers~1skills~1match'
+  /api/v1/schedules:
+    $ref: './domains/engineer-domain.yaml#/paths/~1api~1v1~1schedules'
+  /api/v1/performance/evaluations:
+    $ref: './domains/engineer-domain.yaml#/paths/~1api~1v1~1performance~1evaluations'
+  /api/v1/engineers/analytics/summary:
+    $ref: './domains/engineer-domain.yaml#/paths/~1api~1v1~1engineers~1analytics~1summary'
+
+  # 知识库业务域 API
+  /api/v1/knowledge/articles:
+    $ref: './domains/knowledge-domain.yaml#/paths/~1api~1v1~1knowledge~1articles'
+  /api/v1/knowledge/articles/{id}:
+    $ref: './domains/knowledge-domain.yaml#/paths/~1api~1v1~1knowledge~1articles~1{id}'
+  /api/v1/knowledge/articles/{id}/versions:
+    $ref: './domains/knowledge-domain.yaml#/paths/~1api~1v1~1knowledge~1articles~1{id}~1versions'
+  /api/v1/knowledge/search:
+    $ref: './domains/knowledge-domain.yaml#/paths/~1api~1v1~1knowledge~1search'
+  /api/v1/knowledge/search/suggest:
+    $ref: './domains/knowledge-domain.yaml#/paths/~1api~1v1~1knowledge~1search~1suggest'
+  /api/v1/knowledge/categories:
+    $ref: './domains/knowledge-domain.yaml#/paths/~1api~1v1~1knowledge~1categories'
+
+  # 通知消息业务域 API
+  /api/v1/notifications/send:
+    $ref: './domains/notification-domain.yaml#/paths/~1api~1v1~1notifications~1send'
+  /api/v1/notifications/batch-send:
+    $ref: './domains/notification-domain.yaml#/paths/~1api~1v1~1notifications~1batch-send'
+  /api/v1/notifications/{notificationId}/resend:
+    $ref: './domains/notification-domain.yaml#/paths/~1api~1v1~1notifications~1{notificationId}~1resend'
+  /api/v1/notifications:
+    $ref: './domains/notification-domain.yaml#/paths/~1api~1v1~1notifications'
+  /api/v1/notifications/{notificationId}:
+    $ref: './domains/notification-domain.yaml#/paths/~1api~1v1~1notifications~1{notificationId}'
+  /api/v1/notifications/{notificationId}/read:
+    $ref: './domains/notification-domain.yaml#/paths/~1api~1v1~1notifications~1{notificationId}~1read'
+  /api/v1/notifications/batch-read:
+    $ref: './domains/notification-domain.yaml#/paths/~1api~1v1~1notifications~1batch-read'
+  /api/v1/notifications/templates:
+    $ref: './domains/notification-domain.yaml#/paths/~1api~1v1~1notifications~1templates'
+  /api/v1/notifications/templates/{templateId}:
+    $ref: './domains/notification-domain.yaml#/paths/~1api~1v1~1notifications~1templates~1{templateId}'
+  /api/v1/users/{userId}/notification-settings:
+    $ref: './domains/notification-domain.yaml#/paths/~1api~1v1~1users~1{userId}~1notification-settings'
+  /api/v1/notifications/statistics:
+    $ref: './domains/notification-domain.yaml#/paths/~1api~1v1~1notifications~1statistics'
+  /api/v1/notifications/events:
+    $ref: './domains/notification-domain.yaml#/paths/~1api~1v1~1notifications~1events'
+
+  # 系统集成业务域 API
+  /api/v1/integrations/configs:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1configs'
+  /api/v1/integrations/configs/{id}:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1configs~1{id}'
+  /api/v1/integrations/configs/{id}/test:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1configs~1{id}~1test'
+  /api/v1/integrations/configs/{id}/activate:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1configs~1{id}~1activate'
+  /api/v1/integrations/configs/batch:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1configs~1batch'
+  /api/v1/integrations/configs/export:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1configs~1export'
+  /api/v1/integrations/{id}/sync:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1{id}~1sync'
+  /api/v1/integrations/{id}/sync/status:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1{id}~1sync~1status'
+  /api/v1/integrations/{id}/sync/stop:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1{id}~1sync~1stop'
+  /api/v1/integrations/{id}/sync/history:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1{id}~1sync~1history'
+  /api/v1/integrations/{id}/status:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1{id}~1status'
+  /api/v1/integrations/{id}/metrics:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1{id}~1metrics'
+  /api/v1/integrations/health:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1health'
+  /api/v1/integrations/alerts/webhook:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1alerts~1webhook'
+  /api/v1/integrations/templates:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1templates'
+  /api/v1/integrations/templates/{id}:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1templates~1{id}'
+  /api/v1/integrations/logs/export:
+    $ref: './domains/integration-domain.yaml#/paths/~1api~1v1~1integrations~1logs~1export'
+
+  # 用户体验业务域 API
+  /api/v1/ux/personalization:
+    $ref: './domains/experience-domain.yaml#/paths/~1api~1v1~1ux~1personalization'
+  /api/v1/ux/accessibility:
+    $ref: './domains/experience-domain.yaml#/paths/~1api~1v1~1ux~1accessibility'
+
+  # 工单业务域 API
+  /api/v1/tickets:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets'
+  /api/v1/tickets/{id}:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1{id}'
+  /api/v1/tickets/{id}/status:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1{id}~1status'
+  /api/v1/tickets/{id}/assign:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1{id}~1assign'
+  /api/v1/tickets/{id}/accept:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1{id}~1accept'
+  /api/v1/tickets/{id}/escalate:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1{id}~1escalate'
+  /api/v1/tickets/{id}/resolve:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1{id}~1resolve'
+  /api/v1/tickets/{id}/attachments:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1{id}~1attachments'
+  /api/v1/tickets/{ticket_id}/attachments/{attachment_id}:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1{ticket_id}~1attachments~1{attachment_id}'
+  /api/v1/tickets/batch:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1batch'
+  /api/v1/tickets/batch/assign:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1batch~1assign'
+  /api/v1/tickets/batch/close:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1batch~1close'
+  /api/v1/tickets/search:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1search'
+  /api/v1/tickets/statistics:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1statistics'
+  /api/v1/tickets/export:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1export'
+  /api/v1/tickets/dashboard:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1tickets~1dashboard'
+  /api/v1/dispatch/auto:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1dispatch~1auto'
+  /api/v1/dispatch/manual:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1dispatch~1manual'
+  /api/v1/dispatch/batch:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1dispatch~1batch'
+  /api/v1/dispatch/{id}/reassign:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1dispatch~1{id}~1reassign'
+  /api/v1/dispatch/{id}/cancel:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1dispatch~1{id}~1cancel'
+  /api/v1/dispatch/candidates:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1dispatch~1candidates'
+  /api/v1/dispatch/rules:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1dispatch~1rules'
+  /api/v1/dispatch/rules/{id}:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1dispatch~1rules~1{id}'
+  /api/v1/dispatch/strategies:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1dispatch~1strategies'
+  /api/v1/dispatch/weights:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1dispatch~1weights'
+  /api/v1/ml/models:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1ml~1models'
+  /api/v1/ml/models/{id}/deploy:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1ml~1models~1{id}~1deploy'
+  /api/v1/ml/models/{id}/rollback:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1ml~1models~1{id}~1rollback'
+  /api/v1/ml/training/start:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1ml~1training~1start'
+  /api/v1/dispatch/statistics:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1dispatch~1statistics'
+  /api/v1/dispatch/performance:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1dispatch~1performance'
+  /api/v1/dispatch/predictions:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1dispatch~1predictions'
+  /api/v1/dispatch/health:
+    $ref: './domains/ticket-domain.yaml#/paths/~1api~1v1~1dispatch~1health'
+
+  # 工作流业务域 API
+  /api/v1/workflow/definitions:
+    $ref: './domains/workflow-domain.yaml#/paths/~1api~1v1~1workflow~1definitions'
+  /api/v1/workflow/definitions/{id}:
+    $ref: './domains/workflow-domain.yaml#/paths/~1api~1v1~1workflow~1definitions~1{id}'
+  /api/v1/workflow/definitions/{id}/publish:
+    $ref: './domains/workflow-domain.yaml#/paths/~1api~1v1~1workflow~1definitions~1{id}~1publish'
+  /api/v1/workflow/instances/start:
+    $ref: './domains/workflow-domain.yaml#/paths/~1api~1v1~1workflow~1instances~1start'
+  /api/v1/workflow/instances:
+    $ref: './domains/workflow-domain.yaml#/paths/~1api~1v1~1workflow~1instances'
+  /api/v1/workflow/instances/{instance_id}:
+    $ref: './domains/workflow-domain.yaml#/paths/~1api~1v1~1workflow~1instances~1{instance_id}'
+  /api/v1/workflow/instances/{instance_id}/suspend:
+    $ref: './domains/workflow-domain.yaml#/paths/~1api~1v1~1workflow~1instances~1{instance_id}~1suspend'
+  /api/v1/workflow/instances/{instance_id}/resume:
+    $ref: './domains/workflow-domain.yaml#/paths/~1api~1v1~1workflow~1instances~1{instance_id}~1resume'
+  /api/v1/workflow/tasks/pending:
+    $ref: './domains/workflow-domain.yaml#/paths/~1api~1v1~1workflow~1tasks~1pending'
+  /api/v1/workflow/tasks/{task_id}:
+    $ref: './domains/workflow-domain.yaml#/paths/~1api~1v1~1workflow~1tasks~1{task_id}'
+  /api/v1/workflow/tasks/{task_id}/complete:
+    $ref: './domains/workflow-domain.yaml#/paths/~1api~1v1~1workflow~1tasks~1{task_id}~1complete'
+  /api/v1/workflow/tasks/{task_id}/delegate:
+    $ref: './domains/workflow-domain.yaml#/paths/~1api~1v1~1workflow~1tasks~1{task_id}~1delegate'
+  /api/v1/workflow/statistics:
+    $ref: './domains/workflow-domain.yaml#/paths/~1api~1v1~1workflow~1statistics'
+
+  # 门户业务域 API
+  /api/v1/dashboard/configs:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1dashboard~1configs'
+  /api/v1/dashboard/configs/{id}:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1dashboard~1configs~1{id}'
+  /api/v1/dashboard/configs/{id}/clone:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1dashboard~1configs~1{id}~1clone'
+  /api/v1/dashboard/configs/{id}/share:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1dashboard~1configs~1{id}~1share'
+  /api/v1/dashboard/widgets:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1dashboard~1widgets'
+  /api/v1/dashboard/widgets/{code}:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1dashboard~1widgets~1{code}'
+  /api/v1/dashboard/widgets/{code}/data:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1dashboard~1widgets~1{code}~1data'
+  /api/v1/dashboard/preferences:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1dashboard~1preferences'
+  /api/v1/dashboard/tasks:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1dashboard~1tasks'
+  /api/v1/dashboard/notifications:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1dashboard~1notifications'
+  /api/v1/dashboard/notifications/{id}/read:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1dashboard~1notifications~1{id}~1read'
+  /api/v1/dashboard/notifications/batch-read:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1dashboard~1notifications~1batch-read'
+  /api/v1/dashboard/statistics/overview:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1dashboard~1statistics~1overview'
+  /api/v1/customer-portal/config:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1customer-portal~1config'
+  /api/v1/customer-portal/search:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1customer-portal~1search'
+  /api/v1/customer-portal/search/suggestions:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1customer-portal~1search~1suggestions'
+  /api/v1/customer-portal/ai-chat:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1customer-portal~1ai-chat'
+  /api/v1/customer-portal/ai-chat/sessions:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1customer-portal~1ai-chat~1sessions'
+  /api/v1/customer-portal/tickets:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1customer-portal~1tickets'
+  /api/v1/customer-portal/tickets/{id}:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1customer-portal~1tickets~1{id}'
+  /api/v1/customer-portal/tickets/{id}/status:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1customer-portal~1tickets~1{id}~1status'
+  /api/v1/customer-portal/feedback:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1customer-portal~1feedback'
+  /api/v1/customer-portal/service-status:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1customer-portal~1service-status'
+  /api/v1/customer-portal/documents:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1customer-portal~1documents'
+  /api/v1/customer-portal/documents/{id}/download:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1customer-portal~1documents~1{id}~1download'
+  /api/v1/customer-portal/analytics/track:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1customer-portal~1analytics~1track'
+  /api/v1/customer-portal/faq:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1customer-portal~1faq'
+  /api/v1/customer-portal/faq/{id}:
+    $ref: './domains/portal-domain.yaml#/paths/~1api~1v1~1customer-portal~1faq~1{id}'
 
 components:
   schemas:

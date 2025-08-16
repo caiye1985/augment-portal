@@ -5,13 +5,47 @@ info:
   description: 系统相关的API聚合，包括系统设置、系统管理、运维管理等功能
 
 paths:
-  # 系统管理模块 API
+  # 系统管理模块 API - 用户管理
   /api/v1/system/users:
     $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1users'
+  /api/v1/system/users/{id}:
+    $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1users~1{id}'
+  /api/v1/system/users/{id}/roles:
+    $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1users~1{id}~1roles'
+  /api/v1/system/users/batch:
+    $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1users~1batch'
+  /api/v1/system/users/export:
+    $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1users~1export'
+
+  # 系统管理模块 API - 角色管理
   /api/v1/system/roles:
     $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1roles'
+  /api/v1/system/roles/{id}:
+    $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1roles~1{id}'
+  /api/v1/system/roles/{id}/permissions:
+    $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1roles~1{id}~1permissions'
+
+  # 系统管理模块 API - 权限管理
   /api/v1/system/permissions:
     $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1permissions'
+
+  # 系统管理模块 API - 配置管理
+  /api/v1/system/configs:
+    $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1configs'
+  /api/v1/system/configs/{key}:
+    $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1configs~1{key}'
+
+  # 系统管理模块 API - 模块管理
+  /api/v1/system/modules/{code}/toggle:
+    $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1modules~1{code}~1toggle'
+
+  # 系统管理模块 API - 审计日志
+  /api/v1/system/audit/logs:
+    $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1audit~1logs'
+
+  # 系统管理模块 API - 统计分析
+  /api/v1/system/analytics/summary:
+    $ref: '../modules/REQ-010-系统管理模块/openapi.yaml#/paths/~1api~1v1~1system~1analytics~1summary'
 
   # 系统设置模块 API - 系统配置管理
   /api/v1/system-config:
@@ -59,17 +93,7 @@ paths:
   /api/v1/settings:
     $ref: '../modules/REQ-008-系统设置/openapi.yaml#/paths/~1api~1v1~1settings'
 
-  # 运维管理模块 API
-  /api/v1/ops/assets:
-    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1assets'
-  /api/v1/ops/alerts/events:
-    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1alerts~1events'
-  /api/v1/ops/playbooks:
-    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1playbooks'
-  /api/v1/ops/tasks:
-    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1tasks'
-  /api/v1/ops/monitor-configs:
-    $ref: '../modules/REQ-009-运维管理/openapi.yaml#/paths/~1api~1v1~1ops~1monitor-configs'
+
 
 components:
   # 引用全局通用组件

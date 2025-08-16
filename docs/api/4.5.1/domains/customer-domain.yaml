@@ -71,6 +71,67 @@ paths:
   /api/v1/customers/{id}/satisfaction:
     $ref: '../modules/REQ-016-客户关系管理模块/openapi.yaml#/paths/~1api~1v1~1customers~1{id}~1satisfaction'
 
+  # 甲方管理与报表系统API（REQ-007）
+  # 甲方主题配置
+  /api/v1/client/theme/{tenant_id}:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1theme~1{tenant_id}'
+
+  # 甲方认证
+  /api/v1/client/auth/login:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1auth~1login'
+  /api/v1/client/auth/permissions:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1auth~1permissions'
+
+  # 甲方工作空间
+  /api/v1/client/workspace:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1workspace'
+
+  # 甲方仪表板
+  /api/v1/client/dashboard/overview:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1dashboard~1overview'
+  /api/v1/client/dashboard/config:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1dashboard~1config'
+  /api/v1/client/dashboard/config/{config_id}:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1dashboard~1config~1{config_id}'
+
+  # 甲方工单管理
+  /api/v1/client/tickets:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1tickets'
+  /api/v1/client/tickets/{ticket_id}:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1tickets~1{ticket_id}'
+  /api/v1/client/tickets/statistics:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1tickets~1statistics'
+
+  # 甲方SLA管理
+  /api/v1/client/sla/compliance:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1sla~1compliance'
+  /api/v1/client/sla/violations:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1sla~1violations'
+
+  # 甲方报表管理
+  /api/v1/client/reports/generate:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1reports~1generate'
+  /api/v1/client/reports/progress/{task_id}:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1reports~1progress~1{task_id}'
+  /api/v1/client/reports/history:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1reports~1history'
+  /api/v1/client/reports/templates:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1reports~1templates'
+
+  # 甲方数据导出
+  /api/v1/client/export/data:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1export~1data'
+  /api/v1/client/export/progress/{export_id}:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1export~1progress~1{export_id}'
+
+  # 甲方文件管理
+  /api/v1/client/files/download/{file_id}:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1files~1download~1{file_id}'
+
+  # 甲方订阅管理
+  /api/v1/client/subscriptions:
+    $ref: '../modules/REQ-007-甲方管理与报表系统/openapi.yaml#/paths/~1api~1v1~1client~1subscriptions'
+
 components:
   # 引用全局通用组件
   schemas:

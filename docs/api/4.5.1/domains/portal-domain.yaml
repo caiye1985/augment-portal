@@ -5,11 +5,41 @@ info:
   description: 门户相关的API聚合，包括工作台仪表板、客户自助服务等功能
 
 paths:
-  # 工作台与仪表板 API
+  # 工作台与仪表板 API - 仪表板配置
   /api/v1/dashboard/configs:
     $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1api~1v1~1dashboard~1configs'
+  /api/v1/dashboard/configs/{id}:
+    $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1api~1v1~1dashboard~1configs~1{id}'
+  /api/v1/dashboard/configs/{id}/clone:
+    $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1api~1v1~1dashboard~1configs~1{id}~1clone'
+  /api/v1/dashboard/configs/{id}/share:
+    $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1api~1v1~1dashboard~1configs~1{id}~1share'
+
+  # 工作台与仪表板 API - 小组件管理
   /api/v1/dashboard/widgets:
     $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1api~1v1~1dashboard~1widgets'
+  /api/v1/dashboard/widgets/{code}:
+    $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1api~1v1~1dashboard~1widgets~1{code}'
+  /api/v1/dashboard/widgets/{code}/data:
+    $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1api~1v1~1dashboard~1widgets~1{code}~1data'
+
+  # 工作台与仪表板 API - 用户偏好
+  /api/v1/dashboard/preferences:
+    $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1api~1v1~1dashboard~1preferences'
+
+  # 工作台与仪表板 API - 任务管理
+  /api/v1/dashboard/tasks:
+    $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1api~1v1~1dashboard~1tasks'
+
+  # 工作台与仪表板 API - 通知管理
+  /api/v1/dashboard/notifications:
+    $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1api~1v1~1dashboard~1notifications'
+  /api/v1/dashboard/notifications/{id}/read:
+    $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1api~1v1~1dashboard~1notifications~1{id}~1read'
+  /api/v1/dashboard/notifications/batch-read:
+    $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1api~1v1~1dashboard~1notifications~1batch-read'
+
+  # 工作台与仪表板 API - 统计概览
   /api/v1/dashboard/statistics/overview:
     $ref: '../modules/REQ-002-工作台与仪表板/openapi.yaml#/paths/~1api~1v1~1dashboard~1statistics~1overview'
 

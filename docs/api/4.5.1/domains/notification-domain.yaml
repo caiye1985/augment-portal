@@ -1,9 +1,50 @@
 openapi: 3.0.3
 info:
-  title: Unotification 业务域 API 聚合
+  title: 通知消息业务域 API 聚合
   version: 1.0.0
+  description: 通知与消息系统相关的API聚合，包括消息发送、通知管理、模板配置、推送设置等功能
+
 paths:
+  # 消息发送API
   /api/v1/notifications/send:
     $ref: '../modules/REQ-011-通知与消息系统/openapi.yaml#/paths/~1api~1v1~1notifications~1send'
+  /api/v1/notifications/batch-send:
+    $ref: '../modules/REQ-011-通知与消息系统/openapi.yaml#/paths/~1api~1v1~1notifications~1batch-send'
+  /api/v1/notifications/{notificationId}/resend:
+    $ref: '../modules/REQ-011-通知与消息系统/openapi.yaml#/paths/~1api~1v1~1notifications~1{notificationId}~1resend'
+
+  # 通知管理API
   /api/v1/notifications:
     $ref: '../modules/REQ-011-通知与消息系统/openapi.yaml#/paths/~1api~1v1~1notifications'
+  /api/v1/notifications/{notificationId}:
+    $ref: '../modules/REQ-011-通知与消息系统/openapi.yaml#/paths/~1api~1v1~1notifications~1{notificationId}'
+  /api/v1/notifications/{notificationId}/read:
+    $ref: '../modules/REQ-011-通知与消息系统/openapi.yaml#/paths/~1api~1v1~1notifications~1{notificationId}~1read'
+  /api/v1/notifications/batch-read:
+    $ref: '../modules/REQ-011-通知与消息系统/openapi.yaml#/paths/~1api~1v1~1notifications~1batch-read'
+
+  # 通知模板管理API
+  /api/v1/notifications/templates:
+    $ref: '../modules/REQ-011-通知与消息系统/openapi.yaml#/paths/~1api~1v1~1notifications~1templates'
+  /api/v1/notifications/templates/{templateId}:
+    $ref: '../modules/REQ-011-通知与消息系统/openapi.yaml#/paths/~1api~1v1~1notifications~1templates~1{templateId}'
+
+  # 用户通知设置API
+  /api/v1/users/{userId}/notification-settings:
+    $ref: '../modules/REQ-011-通知与消息系统/openapi.yaml#/paths/~1api~1v1~1users~1{userId}~1notification-settings'
+
+  # 通知统计与事件API
+  /api/v1/notifications/statistics:
+    $ref: '../modules/REQ-011-通知与消息系统/openapi.yaml#/paths/~1api~1v1~1notifications~1statistics'
+  /api/v1/notifications/events:
+    $ref: '../modules/REQ-011-通知与消息系统/openapi.yaml#/paths/~1api~1v1~1notifications~1events'
+
+components:
+  schemas:
+    # 引用全局通用组件
+    ApiResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+    PagedResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/PagedResponse'
+    ErrorResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'

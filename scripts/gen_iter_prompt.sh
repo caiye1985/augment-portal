@@ -108,13 +108,21 @@ render_prompt() {
     local module_name
     module_name=$(get_module_name "$mid")
 
-    # 设置环境变量（API_BUNDLE可选）
+    # 构建API模块文件路径
+    local api_module_file="docs/api/$VERSION/modules/$mid-$module_name/openapi.yaml"
+
+    # 设置环境变量（API_BUNDLE和API_MODULE_FILE可选）
     export GLOBAL_FILE MOCK_GUIDE MODULE_FILE="$path" MODULE_ID="$mid" MODULE_NAME="$module_name"
     export VERSION
     if [[ -f "$API_BUNDLE" ]]; then
         export API_BUNDLE
     else
         export API_BUNDLE="（文件不存在，跳过引用）"
+    fi
+    if [[ -f "$api_module_file" ]]; then
+        export API_MODULE_FILE="$api_module_file"
+    else
+        export API_MODULE_FILE="（文件不存在，跳过引用）"
     fi
 
     envsubst < "$template" | sed 's/DOLLAR_REF/$ref/g'
@@ -143,6 +151,10 @@ generate_all_modules() {
       frontend) template_file="prompt-templates/frontend-iter.md" ;;
       mobile-init) template_file="prompt-templates/mobile-init.md" ;;
       mobile) template_file="prompt-templates/mobile-iter.md" ;;
+      prd) template_file="prompt-templates/prd-generation.md" ;;
+      prd-ai) template_file="prompt-templates/prd-generation-ai-focused.md" ;;
+      prd-mobile) template_file="prompt-templates/prd-mobile.md" ;;
+      prd-quality) template_file="prompt-templates/prd-quality-check.md" ;;
       *) echo "[x] 未知模式: $mode" && exit 1 ;;
     esac
 
@@ -154,6 +166,12 @@ generate_all_modules() {
         local line; line=$(sed -n "$((idx+1))p" "$list_file")
         local mid path; read mid path <<< "$line"
         echo "[i] 正在处理模块 $((idx+1))/$total: $mid"
+
+        # 移动端模式特殊处理：只处理 REQ-020
+        if [[ "$mode" == "prd-mobile" && "$mid" != "REQ-020" ]]; then
+            echo "[i] 跳过非移动端模块: $mid"
+            continue
+        fi
 
         # 生成prompt
         local prompt; prompt=$(render_prompt "$template_file" "$mid" "$path")
@@ -185,7 +203,7 @@ if [ $# -lt 2 ]; then
     echo "用法: $0 <模式> <阶段>"
     echo ""
     echo "参数说明:"
-    echo "  <模式>   : api-init, api, backend-init, backend, frontend-init, frontend, mobile-init, mobile"
+    echo "  <模式>   : api-init, api, backend-init, backend, frontend-init, frontend, mobile-init, mobile, prd, prd-ai, prd-mobile, prd-quality"
     echo "  <阶段>   : P0, P1, P2, all"
     echo ""
     echo "示例用法:"
@@ -194,6 +212,10 @@ if [ $# -lt 2 ]; then
     echo "  $0 api P2        # 生成P2阶段所有模块的API prompt"
     echo "  $0 api all       # 生成所有阶段的API prompt"
     echo "  $0 backend P0    # 生成P0阶段所有模块的后端 prompt"
+    echo "  $0 prd P0        # 生成P0阶段所有模块的PRD prompt"
+    echo "  $0 prd-ai P0     # 生成P0阶段AI专用精简PRD prompt"
+    echo "  $0 prd-mobile P0 # 生成移动端模块的PRD prompt"
+    echo "  $0 prd-quality P0 # 生成PRD质量检查 prompt"
     echo ""
     echo "注意: 每个模块都会生成独立的prompt文件，支持中断和恢复"
     echo ""

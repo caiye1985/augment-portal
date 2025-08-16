@@ -2,22 +2,62 @@ openapi: 3.0.3
 info:
   title: 客户端业务域 API 聚合
   version: 1.0.0
-  description: 客户端相关的API聚合，包括移动端应用等功能
+  description: 客户端相关的API聚合，包括移动端应用、设备管理、离线同步等功能
 
 paths:
-  # 移动端应用模块暂未实现，添加占位符路径
-  /api/v1/client/placeholder:
-    get:
-      summary: 客户端占位符接口
-      description: 客户端模块占位符接口，待实现
-      operationId: client_placeholder
-      responses:
-        '200':
-          description: 占位符响应
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
+  # 移动端认证API
+  /api/v1/mobile/auth/login:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1auth~1login'
+  /api/v1/mobile/auth/logout:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1auth~1logout'
+  /api/v1/mobile/auth/refresh:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1auth~1refresh'
+
+  # 设备管理API
+  /api/v1/mobile/devices/register:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1devices~1register'
+  /api/v1/mobile/devices/{deviceId}:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1devices~1{deviceId}'
+
+  # 移动端工单API
+  /api/v1/mobile/tickets:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1tickets'
+  /api/v1/mobile/tickets/{id}:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1tickets~1{id}'
+  /api/v1/mobile/tickets/{id}/status:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1tickets~1{id}~1status'
+  /api/v1/mobile/tickets/{id}/attachments:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1tickets~1{id}~1attachments'
+  /api/v1/mobile/tickets/{id}/checkin:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1tickets~1{id}~1checkin'
+
+  # 数据同步API
+  /api/v1/mobile/sync/upload:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1sync~1upload'
+  /api/v1/mobile/sync/download:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1sync~1download'
+  /api/v1/mobile/sync/status:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1sync~1status'
+
+  # 推送通知API
+  /api/v1/mobile/push/register:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1push~1register'
+  /api/v1/mobile/push/settings:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1push~1settings'
+
+  # 位置服务API
+  /api/v1/mobile/location/update:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1location~1update'
+  /api/v1/mobile/location/nearby-tickets:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1location~1nearby-tickets'
+
+  # 配置管理API
+  /api/v1/mobile/config:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1config'
+
+  # 文件上传API
+  /api/v1/mobile/files/upload:
+    $ref: '../modules/REQ-020-移动端应用模块/openapi.yaml#/paths/~1api~1v1~1mobile~1files~1upload'
 
 components:
   schemas:

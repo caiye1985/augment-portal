@@ -1,11 +1,46 @@
 openapi: 3.0.3
 info:
-  title: Uengineer 业务域 API 聚合
+  title: 工程师业务域 API 聚合
   version: 1.0.0
+  description: 工程师管理相关的API聚合，包括工程师档案、技能管理、排班调度、绩效评估等功能
+
 paths:
+  # 工程师档案管理API
   /api/v1/engineers:
     $ref: '../modules/REQ-006-工程师管理系统/openapi.yaml#/paths/~1api~1v1~1engineers'
   /api/v1/engineers/{id}:
     $ref: '../modules/REQ-006-工程师管理系统/openapi.yaml#/paths/~1api~1v1~1engineers~1{id}'
+  /api/v1/engineers/{id}/status:
+    $ref: '../modules/REQ-006-工程师管理系统/openapi.yaml#/paths/~1api~1v1~1engineers~1{id}~1status'
+  /api/v1/engineers/batch:
+    $ref: '../modules/REQ-006-工程师管理系统/openapi.yaml#/paths/~1api~1v1~1engineers~1batch'
+  /api/v1/engineers/export:
+    $ref: '../modules/REQ-006-工程师管理系统/openapi.yaml#/paths/~1api~1v1~1engineers~1export'
+
+  # 技能管理API
   /api/v1/engineers/{id}/skills:
     $ref: '../modules/REQ-006-工程师管理系统/openapi.yaml#/paths/~1api~1v1~1engineers~1{id}~1skills'
+  /api/v1/engineers/skills/match:
+    $ref: '../modules/REQ-006-工程师管理系统/openapi.yaml#/paths/~1api~1v1~1engineers~1skills~1match'
+
+  # 排班调度API
+  /api/v1/schedules:
+    $ref: '../modules/REQ-006-工程师管理系统/openapi.yaml#/paths/~1api~1v1~1schedules'
+
+  # 绩效评估API
+  /api/v1/performance/evaluations:
+    $ref: '../modules/REQ-006-工程师管理系统/openapi.yaml#/paths/~1api~1v1~1performance~1evaluations'
+
+  # 数据统计分析API
+  /api/v1/engineers/analytics/summary:
+    $ref: '../modules/REQ-006-工程师管理系统/openapi.yaml#/paths/~1api~1v1~1engineers~1analytics~1summary'
+
+components:
+  schemas:
+    # 引用全局通用组件
+    ApiResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+    PagedResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/PagedResponse'
+    ErrorResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'

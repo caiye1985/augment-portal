@@ -1,0 +1,182 @@
+# API文档三级架构映射配置文件
+# 定义模块文件到业务域文件的映射关系
+
+# 配置版本
+version: "1.0"
+
+# 映射规则说明
+description: |
+  此配置文件定义了模块级API文档到业务域级API文档的映射关系。
+  每个模块应该映射到一个对应的业务域，确保API路径的完整聚合。
+
+# 模块到业务域的映射关系
+module_to_domain_mapping:
+  # 工程师管理相关
+  "REQ-006-工程师管理系统": "engineer-domain"
+  
+  # 知识库管理相关
+  "REQ-005-知识库管理系统": "knowledge-domain"
+  
+  # 通知与消息相关
+  "REQ-011-通知与消息系统": "notification-domain"
+  
+  # 系统集成相关
+  "REQ-012-系统集成模块": "integration-domain"
+  
+  # 用户体验相关
+  "REQ-015-用户体验增强系统": "experience-domain"
+  
+  # 客户端应用相关（移动端等）
+  "REQ-020-移动端应用模块": "client-domain"
+  
+  # 数据分析与AI相关
+  "REQ-023-数据分析与商业智能模块": "data-domain"
+  "REQ-013-智能分析与AI功能": "data-domain"
+  
+  # 认证与权限相关
+  "REQ-001-基础架构模块": "auth-domain"
+  "REQ-022-用户与权限管理模块": "auth-domain"
+  "REQ-021-资源权限管理模块": "auth-domain"
+  
+  # 工单管理相关
+  "REQ-003-工单管理系统": "ticket-domain"
+  "REQ-004-智能派单系统": "ticket-domain"
+  
+  # 客户关系管理相关
+  "REQ-016-客户关系管理模块": "customer-domain"
+  "REQ-007-甲方管理与报表系统": "customer-domain"
+  
+  # SLA管理相关
+  "REQ-017-SLA管理模块": "sla-domain"
+  
+  # 财务管理相关
+  "REQ-018-财务管理模块": "finance-domain"
+  
+  # 系统设置与管理相关
+  "REQ-008-系统设置": "system-domain"
+  "REQ-010-系统管理模块": "system-domain"
+  
+  # 运维管理相关
+  "REQ-009-运维管理": "ops-domain"
+  
+  # 门户与仪表板相关
+  "REQ-002-工作台与仪表板": "portal-domain"
+  "REQ-019-客户自助服务模块": "portal-domain"
+  
+  # 工作流引擎相关
+  "REQ-014-工作流引擎系统": "workflow-domain"
+
+# 业务域描述
+domain_descriptions:
+  engineer-domain:
+    name: "工程师业务域"
+    description: "工程师管理相关的API聚合，包括工程师档案、技能管理、排班调度、绩效评估等功能"
+    
+  knowledge-domain:
+    name: "知识库业务域"
+    description: "知识库管理相关的API聚合，包括知识文章管理、分类管理、搜索功能、版本控制等功能"
+    
+  notification-domain:
+    name: "通知消息业务域"
+    description: "通知与消息系统相关的API聚合，包括消息发送、通知管理、模板配置、推送设置等功能"
+    
+  integration-domain:
+    name: "系统集成业务域"
+    description: "系统集成相关的API聚合，包括第三方系统集成配置、数据同步、接口管理等功能"
+    
+  experience-domain:
+    name: "用户体验业务域"
+    description: "用户体验增强相关的API聚合，包括个性化设置、无障碍访问、界面优化等功能"
+    
+  client-domain:
+    name: "客户端业务域"
+    description: "客户端相关的API聚合，包括移动端应用、设备管理、离线同步等功能"
+    
+  data-domain:
+    name: "数据业务域"
+    description: "数据相关的API聚合，包括数据分析与商业智能、AI功能、分析任务管理等功能"
+    
+  auth-domain:
+    name: "认证业务域"
+    description: "认证与权限相关的API聚合，包括用户认证、权限管理、资源控制等功能"
+    
+  ticket-domain:
+    name: "工单业务域"
+    description: "工单管理相关的API聚合，包括工单创建、状态管理、智能派单等功能"
+    
+  customer-domain:
+    name: "客户业务域"
+    description: "客户关系管理相关的API聚合，包括客户信息管理、关系维护、价值分析等功能"
+    
+  sla-domain:
+    name: "SLA业务域"
+    description: "SLA管理相关的API聚合，包括SLA定义、监控、告警、违规处理等功能"
+    
+  finance-domain:
+    name: "财务业务域"
+    description: "财务管理相关的API聚合，包括发票管理、支付处理、合同续费、财务报表等功能"
+    
+  system-domain:
+    name: "系统业务域"
+    description: "系统设置与管理相关的API聚合，包括系统配置、功能开关、灰度发布等功能"
+    
+  ops-domain:
+    name: "运维业务域"
+    description: "运维管理相关的API聚合，包括资产管理、告警处理、自动化运维等功能"
+    
+  portal-domain:
+    name: "门户业务域"
+    description: "门户与仪表板相关的API聚合，包括工作台配置、客户自助服务、数据展示等功能"
+    
+  workflow-domain:
+    name: "工作流业务域"
+    description: "工作流引擎相关的API聚合，包括流程定义、实例管理、任务处理等功能"
+
+# 验证规则配置
+validation_rules:
+  # 是否要求所有模块都必须映射到业务域
+  require_all_modules_mapped: true
+  
+  # 是否要求所有业务域都必须在全局索引中
+  require_all_domains_in_global: true
+  
+  # 是否允许一个模块映射到多个业务域
+  allow_multiple_domain_mapping: false
+  
+  # 是否允许业务域为空（没有对应的模块）
+  allow_empty_domains: false
+  
+  # API路径完整性检查级别
+  completeness_check_level: "strict"  # strict, moderate, loose
+  
+  # 引用路径验证级别
+  reference_validation_level: "full"  # full, basic, skip
+
+# 排除规则
+exclusions:
+  # 排除的模块（不参与验证）
+  excluded_modules: []
+  
+  # 排除的业务域（不参与验证）
+  excluded_domains: []
+  
+  # 排除的API路径模式（正则表达式）
+  excluded_api_patterns:
+    - "^/api/v1/.*placeholder.*$"  # 排除占位符API
+    - "^/api/v1/.*test.*$"         # 排除测试API
+
+# 报告配置
+reporting:
+  # 报告输出格式
+  output_formats:
+    - "json"
+    - "text"
+  
+  # 是否包含详细的API路径列表
+  include_detailed_paths: true
+  
+  # 是否包含映射关系图
+  include_mapping_diagram: false
+  
+  # 报告保留天数
+  retention_days: 30

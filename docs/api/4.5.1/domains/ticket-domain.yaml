@@ -16,10 +16,76 @@ paths:
     $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1{id}~1assign'
   /api/v1/tickets/{id}/accept:
     $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1{id}~1accept'
+  /api/v1/tickets/{id}/escalate:
+    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1{id}~1escalate'
   /api/v1/tickets/{id}/resolve:
     $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1{id}~1resolve'
   /api/v1/tickets/{id}/attachments:
     $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1{id}~1attachments'
+  /api/v1/tickets/{ticket_id}/attachments/{attachment_id}:
+    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1{ticket_id}~1attachments~1{attachment_id}'
+
+  # 工单批量操作API
+  /api/v1/tickets/batch:
+    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1batch'
+  /api/v1/tickets/batch/assign:
+    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1batch~1assign'
+  /api/v1/tickets/batch/close:
+    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1batch~1close'
+
+  # 工单搜索和统计API
+  /api/v1/tickets/search:
+    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1search'
+  /api/v1/tickets/statistics:
+    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1statistics'
+  /api/v1/tickets/export:
+    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1export'
+  /api/v1/tickets/dashboard:
+    $ref: '../modules/REQ-003-工单管理系统/openapi.yaml#/paths/~1api~1v1~1tickets~1dashboard'
+
+  # 智能派单系统 - 派单操作API
+  /api/v1/dispatch/auto:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1dispatch~1auto'
+  /api/v1/dispatch/manual:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1dispatch~1manual'
+  /api/v1/dispatch/batch:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1dispatch~1batch'
+  /api/v1/dispatch/{id}/reassign:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1dispatch~1{id}~1reassign'
+  /api/v1/dispatch/{id}/cancel:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1dispatch~1{id}~1cancel'
+  /api/v1/dispatch/candidates:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1dispatch~1candidates'
+
+  # 派单规则和策略API
+  /api/v1/dispatch/rules:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1dispatch~1rules'
+  /api/v1/dispatch/rules/{id}:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1dispatch~1rules~1{id}'
+  /api/v1/dispatch/strategies:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1dispatch~1strategies'
+  /api/v1/dispatch/weights:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1dispatch~1weights'
+
+  # 机器学习模型API
+  /api/v1/ml/models:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1ml~1models'
+  /api/v1/ml/models/{id}/deploy:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1ml~1models~1{id}~1deploy'
+  /api/v1/ml/models/{id}/rollback:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1ml~1models~1{id}~1rollback'
+  /api/v1/ml/training/start:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1ml~1training~1start'
+
+  # 派单统计和监控API
+  /api/v1/dispatch/statistics:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1dispatch~1statistics'
+  /api/v1/dispatch/performance:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1dispatch~1performance'
+  /api/v1/dispatch/predictions:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1dispatch~1predictions'
+  /api/v1/dispatch/health:
+    $ref: '../modules/REQ-004-智能派单系统/openapi.yaml#/paths/~1api~1v1~1dispatch~1health'
 
 components:
   # 引用全局通用组件

@@ -1,0 +1,257 @@
+# GitHub Actions工作流：API文档质量保证
+# 文件路径: .github/workflows/api-validation.yml
+
+name: API Documentation Quality Assurance
+
+on:
+  # 在推送到主分支时触发
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'docs/api/**/*.yaml'
+      - 'docs/api/**/*.yml'
+      - 'docs/api/**/validate-api.py'
+      - 'docs/api/**/enhanced-api-validator.py'
+  
+  # 在Pull Request时触发
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'docs/api/**/*.yaml'
+      - 'docs/api/**/*.yml'
+      - 'docs/api/**/validate-api.py'
+      - 'docs/api/**/enhanced-api-validator.py'
+  
+  # 允许手动触发
+  workflow_dispatch:
+    inputs:
+      validation_level:
+        description: '验证级别'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+          - 'basic'
+          - 'enhanced'
+          - 'full'
+
+jobs:
+  api-validation:
+    name: API文档质量验证
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+      with:
+        # 获取完整历史以便进行变更检测
+        fetch-depth: 2
+    
+    - name: 设置Python环境
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    
+    - name: 安装Python依赖
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyyaml requests
+    
+    - name: 设置Node.js环境（用于Prism CLI）
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: 安装Prism CLI（可选）
+      run: |
+        npm install -g @stoplight/prism-cli
+      continue-on-error: true
+    
+    - name: 检查API文档文件变更
+      id: changes
+      run: |
+        echo "检查API文档相关文件变更..."
+        
+        # 检查变更的文件
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          # PR模式：比较PR分支与目标分支
+          changed_files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep -E '\.(yaml|yml)$' | grep -E '(docs/api|modules|domains|global-api-index)' || true)
+        else
+          # Push模式：比较当前提交与前一个提交
+          changed_files=$(git diff --name-only HEAD~1 HEAD | grep -E '\.(yaml|yml)$' | grep -E '(docs/api|modules|domains|global-api-index)' || true)
+        fi
+        
+        if [ -n "$changed_files" ]; then
+          echo "发现API文档文件变更:"
+          echo "$changed_files"
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+          
+          # 将变更文件列表保存到环境变量
+          echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
+          echo "$changed_files" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+        else
+          echo "未发现API文档文件变更"
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: 运行基础API文档验证
+      if: steps.changes.outputs.has_changes == 'true' || github.event.inputs.validation_level == 'basic' || github.event.inputs.validation_level == 'full'
+      working-directory: docs/api/4.5.1
+      run: |
+        echo "🔍 运行基础API文档验证..."
+        
+        if [ -f "validate-api.py" ]; then
+          python validate-api.py
+        else
+          echo "⚠️ 基础验证脚本不存在，跳过基础验证"
+        fi
+    
+    - name: 运行增强API文档验证
+      if: steps.changes.outputs.has_changes == 'true' || github.event.inputs.validation_level == 'enhanced' || github.event.inputs.validation_level == 'full'
+      working-directory: docs/api/4.5.1
+      run: |
+        echo "🚀 运行三级API文档质量保证验证..."
+        
+        # 创建报告目录
+        mkdir -p reports
+        
+        # 运行增强验证
+        python enhanced-api-validator.py --output reports/validation_report.json
+    
+    - name: 生成验证报告
+      if: always() && (steps.changes.outputs.has_changes == 'true' || github.event_name == 'workflow_dispatch')
+      working-directory: docs/api/4.5.1
+      run: |
+        echo "📊 生成验证报告..."
+        
+        # 运行CI脚本生成完整报告
+        if [ -f "ci-api-validation.sh" ]; then
+          chmod +x ci-api-validation.sh
+          ./ci-api-validation.sh || true
+        fi
+        
+        # 确保报告文件存在
+        if [ ! -f "reports/validation_report.json" ]; then
+          echo "⚠️ 验证报告不存在，生成空报告"
+          mkdir -p reports
+          echo '{"summary": {"status": "no_report"}, "validation_results": []}' > reports/validation_report.json
+        fi
+    
+    - name: 上传验证报告
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: api-validation-report-${{ github.sha }}
+        path: |
+          docs/api/4.5.1/reports/
+        retention-days: 30
+    
+    - name: 评论PR（如果是Pull Request）
+      if: github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          try {
+            // 读取验证报告
+            const reportPath = 'docs/api/4.5.1/reports/validation_report.json';
+            let reportContent = '验证报告不可用';
+            
+            if (fs.existsSync(reportPath)) {
+              const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+              
+              // 生成PR评论内容
+              let comment = '## 🔍 API文档质量验证报告\n\n';
+              
+              if (report.summary) {
+                comment += '### 📊 统计信息\n';
+                comment += `- 模块文件数量: ${report.summary.total_modules || 0}\n`;
+                comment += `- 业务域文件数量: ${report.summary.total_domains || 0}\n`;
+                comment += `- 全局索引API数量: ${report.summary.total_global_apis || 0}\n`;
+                comment += `- 映射覆盖率: ${((report.summary.mapping_coverage_rate || 0) * 100).toFixed(1)}%\n\n`;
+              }
+              
+              if (report.validation_results && report.validation_results.length > 0) {
+                comment += '### 🔍 验证结果\n';
+                report.validation_results.forEach((result, index) => {
+                  const status = result.success ? '✅' : '❌';
+                  comment += `${index + 1}. ${status} ${result.message}\n`;
+                });
+                comment += '\n';
+                
+                // 统计问题数量
+                const totalIssues = report.validation_results
+                  .filter(r => !r.success)
+                  .reduce((sum, r) => sum + (r.details ? r.details.length : 0), 0);
+                
+                if (totalIssues > 0) {
+                  comment += `⚠️ **发现 ${totalIssues} 个问题需要修复**\n\n`;
+                  comment += '请查看详细的验证报告以了解具体问题。\n';
+                } else {
+                  comment += '🎉 **所有检查通过，API文档架构完整！**\n';
+                }
+              }
+              
+              comment += '\n---\n';
+              comment += `📄 完整报告请查看 [验证报告工件](${context.payload.pull_request.html_url}/checks)\n`;
+              
+              reportContent = comment;
+            }
+            
+            // 发布评论
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: reportContent
+            });
+            
+          } catch (error) {
+            console.error('生成PR评论失败:', error);
+            
+            // 发布简单的错误评论
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '## 🔍 API文档质量验证报告\n\n❌ 验证过程中出现错误，请查看工作流日志了解详情。'
+            });
+          }
+    
+    - name: 设置验证状态
+      if: always()
+      run: |
+        # 检查验证是否成功
+        if [ -f "docs/api/4.5.1/reports/validation_report.json" ]; then
+          # 使用Python检查验证结果
+          python3 << 'EOF'
+import json
+import sys
+
+try:
+    with open('docs/api/4.5.1/reports/validation_report.json', 'r') as f:
+        report = json.load(f)
+    
+    validation_results = report.get('validation_results', [])
+    all_success = all(result.get('success', False) for result in validation_results)
+    
+    if all_success:
+        print("✅ 所有API文档质量检查通过")
+        sys.exit(0)
+    else:
+        print("❌ API文档质量检查失败")
+        sys.exit(1)
+        
+except Exception as e:
+    print(f"❌ 检查验证结果失败: {e}")
+    sys.exit(1)
+EOF
+        else
+          echo "❌ 验证报告不存在"
+          exit 1
+        fi

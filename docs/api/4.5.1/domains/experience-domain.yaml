@@ -1,9 +1,24 @@
 openapi: 3.0.3
 info:
-  title: Uexperience 业务域 API 聚合
+  title: 用户体验业务域 API 聚合
   version: 1.0.0
+  description: 用户体验增强相关的API聚合，包括个性化设置、无障碍访问、界面优化等功能
+
 paths:
+  # 个性化设置API
   /api/v1/ux/personalization:
     $ref: '../modules/REQ-015-用户体验增强系统/openapi.yaml#/paths/~1api~1v1~1ux~1personalization'
+
+  # 无障碍访问API
   /api/v1/ux/accessibility:
     $ref: '../modules/REQ-015-用户体验增强系统/openapi.yaml#/paths/~1api~1v1~1ux~1accessibility'
+
+components:
+  schemas:
+    # 引用全局通用组件
+    ApiResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+    PagedResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/PagedResponse'
+    ErrorResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'

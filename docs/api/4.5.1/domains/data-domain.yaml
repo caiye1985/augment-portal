@@ -2,22 +2,92 @@ openapi: 3.0.3
 info:
   title: 数据业务域 API 聚合
   version: 1.0.0
-  description: 数据相关的API聚合，包括数据分析与商业智能等功能
+  description: 数据相关的API聚合，包括数据分析与商业智能、AI功能、分析任务管理等功能
 
 paths:
-  # 数据分析与商业智能模块暂未实现，添加占位符路径
-  /api/v1/data/placeholder:
-    get:
-      summary: 数据分析占位符接口
-      description: 数据分析模块占位符接口，待实现
-      operationId: data_placeholder
-      responses:
-        '200':
-          description: 占位符响应
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
+  # 数据分析任务管理API
+  /api/v1/analytics/tasks:
+    $ref: '../modules/REQ-023-数据分析与商业智能模块/openapi.yaml#/paths/~1api~1v1~1analytics~1tasks'
+  /api/v1/analytics/tasks/{id}:
+    $ref: '../modules/REQ-023-数据分析与商业智能模块/openapi.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}'
+  /api/v1/analytics/tasks/{id}/execute:
+    $ref: '../modules/REQ-023-数据分析与商业智能模块/openapi.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}~1execute'
+  /api/v1/analytics/tasks/{id}/pause:
+    $ref: '../modules/REQ-023-数据分析与商业智能模块/openapi.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}~1pause'
+  /api/v1/analytics/tasks/{id}/resume:
+    $ref: '../modules/REQ-023-数据分析与商业智能模块/openapi.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}~1resume'
+  /api/v1/analytics/tasks/{id}/status:
+    $ref: '../modules/REQ-023-数据分析与商业智能模块/openapi.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}~1status'
+  /api/v1/analytics/tasks/{id}/logs:
+    $ref: '../modules/REQ-023-数据分析与商业智能模块/openapi.yaml#/paths/~1api~1v1~1analytics~1tasks~1{id}~1logs'
+
+  # 分析结果管理API
+  /api/v1/analytics/results:
+    $ref: '../modules/REQ-023-数据分析与商业智能模块/openapi.yaml#/paths/~1api~1v1~1analytics~1results'
+  /api/v1/analytics/results/{id}:
+    $ref: '../modules/REQ-023-数据分析与商业智能模块/openapi.yaml#/paths/~1api~1v1~1analytics~1results~1{id}'
+  /api/v1/analytics/results/{id}/export:
+    $ref: '../modules/REQ-023-数据分析与商业智能模块/openapi.yaml#/paths/~1api~1v1~1analytics~1results~1{id}~1export'
+
+  # 机器学习模型API
+  /api/v1/analytics/models:
+    $ref: '../modules/REQ-023-数据分析与商业智能模块/openapi.yaml#/paths/~1api~1v1~1analytics~1models'
+  /api/v1/analytics/models/{id}/train:
+    $ref: '../modules/REQ-023-数据分析与商业智能模块/openapi.yaml#/paths/~1api~1v1~1analytics~1models~1{id}~1train'
+  /api/v1/analytics/models/{id}/predict:
+    $ref: '../modules/REQ-023-数据分析与商业智能模块/openapi.yaml#/paths/~1api~1v1~1analytics~1models~1{id}~1predict'
+
+  # 数据集管理API
+  /api/v1/analytics/datasets:
+    $ref: '../modules/REQ-023-数据分析与商业智能模块/openapi.yaml#/paths/~1api~1v1~1analytics~1datasets'
+
+  # AI诊断功能API
+  /api/v1/ai/diagnosis:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1diagnosis'
+  /api/v1/ai/diagnosis/{diagnosisId}:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1diagnosis~1{diagnosisId}'
+  /api/v1/ai/diagnosis/batch:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1diagnosis~1batch'
+
+  # AI预测功能API
+  /api/v1/ai/prediction:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1prediction'
+  /api/v1/ai/prediction/{predictionId}:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1prediction~1{predictionId}'
+  /api/v1/ai/prediction/capacity-planning:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1prediction~1capacity-planning'
+
+  # AI聊天功能API
+  /api/v1/ai/chat:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1chat'
+  /api/v1/ai/chat/sessions:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1chat~1sessions'
+  /api/v1/ai/chat/sessions/{sessionId}:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1chat~1sessions~1{sessionId}'
+
+  # 异常检测API
+  /api/v1/ai/anomaly-detection:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1anomaly-detection'
+
+  # AI模型管理API
+  /api/v1/ai/models:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1models'
+  /api/v1/ai/models/{modelId}:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1models~1{modelId}'
+
+  # AI训练任务API
+  /api/v1/ai/training/jobs:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1training~1jobs'
+  /api/v1/ai/training/jobs/{jobId}:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1training~1jobs~1{jobId}'
+  /api/v1/ai/training/jobs/{jobId}/start:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1training~1jobs~1{jobId}~1start'
+
+  # AI监控API
+  /api/v1/ai/monitoring/health:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1monitoring~1health'
+  /api/v1/ai/statistics/usage:
+    $ref: '../modules/REQ-013-智能分析与AI功能/openapi.yaml#/paths/~1api~1v1~1ai~1statistics~1usage'
 
 components:
   schemas:

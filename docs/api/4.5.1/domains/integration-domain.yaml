@@ -1,9 +1,62 @@
 openapi: 3.0.3
 info:
-  title: Uintegration 业务域 API 聚合
+  title: 系统集成业务域 API 聚合
   version: 1.0.0
+  description: 系统集成相关的API聚合，包括第三方系统集成配置、数据同步、接口管理等功能
+
 paths:
+  # 集成配置管理API
   /api/v1/integrations/configs:
     $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1configs'
   /api/v1/integrations/configs/{id}:
     $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1configs~1{id}'
+  /api/v1/integrations/configs/{id}/test:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1configs~1{id}~1test'
+  /api/v1/integrations/configs/{id}/activate:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1configs~1{id}~1activate'
+  /api/v1/integrations/configs/batch:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1configs~1batch'
+  /api/v1/integrations/configs/export:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1configs~1export'
+
+  # 数据同步管理API
+  /api/v1/integrations/{id}/sync:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1{id}~1sync'
+  /api/v1/integrations/{id}/sync/status:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1{id}~1sync~1status'
+  /api/v1/integrations/{id}/sync/stop:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1{id}~1sync~1stop'
+  /api/v1/integrations/{id}/sync/history:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1{id}~1sync~1history'
+
+  # 集成状态监控API
+  /api/v1/integrations/{id}/status:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1{id}~1status'
+  /api/v1/integrations/{id}/metrics:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1{id}~1metrics'
+  /api/v1/integrations/health:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1health'
+
+  # 告警与通知API
+  /api/v1/integrations/alerts/webhook:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1alerts~1webhook'
+
+  # 集成模板管理API
+  /api/v1/integrations/templates:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1templates'
+  /api/v1/integrations/templates/{id}:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1templates~1{id}'
+
+  # 日志导出API
+  /api/v1/integrations/logs/export:
+    $ref: '../modules/REQ-012-系统集成模块/openapi.yaml#/paths/~1api~1v1~1integrations~1logs~1export'
+
+components:
+  schemas:
+    # 引用全局通用组件
+    ApiResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ApiResponse'
+    PagedResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/PagedResponse'
+    ErrorResponse:
+      $ref: '../global-api-index.yaml#/components/schemas/ErrorResponse'
